@@ -16,23 +16,12 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     ignoreBuildErrors: true,
   },
   webpack(config, options) {
-
-    // config.module.rules.push({
-    //   test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
-    //   use: {
-    //     loader: 'url-loader',
-    //     options: {
-    //       limit: 100000,
-    //       name: '[name].[ext]'
-    //     }
-    //   }
-    // });
-
     config.resolve.modules.push(path.resolve("./"));
     return config;
   },
   env: {
-    SITE_URL: "http://localhost:3000",
+    SITE_URL: "http://student.hiast.edu.sy:3000",
+    // SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
     // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public/api",
     BASE_URL: "http://student.hiast.edu.sy/backend/public/api",
