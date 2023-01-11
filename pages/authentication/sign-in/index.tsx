@@ -97,7 +97,7 @@ function SignIn() {
     });
     console.log(resp);
     // dispatch(setSessionKey(resp.token));
-    if (resp.url) router.push(resp.url + "/student_affairs/dashboard");
+    router.push(process.env.SITE_URL + "/student_affairs/dashboard");
     setSubmitting(false);
   };
   return (
