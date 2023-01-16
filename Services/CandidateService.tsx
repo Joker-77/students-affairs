@@ -9,15 +9,12 @@ export default class CandidateService {
       .get(listUrl)
       .then((response) => {
 
-        console.log(response);
         if (response.data.success) {
           let result = response.data;
-          console.log(result);
           return result;
         }
       })
       .catch((error) => {
-        console.log("Api Error:", error);
         throw error;
       });
   }
@@ -27,7 +24,6 @@ export default class CandidateService {
       return await apiConnector
           .post(addUrl, payload)
           .then((response) => {
-              console.log('res', response);
               if (response?.data?.success) {
                   let result = response?.data;
                   return result;
@@ -49,7 +45,6 @@ export default class CandidateService {
         }
       })
       .catch((error) => {
-        console.log("Api Error:", error);
         throw error;
       });
   }

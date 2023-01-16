@@ -18,14 +18,11 @@ class Connector {
       .catch((error) => {
         console.error("Error:", error);
         if (error.response) {
-          console.log(error.response);
           let result: any = error.response.data;
           return result;
         } else if (error.request) {
-          console.log(error.request);
           //do something else
         } else if (error.message) {
-          console.log(error);
           //do something other than the other two
           return {
             success: false,
@@ -63,7 +60,6 @@ class Connector {
         if (error.name) console.error("Error Name", error.name);
         if (error.code) console.error("Error Code:", error.code);
         else if (error.message) {
-          console.log(error);
           //do something other than the other two
           return {
             success: false,
@@ -81,7 +77,6 @@ class Connector {
           } as IAbpResponse;
         }
       });
-    console.log(response);
     return response;
   }
   // log in to server
@@ -224,7 +219,6 @@ class Connector {
   static async SendTicketReply(Token, _data): Promise<IAbpResponse> {
     let _url =
       window["runConfig"].BaseAPIUrl + window["runConfig"].SendTicketReplyUrl;
-    console.log(_url);
     return await axios({
       method: "post",
       url: _url,
@@ -241,14 +235,11 @@ class Connector {
       .catch((error) => {
         console.error("Error:", error);
         if (error.response) {
-          console.log(error.response);
           let result: any = error.response.data;
           return result;
         } else if (error.request) {
-          console.log(error.request);
           //do something else
         } else if (error.message) {
-          console.log(error.message);
           return {
             success: false,
             error: {
@@ -273,7 +264,6 @@ class Connector {
     );
   }
   static async GetErrors(Token, filter) {
-    console.log(filter);
     return await this.SendMessageUsingToken(
       window["runConfig"].GetErrorsUrl,
       filter,
@@ -299,7 +289,6 @@ class Connector {
     );
   }
   static async GetUsers(Token, selectedFilter) {
-    console.log("Connector", selectedFilter);
     return await this.SendMessageUsingToken(
       window["runConfig"].GetUsersUrl,
       selectedFilter,
@@ -315,7 +304,6 @@ class Connector {
     );
   }
   static async GetCurrentUserInfo(Token) {
-    console.log(window["runConfig"].GetCurrentUserInfoUrl);
     return await this.SendMessageUsingToken(
       window["runConfig"].GetCurrentUserInfoUrl,
       {},

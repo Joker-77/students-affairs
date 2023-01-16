@@ -1,8 +1,6 @@
 import React from "react";
 import Router from "next/router";
 import {
-  setSessionKey,
-  useAppDispatch,
   useAppSelector,
   selectSessionKey,
 } from "../redux";
@@ -10,7 +8,7 @@ import {
 export default function Index() {
   const _sessionKey = useAppSelector(selectSessionKey);
 
-  if (!!_sessionKey) {
+  if (!!_sessionKey || (typeof window !== 'undefined' && !!localStorage.getItem("sa_access_token"))) {
     React.useEffect(() => {
       Router.push("/students_affairs/dashboard");
     });

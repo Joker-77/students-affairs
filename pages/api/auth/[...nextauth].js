@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { ApiResponse } from "../../../Models/ApiResponse/ApiResponse";
 import axios from "../../../Services/ApiClient";
 //Api route function that is returned from next auth
 export default NextAuth({
@@ -56,9 +55,6 @@ export default NextAuth({
   callbacks: {
     // called after sucessful signin
     jwt: async ({ token, user }) => {
-      console.log("fire jwt Callback");
-      console.log("token", token);
-      console.log("user", user);
       user && (token.user = user);
       if (user)
         return {
@@ -68,9 +64,6 @@ export default NextAuth({
       return token;
     }, // called whenever session is checked
     session: async ({ session, token }) => {
-      console.log("fire SESSION Callback");
-      console.log("token", token);
-      console.log("session", session);
       token && (session.user = token.user);
       return session;
     },

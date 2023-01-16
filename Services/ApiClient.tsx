@@ -9,7 +9,6 @@ const configs: AxiosRequestConfig = {
     rejectUnauthorized: false,
   }),
 };
-console.log("configs", configs);
 const instance = axios.create(configs);
 instance.defaults.headers.common["Content-Type"] = "application/json";
 // instance.defaults.timeout = 2500;
@@ -18,21 +17,17 @@ instance.interceptors.response.use(
   response => {
       if (!response.data.success) {
           let result = response.data;
-          console.log(result);
           return result;
       }
       return response;
   },
   error => {
     if (error.response.status === 401) {
-      console.log('error 401');
       toast('You\'re unauthorized to do this!', {type: 'error'})
     }
     else {
-        console.log('errrrororororoor', error);
         if (!error.response.data.success) {
             let result = error.response.data;
-            console.log(result);
             toast(result.error.message, {type: 'error'})
         }
     }
