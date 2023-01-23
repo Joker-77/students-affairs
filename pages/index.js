@@ -8,7 +8,7 @@ import {
 export default function Index() {
   const _sessionKey = useAppSelector(selectSessionKey);
 
-  if (!!_sessionKey/* || (typeof window !== 'undefined' && !!localStorage.getItem("sa_access_token"))*/) {
+  if (!!_sessionKey || (typeof window !== 'undefined' && !!localStorage.getItem("sa_access_token"))) {
     React.useEffect(() => {
       Router.push("/students_affairs/dashboard");
     });

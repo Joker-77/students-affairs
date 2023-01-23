@@ -85,7 +85,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 type="text"
                 id={`${prefix}.first_name`}
                 name={`${prefix}.first_name`}
-                value={values[prefix].first_name}
+                value={values[prefix]?.first_name}
                 onBlur={handleBlur}
                 error={Boolean(touched[prefix]?.first_name && errors[prefix]?.first_name)}
                 helperText={touched[prefix]?.first_name && errors[prefix]?.first_name}
@@ -110,7 +110,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 type="text"
                 id={`${prefix}.last_name`}
                 name={`${prefix}.last_name`}
-                value={values[prefix].last_name}
+                value={values[prefix]?.last_name}
                 onBlur={handleBlur}
                 error={Boolean(touched[prefix]?.last_name && errors[prefix]?.last_name)}
                 helperText={touched[prefix]?.last_name && errors[prefix]?.last_name}
@@ -136,7 +136,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 id={`${prefix}.sex`}
                 name={`${prefix}.sex`}
                 select={true}
-                value={values[prefix].sex}
+                value={values[prefix]?.sex}
                 onChange={handleChange(`${prefix}.sex`)}
                 onBlur={handleBlur}
                 placeholder="Gender"
@@ -166,7 +166,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 type="text"
                 id={`${prefix}.nationality`}
                 name={`${prefix}.nationality`}
-                value={values[prefix].nationality}
+                value={values[prefix]?.nationality}
                 onBlur={handleBlur}
                 error={Boolean(
                     touched[prefix]?.nationality && errors[prefix]?.nationality
@@ -193,7 +193,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 type="text"
                 id={`${prefix}.national_number`}
                 name={`${prefix}.national_number`}
-                value={values[prefix].national_number}
+                value={values[prefix]?.national_number}
                 onBlur={handleBlur}
                 error={Boolean(touched[prefix]?.national_number && errors[prefix]?.national_number)}
                 helperText={touched[prefix]?.national_number && errors[prefix]?.national_number}
@@ -218,7 +218,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 type="text"
                 id={`${prefix}.passport_first_name`}
                 name={`${prefix}.passport_first_name`}
-                value={values[prefix].passport_first_name}
+                value={values[prefix]?.passport_first_name}
                 onBlur={handleBlur}
                 error={Boolean(
                     touched[prefix]?.passport_first_name && errors[prefix]?.passport_first_name
@@ -247,7 +247,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 type="text"
                 id={`${prefix}.passport_last_name`}
                 name={`${prefix}.passport_last_name`}
-                value={values[prefix].passport_last_name}
+                value={values[prefix]?.passport_last_name}
                 onBlur={handleBlur}
                 error={Boolean(
                     touched[prefix]?.passport_last_name && errors[prefix]?.passport_last_name
@@ -276,7 +276,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 type="text"
                 id={`${prefix}.passport_number`}
                 name={`${prefix}.passport_number`}
-                value={values[prefix].passport_number}
+                value={values[prefix]?.passport_number}
                 onBlur={handleBlur}
                 error={Boolean(
                     touched[prefix]?.passport_number && errors[prefix]?.passport_number
@@ -302,8 +302,8 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
             name={`${prefix}.phones`}
             render={arrayHelpers => (
                 <div>
-                  {values[prefix].phones && values[prefix].phones.length > 0 ? (
-                      values[prefix].phones.map((phone, index) => (
+                  {values[prefix]?.phones && values[prefix]?.phones.length > 0 ? (
+                      values[prefix]?.phones.map((phone, index) => (
                           <div key={index}>
 
                             <Grid container spacing={2}>
@@ -334,7 +334,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                                     id={`${prefix}.phones.${index}.type`}
                                     name={`${prefix}.phones.${index}.type`}
                                     select={true}
-                                    // value={values[prefix].sex}
+                                    // value={values[prefix]?.sex}
                                     onChange={handleChange(`${prefix}.phones.${index}.type`)}
                                     onBlur={handleBlur}
                                     placeholder="Phone type"
@@ -348,7 +348,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                                 </TextField>
                               </Grid>
 
-                              <Grid item xs={4}>
+                              {!disabled && <Grid item xs={4}>
                                 <SuiButton
                                     style={{ margin: 5 }}
                                     color="error"
@@ -364,19 +364,22 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                                 >
                                   +
                                 </SuiButton>
-                              </Grid>
+                              </Grid>}
                             </Grid>
 
                           </div>
                       ))
                   ) : (
-                      <SuiButton
+                      <React.Fragment>
+                      {!disabled && <SuiButton
                           variant="gradient"
                           color="success"
                           onClick={() => arrayHelpers.push('')}>
                         {/* show this when user has removed all phones from the list */}
                         Add a phone
                       </SuiButton>
+                        }
+                      </React.Fragment>
                   )}
                 </div>
             )}

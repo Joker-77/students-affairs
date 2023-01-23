@@ -21,6 +21,13 @@ const dashboardRoutes = [
     icon: Person,
     layout: "/students_affairs",
   },
+  {
+    path: "/admin/specialities/specialities-list",
+    name: "Specialities",
+    rtlName: "الاختصاصات",
+    icon: LibraryBooks,
+    layout: "/students_affairs",
+  },
   // {
   //   path: "/table-list",
   //   name: "Table List",

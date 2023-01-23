@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form, FieldArray } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
   Modal,
@@ -16,8 +16,7 @@ import Card from "../Card/Card.js";
 import CardHeader from "../Card/CardHeader.js";
 import CardBody from "../Card/CardBody.js";
 import SuiButton from "../SuiButton";
-import { ICandidateModel } from "../../Models/ApiResponse/CandidateModel.jsx";
-import PersonInfoPartialForm from "./PersonInfoPartialForm";
+import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -28,7 +27,7 @@ interface ICusomModalProps {
   initValues: any;
   formScheme: any;
 }
-const AddCandidateModal: React.FC<ICusomModalProps> = ({
+const AddSpecialityModal: React.FC<ICusomModalProps> = ({
   disabled,
   title,
   open,
@@ -42,7 +41,7 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "70%",
+    width: 400,
     bgcolor: "background.paper",
     // border: "2px solid brown",
     boxShadow: 24,
@@ -53,7 +52,7 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
     //top: "50%",
     //left: "50%",
     //transform: "translate(-50%, -50%)",
-    // width: 400,
+    width: 400,
     bgcolor: "background.paper",
     // border: "2px solid brown",
     boxShadow: 24,
@@ -61,11 +60,12 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
     marginTop: "0px",
     marginBottom: "0px",
   };
+
   const styles = {
     modal: {
       overflowY: "scroll",
       overflowX: "hidden",
-      height: "95%",
+      height: "75%",
     },
     header: {
       height: "5em",
@@ -75,7 +75,6 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
       backgroundColor: "#A69577",
     },
   };
-
   return (
     <Modal
       open={open}
@@ -88,7 +87,9 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
           <CardHeader style={styles.header}>
             <Grid container>
               <Grid md={8}>
-                <h4 style={{ fontWeight: "bold" }}>{title} </h4>
+                <center>
+                  <h4 style={{ fontWeight: "bold" }}>{title} </h4>
+                </center>
               </Grid>
               <Grid md={4}>
                 <IconButton
@@ -105,7 +106,6 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
             </Grid>
           </CardHeader>
           <CardBody>
-
             <Formik
               initialValues={initValues}
               validationSchema={formScheme}
@@ -127,12 +127,10 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                 } = formik;
                 return (
                   <Form>
-                    <PersonInfoPartialForm prefix={"person"} formik={formik} disabled={disabled}/>
-
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                        Registeration number
+                          English Name
                         </Typography>
                       </Box>
                       <TextField
@@ -141,42 +139,20 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                         variant="outlined"
                         size="small"
                         type="text"
-                        id="registeration_number"
-                        name="registeration_number"
-                        value={values.registeration_number}
+                        id="en_name"
+                        name="en_name"
+                        value={values.en_name}
                         onBlur={handleBlur}
-                        error={Boolean(touched.registeration_number && errors.registeration_number)}
-                        helperText={touched.registeration_number && errors.registeration_number}
-                        placeholder="Registeration number"
+                        error={Boolean(touched.en_name && errors.en_name)}
+                        helperText={touched.en_name && errors.en_name}
+                        placeholder="English Name"
                         fullWidth
                       />
                     </Box>
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                        Birth date
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="date"
-                        id="birth_date"
-                        name="birth_date"
-                        value={values.birth_date}
-                        onBlur={handleBlur}
-                        error={Boolean(touched.birth_date && errors.birth_date)}
-                        helperText={touched.birth_date && errors.birth_date}
-                        placeholder="Birth date"
-                        fullWidth
-                      />
-                    </Box>
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                        Birth place
+                          Arabic Name
                         </Typography>
                       </Box>
                       <TextField
@@ -185,95 +161,40 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                         variant="outlined"
                         size="small"
                         type="text"
-                        id="birth_place"
-                        name="birth_place"
-                        value={values.birth_place}
+                        id="ar_name"
+                        name="ar_name"
+                        value={values.ar_name}
+                        onBlur={handleBlur}
+                        error={Boolean(touched.ar_name && errors.ar_name)}
+                        helperText={touched.ar_name && errors.ar_name}
+                        placeholder="Arabic Name"
+                        fullWidth
+                      />
+                    </Box>
+                    <Box mb={2}>
+                      <Box mb={1} ml={0.5}>
+                        <Typography component="label" variant="caption">
+                          Code
+                        </Typography>
+                      </Box>
+                      <TextField
+                        disabled={disabled}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="small"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
                         onBlur={handleBlur}
                         error={Boolean(
-                          touched.birth_place && errors.birth_place
+                          touched.code && errors.code
                         )}
-                        helperText={touched.birth_place && errors.birth_place}
-                        placeholder="Birth place"
+                        helperText={touched.code && errors.code}
+                        placeholder="Code"
                         fullWidth
                       />
                     </Box>
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                        AQID place
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="qaid_place"
-                        name="qaid_place"
-                        value={values.qaid_place}
-                        onBlur={handleBlur}
-                        error={Boolean(touched.qaid_place && errors.qaid_place)}
-                        helperText={touched.qaid_place && errors.qaid_place}
-                        placeholder="AQID place"
-                        fullWidth
-                      />
-                    </Box>
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                        QAID number
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="qaid_number"
-                        name="qaid_number"
-                        value={values.qaid_number}
-                        onBlur={handleBlur}
-                        error={Boolean(
-                          touched.qaid_number && errors.qaid_number
-                        )}
-                        helperText={
-                          touched.qaid_number && errors.qaid_number
-                        }
-                        placeholder="QAID number"
-                        fullWidth
-                      />
-                    </Box>
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                        Military office
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="military_office"
-                        name="military_office"
-                        value={values.military_office}
-                        onBlur={handleBlur}
-                        error={Boolean(
-                          touched.military_office && errors.military_office
-                        )}
-                        helperText={
-                          touched.military_office && errors.military_office
-                        }
-                        placeholder="Military office"
-                        fullWidth
-                      />
-                    </Box>
-
-                    <PersonInfoPartialForm prefix={"father"} title={'Father'} formik={formik} disabled={disabled} isGray/>
-                    <PersonInfoPartialForm prefix={"mother"} title={'Mother'} formik={formik} disabled={disabled} isGray/>
 
                     <Box mt={4} mb={1}>
                       {isSubmitting ? (
@@ -287,7 +208,7 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                         </SuiButton>
                       ) : (
                         <SuiButton
-                          // disabled={!(dirty && isValid)}
+                          disabled={!(dirty && isValid)}
                           type="submit"
                           variant="gradient"
                           color="info"
@@ -308,4 +229,4 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
   );
 };
 
-export default AddCandidateModal;
+export default AddSpecialityModal;

@@ -24,11 +24,15 @@ export default function Header(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   function makeBrand() {
-    var name = "NextJS Material Dashboard";
+    var name = "";
     props.routes.map((prop) => {
       if (router.route.indexOf(prop.layout + prop.path) !== -1) {
         name = props.rtlActive ? prop.rtlName : prop.name;
       }
+      console.log('Route: ', router);
+      // else if(router.route.indexOf(prop.candidate) !== -1) {
+      //   name = 'Candidates > ' + prop.candidate + ' > ' + prop.name;
+      // }
       return null;
     });
     return name;

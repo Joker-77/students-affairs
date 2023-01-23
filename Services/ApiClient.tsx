@@ -24,6 +24,8 @@ instance.interceptors.response.use(
   error => {
     if (error.response.status === 401) {
       toast('You\'re unauthorized to do this!', {type: 'error'})
+    } else if (error.response.status === 403) {
+        toast('Session expired! Please login again.', {type: 'error'})
     }
     else {
         if (!error.response.data.success) {

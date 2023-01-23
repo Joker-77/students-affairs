@@ -13,12 +13,13 @@ import Placeholder from "../../../../Utility/Placeholders";
 import CandidateService from "../../../../Services/CandidateService";
 import AddCandidateModal from "../../../../components/Modals/AddCandidateModal";
 import * as Yup from "yup";
-import AddPhoneModal from "../../../../components/Modals/AddPhoneModal";
+import { useRouter } from 'next/router';
 
 interface ICandidatesListProps {}
 const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
+  const router = useRouter();
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -97,22 +98,19 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
     person: PersonScheme,
   });
   const UpdateCandidateScheme = Yup.object().shape({
-    // firstName: Yup.string().required("First name is required"),
-    // lastName: Yup.string().required("Last name is required"),
-    // gender: Yup.string().required("Gender is required"),
-    // passportFirstName: Yup.string().required("Passport First Name is required"),
-    // passportLastName: Yup.string().required("Passport Last Name is required"),
-    // nationality: Yup.string().required("Nationality is required"),
-    // nationalId: Yup.string().required("NationalId is required"),
-    // passportNumber: Yup.string().required("Passport Number is required"),
+    first_name: Yup.string().required("First name is required"),
+    last_name: Yup.string().required("Last name is required"),
+    passport_first_name: Yup.string().required("Passport first name is required"),
+    passport_last_name: Yup.string().required("Passport Last name is required"),
+    passport_number: Yup.string().required("Passport number is required"),
+    national_number: Yup.string().required("National number is required"),
+    sex: Yup.string().required("Gender is required"),
+    nationality: Yup.string().required("Nationality is required"),
   });
   const submitAddCandidate = async (values: any, setSubmitting) => {
-
-    console.log("to submit: ", values);
-
+    setSubmitting(true);
     CandidateService.Add(values)
       .then((res) => {
-        console.log("New Candidate", res);
         const candidatesCopy = [res.result, ...Candidates];
         setCandidates(candidatesCopy);
         setOpen(false);
@@ -120,9 +118,10 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
       .catch((error) => {
         console.error("error", error);
       })
+      .finally(() => {
+        setSubmitting(false);
+      });
     ;
-
-    setSubmitting(false);
   };
 
   /************************** Data ****************************/
@@ -140,19 +139,72 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
   /************************** Handle edit data ****************************/
 
   const [openUpdateCandidate, setOpenUpdateCandidate] = React.useState(false);
+  const [openModalForDetails, setOpenModalForDetails] = React.useState(false);
   const handleOpenUpdateCandidate = (data: ICandidateModel) => {
     console.log("data", data);
     setInitUpdateCandidate({
-      
+      id: data.id,
+      registeration_number: data.registeration_number,
+      birth_date: data.birth_date,
+      birth_place: data.birth_place,
+      qaid_place: data.qaid_place,
+      qaid_number: data.qaid_number,
+      military_office: data.military_office,
+      person: data.person,
+      //father: data.father,
+      //mother: data.mother,
     } as ICandidateModel);
     setOpenUpdateCandidate(true);
   };
   const handleCloseUpdateCandidate = () => {
+    setOpenModalForDetails(false);
     setDisabled(false);
     setOpenUpdateCandidate(false);
   };
   const [initUpdateCandidate, setInitUpdateCandidate] = React.useState<ICandidateModel>({
-
+    id: 0,
+    registeration_number: "",
+    birth_date: "",
+    birth_place: "",
+    qaid_place: "",
+    qaid_number: "",
+    military_office: "",
+    person: {
+      id: 0,
+      first_name: "",
+      last_name: "",
+      passport_first_name: "",
+      passport_last_name: "",
+      passport_number: "",
+      national_number: "",
+      sex: "",
+      nationality: "",
+      phones:[]
+    },
+    father: {
+      id: 0,
+      first_name: "",
+      last_name: "",
+      passport_first_name: "",
+      passport_last_name: "",
+      passport_number: "",
+      national_number: "",
+      sex: "",
+      nationality: "",
+      phones:[]
+    },
+    mother: {
+      id: 0,
+      first_name: "",
+      last_name: "",
+      passport_first_name: "",
+      passport_last_name: "",
+      passport_number: "",
+      national_number: "",
+      sex: "",
+      nationality: "",
+      phones:[]
+    },
   });
 
   const submitUpdateCandidate = async (values: any, setSubmitting) => {
@@ -163,8 +215,9 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
   /************************** Finish Handle edit data ****************************/
   const [disabled, setDisabled] = React.useState<boolean>(false);
   const handleDetails = (data: any) => {
+    setOpenModalForDetails(true);
     setDisabled(true);
-    setOpenUpdateCandidate(true);
+    handleOpenUpdateCandidate(data);
   };
   const handleEdit = (data: any) => {
     throw new Error("Function not implemented.");
@@ -197,14 +250,14 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
           title: "Birth place",
           field: "birth_place",
         },
-        {
-          title: "QAID place",
-          field: "qaid_place",
-        },
-        {
-          title: "QAID number",
-          field: "qaid_number",
-        }
+        // {
+        //   title: "QAID place",
+        //   field: "qaid_place",
+        // },
+        // {
+        //   title: "QAID number",
+        //   field: "qaid_number",
+        // }
       ];
       let data = Candidates;
       let options = {
@@ -226,15 +279,30 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
           Options={options}
           Actions={[
             {
-              tooltip: "Candidate Details",
-              icon: "details",
-              onClick: (evt, data) => handleDetails(data.id),
+              tooltip: "Certificates",
+              icon: "collectionsBookmark",
+              onClick: (evt, data) => router.push(`/students_affairs/affairs_officer/candidates/certificates-list?id=${data.id}`),
             },
             {
-              tooltip: "Edit Candidate",
-              icon: "edit",
-              onClick: (evt, data) => handleOpenUpdateCandidate(data),
+              tooltip: "Desires",
+              icon: "stars",
+              onClick: (evt, data) => router.push(`/students_affairs/affairs_officer/candidates/desires-list?id=${data.id}`),
             },
+            {
+              tooltip: "Registration Desires",
+              icon: "star",
+              onClick: (evt, data) => router.push(`/students_affairs/affairs_officer/candidates/registration-desires-list?id=${data.id}`),
+            },
+            {
+              tooltip: "Candidate Details",
+              icon: "details",
+              onClick: (evt, data) => handleDetails(data),
+            },
+            // {
+            //   tooltip: "Edit Candidate",
+            //   icon: "edit",
+            //   onClick: (evt, data) => handleOpenUpdateCandidate(data),
+            // },
             // {
             //   tooltip: "Add Certificate",
             //   icon: "add_phone",
@@ -281,7 +349,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
       <AddCandidateModal
         disabled={disabled}
         key={"updateCandidate"}
-        title={"Update Candidate"}
+        title={!openModalForDetails ? "Update Candidate" : "Candidate Details"}
         open={openUpdateCandidate}
         formScheme={UpdateCandidateScheme}
         handleClose={handleCloseUpdateCandidate}

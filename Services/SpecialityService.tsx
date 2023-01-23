@@ -1,11 +1,11 @@
-import apiConnector from "./ApiClient";
+import apiConnector from "./TokenizedApiClient";
 import { ApiResponse } from "../Models/ApiResponse/ApiResponse";
 
 export default class SpecialityService {
-  static async Add(): Promise<ApiResponse> {
+  static async Add(payload): Promise<ApiResponse> {
     const addUrl = process.env.ADD_SPECIALITY_URL as string;
     return await apiConnector
-      .get(addUrl)
+      .post(addUrl, payload)
       .then((response) => {
         if (response.data.success) {
           let result = response.data;
@@ -18,10 +18,10 @@ export default class SpecialityService {
       });
   }
 
-  static async Edit(): Promise<ApiResponse> {
+  static async Edit(payload): Promise<ApiResponse> {
     const editUrl = process.env.EDIT_SPECIALITY_URL as string;
     return await apiConnector
-      .get(editUrl)
+      .post(editUrl, payload)
       .then((response) => {
         if (response.data.success) {
           let result = response.data;

@@ -2,10 +2,10 @@ import apiConnector from "./ApiClient";
 import { ApiResponse } from "../Models/ApiResponse/ApiResponse";
 
 export default class DesireService {
-  static async Add(): Promise<ApiResponse> {
+  static async Add(payload): Promise<ApiResponse> {
     const addUrl = process.env.ADD_DESIRES_URL as string;
     return await apiConnector
-      .get(addUrl)
+      .post(addUrl, payload)
       .then((response) => {
         if (response.data.success) {
           let result = response.data;
@@ -18,10 +18,10 @@ export default class DesireService {
       });
   }
 
-  static async Edit(): Promise<ApiResponse> {
+  static async Edit(payload): Promise<ApiResponse> {
     const editUrl = process.env.EDIT_DESIRES_URL as string;
     return await apiConnector
-      .get(editUrl)
+      .post(editUrl, payload)
       .then((response) => {
         if (response.data.success) {
           let result = response.data;
@@ -50,10 +50,10 @@ export default class DesireService {
       });
   }
 
-  static async GetAll(): Promise<ApiResponse> {
+  static async GetAll(id): Promise<ApiResponse> {
     const listUrl = process.env.LIST_DESIRES_URL as string;
     return await apiConnector
-      .get(listUrl)
+      .get(`${listUrl}?candidate_id=${id}`)
       .then((response) => {
         if (response.data.success) {
           let result = response.data;

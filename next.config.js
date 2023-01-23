@@ -20,8 +20,8 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     return config;
   },
   env: {
-    SITE_URL: "http://student.hiast.edu.sy:3000",
-    // SITE_URL: "http://localhost:3000",
+    // SITE_URL: "http://student.hiast.edu.sy:3000",
+    SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
     // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public/api",
     BASE_URL: "http://student.hiast.edu.sy/backend/public/api",
@@ -62,7 +62,8 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
       "/candidate",
     ADD_CERTIFICATE_URL:
       "/certificate/add",
-    // EDIT: "/candidate/edit",
+    EDIT_CERTIFICATE_URL:
+      "/candidate/edit",
     DETAILS_CERTIFICATE_URL:
       "/certificate/details",
     LIST_CERTIFICATE_URL:
@@ -74,7 +75,7 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     DETAILS_SPECIALITY_URL:
       "/speciality/details",
     LIST_SPECIALITY_URL:
-      "/speciality/list",
+      "/speciality",
     ADD_REGISTERATION_URL:
       "/registeration/add",
     EDIT_REGISTERATION_URL:
