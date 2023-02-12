@@ -122,5 +122,14 @@
 
   "Internal": "دراسة لصالح المركز",
   "Private": "دراسة خاصة",
-  "Institutions": "مؤسسات"
+  "Institutions": "مؤسسات",
+
+  "Password is too short - should be {0} chars minimum": "كلمة السر قصيرة جداً - يجب أن تكون على الأقل {0} أحرف",
+  "Enter your credentials to sign in": "أدخل اسم المستخدم وكلمة المرور للدخول",
+  "Welcome": "مرحباً",
+  "Username": "اسم المستخدم",
+  "Password": "كلمة المرور",
+  "Remember me": "تذكرني",
+  "Signing in...": "جاري تسجيل الدخول",
+  "Sign in": "تسجيل الدخول"
 }

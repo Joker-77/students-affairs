@@ -9,6 +9,7 @@ import { Box, Typography } from "@material-ui/core";
 
 // Soft UI Dashboard React examples
 import PageLayout from "../PageLayout/index";
+import {useRouter} from "next/router";
 
 function CoverLayout({
   color,
@@ -19,11 +20,13 @@ function CoverLayout({
   top,
   children,
 }) {
+  const { locale } = useRouter();
+
   return (
     <PageLayout background="white">
       <Grid
         container
-        style={{ justifyContent: "center" }}
+        style={{ justifyContent: "center", direction: locale === 'ar' ? 'rtl' : 'ltr' }}
         sx={{
           minHeight: "75vh",
           margin: 0,
@@ -60,10 +63,11 @@ function CoverLayout({
             height="100%"
             display={{ xs: "none", md: "block" }}
             position="relative"
-            right={{ md: "-12rem", xl: "-16rem" }}
+            // right={{ md: "-12rem", xl: "-16rem" }}
+            left={{ md: "-15rem", xl: "-20rem" }}
             mr={-16}
             sx={{
-              transform: "skewX(-10deg)",
+              transform: `skewX(${locale === 'ar' ? '+' : '-'}10deg)`,
               overflow: "hidden",
               borderBottomLeftRadius: ({ borders: { borderRadius } }) =>
                 borderRadius.lg,
@@ -75,7 +79,7 @@ function CoverLayout({
               sx={{
                 backgroundImage: `url(${image})`,
                 backgroundSize: "cover",
-                transform: "skewX(10deg)",
+                transform: locale === 'ar' ? "skewX(0deg)" : "skewX(10deg)",
               }}
             />
           </Box>

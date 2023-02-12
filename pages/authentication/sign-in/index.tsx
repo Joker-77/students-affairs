@@ -27,10 +27,14 @@ import {
 import LoginService from "../../../Services/LoginService";
 import { ApiResponse } from "../../../Models/ApiResponse/ApiResponse";
 import { YearsModel } from "../../../Models/ApiResponse/YearsModel";
+import {useTranslation} from "../../../Utility/Translations/useTranslation";
 // Images
 const bg7 = require("./../../../assets/img/curved-images/HIAST.jpg");
 
 function SignIn() {
+  const { translate } = useTranslation();
+  const { locale } = useRouter();
+
   const dispatch = useAppDispatch();
   const sessionKey = useAppSelector(selectSessionKey);
   const [rememberMe, setRememberMe] = useState(true);
@@ -78,14 +82,14 @@ function SignIn() {
   }, []);
 
   const SignInSchema = Yup.object().shape({
-    username: Yup.string().required("Username is required"),
+    username: Yup.string().required(translate("{0} is required", "Username")),
     // .required("Email is required"),
     // email: Yup.string()
     //   .email("Must be a valid email")
     //   .required("Email is required"),
     password: Yup.string()
-      .required("Password is required")
-      .min(4, "Password is too short - should be 4 chars minimum"),
+      .required(translate("{0} is required", "Password"))
+      .min(4, translate("Password is too short - should be {0} chars minimum", "4", false)),
   });
   const submitForm = async (values: any, setSubmitting) => {
     console.log("values", values);
@@ -102,8 +106,8 @@ function SignIn() {
   };
   return (
     <CoverLayout
-      title="Welcome"
-      description="Enter your credentials to sign in"
+      title={translate("Welcome")}
+      description={translate("Enter your credentials to sign in")}
       image={bg7}
     >
       <Box>
@@ -151,7 +155,7 @@ function SignIn() {
                 <Box mb={2}>
                   <Box mb={1} ml={0.5}>
                     <Typography component="label" variant="caption">
-                      Username
+                      {translate("Username")}
                     </Typography>
                   </Box>
                   <TextField
@@ -165,7 +169,7 @@ function SignIn() {
                     onBlur={handleBlur}
                     error={Boolean(touched.username && errors.username)}
                     helperText={touched.username && errors.username}
-                    placeholder="Username"
+                    placeholder={translate("Username")}
                     fullWidth
                   />
                 </Box>
@@ -192,7 +196,7 @@ function SignIn() {
                 <Box mb={2}>
                   <Box mb={1} ml={0.5}>
                     <Typography component="label" variant="caption">
-                      Password
+                      {translate("Password")}
                     </Typography>
                   </Box>
                   <TextField
@@ -201,7 +205,7 @@ function SignIn() {
                     type="password"
                     variant="outlined"
                     size="small"
-                    placeholder="password"
+                    placeholder={translate("Password")}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={Boolean(errors.password && touched.password)}
@@ -221,7 +225,7 @@ function SignIn() {
                     // onClick={handleSetRememberMe}
                     // sx={{ cursor: "pointer", userSelect: "none" }}
                   >
-                    &nbsp;&nbsp;Remember me
+                    &nbsp;&nbsp;{translate("Remember me")}
                   </Typography>
                 </Box>
                 <Box mt={4} mb={1}>
@@ -232,7 +236,7 @@ function SignIn() {
                       color="info"
                       fullWidth
                     >
-                      signing in...
+                      {translate("Signing in...")}
                     </SuiButton>
                   ) : (
                     <SuiButton
@@ -242,7 +246,7 @@ function SignIn() {
                       color="info"
                       fullWidth
                     >
-                      sign in
+                      {translate("Sign in")}
                     </SuiButton>
                   )}
                 </Box>

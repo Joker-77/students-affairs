@@ -228,12 +228,12 @@ export default function AdminNavbarLinks() {
                       Settings
                     </MenuItem>
 
-                    <MenuItem
-                      onClick={handleChangeLanguage}
-                      className={classes.dropdownItem}
-                    >
-                      Change Language
-                    </MenuItem>
+                    {/*<MenuItem*/}
+                    {/*  onClick={handleChangeLanguage}*/}
+                    {/*  className={classes.dropdownItem}*/}
+                    {/*>*/}
+                    {/*  Change Language*/}
+                    {/*</MenuItem>*/}
 
                     <Divider light />
                     <MenuItem
