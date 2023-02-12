@@ -14,6 +14,7 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import routes from "routes.js";
 
 import styles from "assets/jss/nextjs-material-dashboard/layouts/adminStyle.js";
+import rtlStyles from "assets/jss/nextjs-material-dashboard/layouts/rtlStyle.js";
 
 import bgImage from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/hiastlogo.png";
@@ -27,16 +28,18 @@ import {
   collapseMenu,
   setDirection,
 } from "../redux";
+import {useTranslation} from "../Utility/Translations/useTranslation";
 
 let ps;
 
 export default function Admin({ children, ...rest }) {
+  const {translate} = useTranslation();
   const dispatch = useAppDispatch();
   const toggle = useAppSelector(selectCollapseMenu);
   // used for checking current route
   const router = useRouter();
   // styles
-  const useStyles = makeStyles(styles);
+  const useStyles = makeStyles(router.locale === 'ar' ? rtlStyles : styles);
 
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -95,12 +98,13 @@ export default function Admin({ children, ...rest }) {
     <div className={classes.wrapper}>
       <Sidebar
         routes={routes}
-        logoText={"Hiast Students Affairs"}
+        logoText={translate("Hiast Students Affairs")}
         logo={logo}
         image={image}
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}
+        rtlActive={router.locale === 'ar'}
         {...rest}
         toggle={toggle}
       />
@@ -113,6 +117,7 @@ export default function Admin({ children, ...rest }) {
         <Navbar
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
+          rtlActive={router.locale === 'ar'}
           {...rest}
         />
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}

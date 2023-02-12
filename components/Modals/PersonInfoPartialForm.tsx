@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import {FieldArray} from "formik";
 import SuiButton from "../SuiButton";
+import {useTranslation} from "../../Utility/Translations/useTranslation";
 
 interface IPersonInfoPartialProps {
   title: string;
@@ -25,6 +26,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
   isGray,
   prefix,
 }) => {
+  const {translate} = useTranslation();
   const style = {
     bgcolor: isGray ? "#d3d3d326" : "background.paper",
     padding: "15px",
@@ -35,22 +37,22 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
   const sexs = [
     {
       id: "male",
-      value: "Male",
+      value: translate("Male"),
     },
     {
       id: "female",
-      value: "Female",
+      value: translate("Female"),
     },
   ];
 
   const phoneTypes = [
     {
       id: "private",
-      value: "Private",
+      value: translate("Private"),
     },
     {
       id: "family",
-      value: "Family",
+      value: translate("Family"),
     },
   ];
 
@@ -74,7 +76,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
-                First Name
+                {translate("First name")}
               </Typography>
             </Box>
             <TextField
@@ -89,7 +91,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 onBlur={handleBlur}
                 error={Boolean(touched[prefix]?.first_name && errors[prefix]?.first_name)}
                 helperText={touched[prefix]?.first_name && errors[prefix]?.first_name}
-                placeholder="First name"
+                placeholder={translate("First name")}
                 fullWidth
             />
           </Box>
@@ -99,7 +101,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
-                Last Name
+                {translate("Last name")}
               </Typography>
             </Box>
             <TextField
@@ -114,7 +116,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 onBlur={handleBlur}
                 error={Boolean(touched[prefix]?.last_name && errors[prefix]?.last_name)}
                 helperText={touched[prefix]?.last_name && errors[prefix]?.last_name}
-                placeholder="Last name"
+                placeholder={translate("Last name")}
                 fullWidth
             />
           </Box>
@@ -124,7 +126,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
-                Gender
+                {translate("Gender")}
               </Typography>
             </Box>
 
@@ -139,7 +141,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 value={values[prefix]?.sex}
                 onChange={handleChange(`${prefix}.sex`)}
                 onBlur={handleBlur}
-                placeholder="Gender"
+                placeholder={translate("Gender")}
                 fullWidth
             >
               {sexs.map((sex) => (
@@ -155,7 +157,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
-                Nationality
+                {translate("Nationality")}
               </Typography>
             </Box>
             <TextField
@@ -172,7 +174,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                     touched[prefix]?.nationality && errors[prefix]?.nationality
                 )}
                 helperText={touched[prefix]?.nationality && errors[prefix]?.nationality}
-                placeholder="nationality"
+                placeholder={translate("Nationality")}
                 fullWidth
             />
           </Box>
@@ -182,7 +184,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
-                National number
+                {translate("National number")}
               </Typography>
             </Box>
             <TextField
@@ -197,7 +199,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 onBlur={handleBlur}
                 error={Boolean(touched[prefix]?.national_number && errors[prefix]?.national_number)}
                 helperText={touched[prefix]?.national_number && errors[prefix]?.national_number}
-                placeholder="National number"
+                placeholder={translate("National number")}
                 fullWidth
             />
           </Box>
@@ -207,7 +209,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
-                Passport First Name
+                {translate("Passport First Name")}
               </Typography>
             </Box>
             <TextField
@@ -226,7 +228,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 helperText={
                   touched[prefix]?.passport_first_name && errors[prefix]?.passport_first_name
                 }
-                placeholder="Passport First Name"
+                placeholder={translate("Passport First Name")}
                 fullWidth
             />
           </Box>
@@ -236,7 +238,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
-                Passport Last Name
+                {translate("Passport Last Name")}
               </Typography>
             </Box>
             <TextField
@@ -255,7 +257,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 helperText={
                   touched[prefix]?.passport_last_name && errors[prefix]?.passport_last_name
                 }
-                placeholder="Passport Last Name"
+                placeholder={translate("Passport Last Name")}
                 fullWidth
             />
           </Box>
@@ -265,7 +267,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
-                Passport Number
+                {translate("Passport Number")}
               </Typography>
             </Box>
             <TextField
@@ -284,7 +286,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                 helperText={
                   touched[prefix]?.passport_number && errors[prefix]?.passport_number
                 }
-                placeholder="Passport number"
+                placeholder={translate("Passport Number")}
                 fullWidth
             />
           </Box>
@@ -295,7 +297,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
       <Box mb={2}>
         <Box mb={1} ml={0.5}>
           <Typography component="label" variant="caption">
-            Phones
+            {translate("Phones")}
           </Typography>
         </Box>
         <FieldArray
@@ -320,7 +322,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                                     onBlur={handleBlur}
                                     error={Boolean(touched[prefix]?.phones && errors[prefix]?.phones)}
                                     helperText={touched[prefix]?.phones && errors[prefix]?.phones}
-                                    placeholder="phone"
+                                    placeholder={translate("Phone")}
                                     //fullWidth
                                 />
                               </Grid>
@@ -376,7 +378,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                           color="success"
                           onClick={() => arrayHelpers.push('')}>
                         {/* show this when user has removed all phones from the list */}
-                        Add a phone
+                        {translate("Add a phone")}
                       </SuiButton>
                         }
                       </React.Fragment>

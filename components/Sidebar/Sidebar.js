@@ -30,7 +30,7 @@ import {
 
 export default function Sidebar(props) {
   // used for checking current route
-  
+
   const _collapseMenu = useAppSelector(selectCollapseMenu);
   const dispatchMenu = useAppDispatch();
 
@@ -106,11 +106,10 @@ export default function Sidebar(props) {
   var brand = (
     <div className={classes.logo} style={{ padding: "1rem", display: "flex" }}>
       <a
-        href="https://www.creative-tim.com?ref=njsmd-sidebar"
+        href="/"
         className={classNames(classes.logoLink, {
           [classes.logoLinkRTL]: props.rtlActive,
         })}
-        target="_blank"
       >
         <div className={classes.logoImage}>
           <img src={logo} alt="logo" className={classes.img} />

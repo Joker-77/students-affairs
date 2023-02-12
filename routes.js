@@ -6,13 +6,14 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
+
 const dashboardRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
     rtlName: "لوحة التحكم",
     icon: Dashboard,
-    layout: "/students_affairs",
+    layout: `/students_affairs`,
   },
   {
     path: "/affairs_officer/candidates/candidates-list",

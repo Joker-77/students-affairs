@@ -29,7 +29,6 @@ export default function Header(props) {
       if (router.route.indexOf(prop.layout + prop.path) !== -1) {
         name = props.rtlActive ? prop.rtlName : prop.name;
       }
-      console.log('Route: ', router);
       // else if(router.route.indexOf(prop.candidate) !== -1) {
       //   name = 'Candidates > ' + prop.candidate + ' > ' + prop.name;
       // }

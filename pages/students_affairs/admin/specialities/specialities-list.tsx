@@ -11,8 +11,10 @@ import Placeholder from "../../../../Utility/Placeholders";
 import SpecialityService from "../../../../Services/SpecialityService";
 import AddSpecialityModal from "../../../../components/Modals/AddSpecialityModal";
 import * as Yup from "yup";
+import {useTranslation} from "../../../../Utility/Translations/useTranslation";
 interface ISpecialityListProps {}
 const SpecialityList: React.FC<ISpecialityListProps> = ({}) => {
+  const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
@@ -31,14 +33,14 @@ const SpecialityList: React.FC<ISpecialityListProps> = ({}) => {
     code: ""
   });
   const AddSpecialityScheme = Yup.object().shape({
-    ar_name: Yup.string().required("English name is required"),
-    en_name: Yup.string().required("Arabic name is required"),
-    code: Yup.string().required("Code is required"),
+    en_name: Yup.string().required(translate("{0} is required", "English Name")),
+    ar_name: Yup.string().required(translate("{0} is required","Arabic Name")),
+    code: Yup.string().required(translate("{0} is required","Code")),
   });
   const UpdateSpecialityScheme = Yup.object().shape({
-    ar_name: Yup.string().required("English name is required"),
-    en_name: Yup.string().required("Arabic name is required"),
-    code: Yup.string().required("Code is required"),
+    en_name: Yup.string().required(translate("{0} is required", "English Name")),
+    ar_name: Yup.string().required(translate("{0} is required","Arabic Name")),
+    code: Yup.string().required(translate("{0} is required","Code")),
   });
   const submitAddSpeciality = async (values: any, setSubmitting) => {
     setSubmitting(true);
@@ -126,20 +128,20 @@ const SpecialityList: React.FC<ISpecialityListProps> = ({}) => {
     if (Speciality != null && Speciality.length > 0) {
       let columns = [
         {
-          title: "Id",
+          title: translate("Id"),
           field: "id",
           hidden: true,
         },
         {
-          title: "Arabic Name",
+          title: translate("Arabic Name"),
           field: "ar_name",
         },
         {
-          title: "English Name",
+          title: translate("English Name"),
           field: "en_name",
         },
         {
-          title: "Code",
+          title: translate("Code"),
           field: "code",
         },
       ];
@@ -156,18 +158,18 @@ const SpecialityList: React.FC<ISpecialityListProps> = ({}) => {
       };
       return (
         <ActionTable
-          Title="Speciality List"
+          Title={translate("Speciality List")}
           Columns={columns}
           Data={data}
           Options={options}
           Actions={[
             {
-              tooltip: "Speciality Details",
+              tooltip: translate("Speciality Details"),
               icon: "details",
               onClick: (evt, data) => handleDetails(data),
             },
             {
-              tooltip: "Edit Speciality",
+              tooltip: translate("Edit Speciality"),
               icon: "edit",
               onClick: (evt, data) => handleOpenUpdateSpeciality(data),
             },
@@ -185,14 +187,14 @@ const SpecialityList: React.FC<ISpecialityListProps> = ({}) => {
           className={classes.submitBtn}
           onClick={handleOpen}
         >
-          {"Add New Speciality"}
+          {translate("Add New Speciality")}
         </Button>
         {renderSpeciality()}
       </GridItem>
       <AddSpecialityModal
         disabled={disabled}
         key={"addSpeciality"}
-        title={"Add Speciality"}
+        title={translate("Add Speciality")}
         open={open}
         formScheme={AddSpecialityScheme}
         handleClose={handleClose}
@@ -202,7 +204,7 @@ const SpecialityList: React.FC<ISpecialityListProps> = ({}) => {
       <AddSpecialityModal
         disabled={disabled}
         key={"updateSpeciality"}
-        title={!openModalForDetails ? "Update Speciality" : "Speciality Details"}
+        title={!openModalForDetails ? translate("Update Speciality") : translate("Speciality Details")}
         open={openUpdateSpeciality}
         formScheme={UpdateSpecialityScheme}
         handleClose={handleCloseUpdateSpeciality}

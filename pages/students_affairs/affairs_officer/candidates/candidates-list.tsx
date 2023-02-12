@@ -14,9 +14,11 @@ import CandidateService from "../../../../Services/CandidateService";
 import AddCandidateModal from "../../../../components/Modals/AddCandidateModal";
 import * as Yup from "yup";
 import { useRouter } from 'next/router';
+import {useTranslation} from "../../../../Utility/Translations/useTranslation";
 
 interface ICandidatesListProps {}
 const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
+  const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
@@ -76,36 +78,36 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
   });
 
   const PersonScheme = Yup.object().shape({
-    first_name: Yup.string().required("First name is required"),
-    last_name: Yup.string().required("Last name is required"),
-    passport_first_name: Yup.string().required("Passport first name is required"),
-    passport_last_name: Yup.string().required("Passport Last name is required"),
-    passport_number: Yup.string().required("Passport number is required"),
-    national_number: Yup.string().required("National number is required"),
-    sex: Yup.string().required("Gender is required"),
-    nationality: Yup.string().required("Nationality is required"),
+    first_name: Yup.string().required(translate("{0} is required", "First name")),
+    last_name: Yup.string().required(translate("{0} is required", "Last name")),
+    passport_first_name: Yup.string().required(translate("{0} is required", "Passport First Name")),
+    passport_last_name: Yup.string().required(translate("{0} is required", "Passport Last Name")),
+    passport_number: Yup.string().required(translate("{0} is required", "Passport Number")),
+    national_number: Yup.string().required(translate("{0} is required", "National number")),
+    sex: Yup.string().required(translate("{0} is required", "Gender")),
+    nationality: Yup.string().required(translate("{0} is required", "Nationality")),
   });
 
   const AddCandidateScheme = Yup.object().shape({
-    registeration_number: Yup.string().required("Registeration number is required"),
-    birth_date: Yup.string().required("Birth date is required"),
-    birth_place: Yup.string().required("Birth place is required"),
-    qaid_place: Yup.string().required("QAID place is required"),
-    qaid_number: Yup.string().required("QAID number is required"),
-    military_office: Yup.string().required("Military office is required"),
+    registeration_number: Yup.string().required(translate("{0} is required", "Registeration number")),
+    birth_date: Yup.string().required(translate("{0} is required", "Birth date")),
+    birth_place: Yup.string().required(translate("{0} is required", "Birth place")),
+    qaid_place: Yup.string().required(translate("{0} is required", "QAID place")),
+    qaid_number: Yup.string().required(translate("{0} is required", "QAID number")),
+    military_office: Yup.string().required(translate("{0} is required", "Military office")),
     father: PersonScheme,
     mother: PersonScheme,
     person: PersonScheme,
   });
   const UpdateCandidateScheme = Yup.object().shape({
-    first_name: Yup.string().required("First name is required"),
-    last_name: Yup.string().required("Last name is required"),
-    passport_first_name: Yup.string().required("Passport first name is required"),
-    passport_last_name: Yup.string().required("Passport Last name is required"),
-    passport_number: Yup.string().required("Passport number is required"),
-    national_number: Yup.string().required("National number is required"),
-    sex: Yup.string().required("Gender is required"),
-    nationality: Yup.string().required("Nationality is required"),
+    first_name: Yup.string().required(translate("{0} is required", "First name")),
+    last_name: Yup.string().required(translate("{0} is required", "Last name")),
+    passport_first_name: Yup.string().required(translate("{0} is required", "Passport First Name")),
+    passport_last_name: Yup.string().required(translate("{0} is required", "Passport Last Name")),
+    passport_number: Yup.string().required(translate("{0} is required", "Passport Number")),
+    national_number: Yup.string().required(translate("{0} is required", "National number")),
+    sex: Yup.string().required(translate("{0} is required", "Gender")),
+    nationality: Yup.string().required(translate("{0} is required", "Nationality")),
   });
   const submitAddCandidate = async (values: any, setSubmitting) => {
     setSubmitting(true);
@@ -230,34 +232,26 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
     if (Candidates != null && Candidates.length > 0) {
       let columns = [
         {
-          title: "Id",
+          title: translate("Id"),
           field: "id",
           hidden: true,
         },
         {
-          title: "First name",
+          title: translate("First name"),
           field: "person.first_name",
         },
         {
-          title: "Last name",
+          title: translate("Last name"),
           field: "person.last_name",
         },
         {
-          title: "Registeration number",
+          title: translate("Registeration number"),
           field: "registeration_number",
         },
         {
-          title: "Birth place",
+          title: translate("Birth place"),
           field: "birth_place",
         },
-        // {
-        //   title: "QAID place",
-        //   field: "qaid_place",
-        // },
-        // {
-        //   title: "QAID number",
-        //   field: "qaid_number",
-        // }
       ];
       let data = Candidates;
       let options = {
@@ -273,28 +267,28 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
       };
       return (
         <ActionTable
-          Title="Candidates List"
+          Title={translate("Candidates List")}
           Columns={columns}
           Data={data}
           Options={options}
           Actions={[
             {
-              tooltip: "Certificates",
+              tooltip: translate("Certificates"),
               icon: "collectionsBookmark",
-              onClick: (evt, data) => router.push(`/students_affairs/affairs_officer/candidates/certificates-list?id=${data.id}`),
+              onClick: (evt, data) => router.push(`/${router.locale}/students_affairs/affairs_officer/candidates/certificates-list?id=${data.id}`),
             },
             {
-              tooltip: "Desires",
+              tooltip: translate("Desires"),
               icon: "stars",
-              onClick: (evt, data) => router.push(`/students_affairs/affairs_officer/candidates/desires-list?id=${data.id}`),
+              onClick: (evt, data) => router.push(`/${router.locale}/students_affairs/affairs_officer/candidates/desires-list?id=${data.id}`),
             },
             {
-              tooltip: "Registration Desires",
+              tooltip: translate("Registration Desires"),
               icon: "star",
-              onClick: (evt, data) => router.push(`/students_affairs/affairs_officer/candidates/registration-desires-list?id=${data.id}`),
+              onClick: (evt, data) => router.push(`/${router.locale}/students_affairs/affairs_officer/candidates/registration-desires-list?id=${data.id}`),
             },
             {
-              tooltip: "Candidate Details",
+              tooltip: translate("Candidate Details"),
               icon: "details",
               onClick: (evt, data) => handleDetails(data),
             },
@@ -332,14 +326,14 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
           className={classes.submitBtn}
           onClick={handleOpen}
         >
-          {"Add New Candidate"}
+          {translate("Add New Candidate")}
         </Button>
         {renderCandidates()}
       </GridItem>
       <AddCandidateModal
         disabled={disabled}
         key={"addCandidate"}
-        title={"Add Candidate"}
+        title={translate("Add Candidate")}
         open={open}
         formScheme={AddCandidateScheme}
         handleClose={handleClose}
@@ -349,7 +343,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
       <AddCandidateModal
         disabled={disabled}
         key={"updateCandidate"}
-        title={!openModalForDetails ? "Update Candidate" : "Candidate Details"}
+        title={!openModalForDetails ? translate("Update Candidate") : translate("Candidate Details")}
         open={openUpdateCandidate}
         formScheme={UpdateCandidateScheme}
         handleClose={handleCloseUpdateCandidate}

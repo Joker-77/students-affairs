@@ -13,9 +13,11 @@ import AddRegistrationDesireModal from "../../../../components/Modals/AddRegistr
 import * as Yup from "yup";
 import {useRouter} from "next/router";
 import DesireService from "../../../../Services/DesireService";
+import {useTranslation} from "../../../../Utility/Translations/useTranslation";
 
 interface IRegistrationDesireListProps {}
 const RegistrationDesireList: React.FC<IRegistrationDesireListProps> = ({}) => {
+  const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
@@ -37,14 +39,14 @@ const RegistrationDesireList: React.FC<IRegistrationDesireListProps> = ({}) => {
     candidate_id: +candidateId
   });
   const AddRegistrationDesireScheme = Yup.object().shape({
-    order: Yup.string().required("Order is required"),
-    desire: Yup.string().required("Desire is required"),
-    candidate_id: Yup.string().required("Candidate is required"),
+    order: Yup.string().required(translate("{0} is required", "Order")),
+    desire: Yup.string().required(translate("{0} is required", "Desire")),
+    candidate_id: Yup.string().required(translate("{0} is required", "Candidate")),
   });
   const UpdateRegistrationDesireScheme = Yup.object().shape({
-    desire: Yup.string().required("Order is required"),
-    order: Yup.string().required("Desire is required"),
-    candidate_id: Yup.string().required("Candidate is required"),
+    order: Yup.string().required(translate("{0} is required", "Order")),
+    desire: Yup.string().required(translate("{0} is required", "Desire")),
+    candidate_id: Yup.string().required(translate("{0} is required", "Candidate")),
   });
   const submitAddRegistrationDesire = async (values: any, setSubmitting) => {
     setSubmitting(true);
@@ -132,16 +134,17 @@ const RegistrationDesireList: React.FC<IRegistrationDesireListProps> = ({}) => {
     if (RegistrationDesires != null && RegistrationDesires.length > 0) {
       let columns = [
         {
-          title: "Id",
+          title: translate("Id"),
           field: "id",
           hidden: true,
         },
         {
-          title: "Desire",
+          title: translate("Desire"),
           field: "desire",
+          render: rowData => translate(rowData.desire)
         },
         {
-          title: "Order",
+          title: translate("Order"),
           field: "order",
         },
         // {
@@ -162,18 +165,18 @@ const RegistrationDesireList: React.FC<IRegistrationDesireListProps> = ({}) => {
       };
       return (
         <ActionTable
-          Title="RegistrationDesire List"
+          Title={translate("Registration Desire List")}
           Columns={columns}
           Data={data}
           Options={options}
           Actions={[
             {
-              tooltip: "RegistrationDesire Details",
+              tooltip: translate("Registration Desire Details"),
               icon: "details",
               onClick: (evt, data) => handleDetails(data),
             },
             {
-              tooltip: "Edit RegistrationDesire",
+              tooltip: translate("Edit Registration Desire"),
               icon: "edit",
               onClick: (evt, data) => handleOpenUpdateRegistrationDesire(data),
             },
@@ -191,14 +194,14 @@ const RegistrationDesireList: React.FC<IRegistrationDesireListProps> = ({}) => {
           className={classes.submitBtn}
           onClick={handleOpen}
         >
-          {"Add New Registration Desire"}
+          {translate("Add New Registration Desire")}
         </Button>
         {renderRegistrationDesire()}
       </GridItem>
       <AddRegistrationDesireModal
         disabled={disabled}
-        key={"addRegistrationDesire"}
-        title={"Add RegistrationDesire"}
+        key={"addRegistration Desire"}
+        title={translate("Add Registration Desire")}
         open={open}
         formScheme={AddRegistrationDesireScheme}
         handleClose={handleClose}
@@ -208,7 +211,7 @@ const RegistrationDesireList: React.FC<IRegistrationDesireListProps> = ({}) => {
       <AddRegistrationDesireModal
         disabled={disabled}
         key={"updateRegistrationDesire"}
-        title={!openModalForDetails ? "Update RegistrationDesire" : "RegistrationDesire Details"}
+        title={!openModalForDetails ? translate("Update Registration Desire") : translate("Registration Desire Details")}
         open={openUpdateRegistrationDesire}
         formScheme={UpdateRegistrationDesireScheme}
         handleClose={handleCloseUpdateRegistrationDesire}

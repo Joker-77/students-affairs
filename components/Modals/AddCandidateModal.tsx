@@ -18,6 +18,8 @@ import CardBody from "../Card/CardBody.js";
 import SuiButton from "../SuiButton";
 import { ICandidateModel } from "../../Models/ApiResponse/CandidateModel.jsx";
 import PersonInfoPartialForm from "./PersonInfoPartialForm";
+import {useRouter} from "next/router";
+import {useTranslation} from "../../Utility/Translations/useTranslation";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -37,6 +39,9 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
   formScheme,
   handleClose,
 }) => {
+  const {locale} = useRouter();
+  const {translate} = useTranslation();
+
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -66,6 +71,7 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
       overflowY: "scroll",
       overflowX: "hidden",
       height: "95%",
+      direction: locale === 'ar' ? "rtl" : "ltr",
     },
     header: {
       height: "5em",
@@ -90,12 +96,12 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
               <Grid md={8}>
                 <h4 style={{ fontWeight: "bold" }}>{title} </h4>
               </Grid>
-              <Grid md={4}>
+              <Grid md={4} style={{display: 'flex'}}>
                 <IconButton
                   style={{
                     position: "absolute",
-                    right: "2em",
                     top: "1em",
+                    [locale === 'ar' ? 'left' : 'right']: "2em",
                   }}
                   onClick={handleClose}
                 >
@@ -132,7 +138,7 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                        Registeration number
+                          {translate("Registeration number")}
                         </Typography>
                       </Box>
                       <TextField
@@ -147,14 +153,14 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                         onBlur={handleBlur}
                         error={Boolean(touched.registeration_number && errors.registeration_number)}
                         helperText={touched.registeration_number && errors.registeration_number}
-                        placeholder="Registeration number"
+                        placeholder={translate("Registeration number")}
                         fullWidth
                       />
                     </Box>
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                        Birth date
+                          {translate("Birth date")}
                         </Typography>
                       </Box>
                       <TextField
@@ -169,14 +175,14 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                         onBlur={handleBlur}
                         error={Boolean(touched.birth_date && errors.birth_date)}
                         helperText={touched.birth_date && errors.birth_date}
-                        placeholder="Birth date"
+                        placeholder={translate("Birth date")}
                         fullWidth
                       />
                     </Box>
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                        Birth place
+                          {translate("Birth place")}
                         </Typography>
                       </Box>
                       <TextField
@@ -193,14 +199,14 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                           touched.birth_place && errors.birth_place
                         )}
                         helperText={touched.birth_place && errors.birth_place}
-                        placeholder="Birth place"
+                        placeholder={translate("Birth place")}
                         fullWidth
                       />
                     </Box>
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                        AQID place
+                          {translate("QAID place")}
                         </Typography>
                       </Box>
                       <TextField
@@ -215,14 +221,14 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                         onBlur={handleBlur}
                         error={Boolean(touched.qaid_place && errors.qaid_place)}
                         helperText={touched.qaid_place && errors.qaid_place}
-                        placeholder="AQID place"
+                        placeholder={translate("QAID place")}
                         fullWidth
                       />
                     </Box>
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                        QAID number
+                          {translate("QAID number")}
                         </Typography>
                       </Box>
                       <TextField
@@ -241,14 +247,14 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                         helperText={
                           touched.qaid_number && errors.qaid_number
                         }
-                        placeholder="QAID number"
+                        placeholder={translate("QAID number")}
                         fullWidth
                       />
                     </Box>
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                        Military office
+                          {translate("Military office")}
                         </Typography>
                       </Box>
                       <TextField
@@ -267,13 +273,13 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                         helperText={
                           touched.military_office && errors.military_office
                         }
-                        placeholder="Military office"
+                        placeholder={translate("Military office")}
                         fullWidth
                       />
                     </Box>
 
-                    <PersonInfoPartialForm prefix={"father"} title={'Father'} formik={formik} disabled={disabled} isGray/>
-                    <PersonInfoPartialForm prefix={"mother"} title={'Mother'} formik={formik} disabled={disabled} isGray/>
+                    <PersonInfoPartialForm prefix={"father"} title={translate("Father")} formik={formik} disabled={disabled} isGray/>
+                    <PersonInfoPartialForm prefix={"mother"} title={translate("Mother")} formik={formik} disabled={disabled} isGray/>
 
                     <Box mt={4} mb={1}>
                       {isSubmitting ? (
@@ -283,17 +289,17 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                           color="info"
                           fullWidth
                         >
-                          Processing ...
+                          {translate("Processing ...")}
                         </SuiButton>
                       ) : (
                         <SuiButton
-                          // disabled={!(dirty && isValid)}
+                          disabled={!(dirty && isValid)}
                           type="submit"
                           variant="gradient"
                           color="info"
                           fullWidth
                         >
-                          Save
+                          {translate("Save")}
                         </SuiButton>
                       )}
                     </Box>

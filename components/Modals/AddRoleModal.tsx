@@ -6,6 +6,8 @@ import Card from "../Card/Card.js";
 import CardHeader from "../Card/CardHeader.js";
 import CardBody from "../Card/CardBody.js";
 import SuiButton from "../SuiButton";
+import {useRouter} from "next/router";
+import {useTranslation} from "../../Utility/Translations/useTranslation";
 
 interface ICusomModalProps {
   title: string;
@@ -23,6 +25,9 @@ const AddRoleModal: React.FC<ICusomModalProps> = ({
   formScheme,
   handleClose,
 }) => {
+  const {locale} = useRouter();
+  const {translate} = useTranslation();
+
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -64,9 +69,7 @@ const AddRoleModal: React.FC<ICusomModalProps> = ({
               backgroundColor: "#A69577",
             }}
           >
-            <center>
-              <h4 style={{ fontWeight: "bold" }}>{title}</h4>
-            </center>
+            <h4 style={{ fontWeight: "bold" }}>{title}</h4>
           </CardHeader>
           <CardBody>
             <Formik

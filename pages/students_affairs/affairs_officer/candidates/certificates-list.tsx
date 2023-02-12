@@ -12,9 +12,11 @@ import CertificateService from "../../../../Services/CertificateService";
 import AddCertificateModal from "../../../../components/Modals/AddCertificateModal";
 import * as Yup from "yup";
 import {useRouter} from "next/router";
+import {useTranslation} from "../../../../Utility/Translations/useTranslation";
 
 interface ICertificateListProps {}
 const CertificateList: React.FC<ICertificateListProps> = ({}) => {
+  const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
@@ -41,22 +43,22 @@ const CertificateList: React.FC<ICertificateListProps> = ({}) => {
     candidate_id: +candidateId
   });
   const AddCertificateScheme = Yup.object().shape({
-    type: Yup.string().required("Type is required"),
-    year: Yup.string().required("Year is required"),
-    result: Yup.string().required("Result is required"),
-    city: Yup.string().required("City is required"),
-    round: Yup.string().required("Round is required"),
-    subscription_number: Yup.string().required("Subscription number is required"),
-    candidate_id: Yup.string().required("Candidate is required"),
+    type: Yup.string().required(translate("{0} is required", "Type")),
+    year: Yup.string().required(translate("{0} is required", "Year")),
+    result: Yup.string().required(translate("{0} is required", "Result")),
+    city: Yup.string().required(translate("{0} is required", "City")),
+    round: Yup.string().required(translate("{0} is required", "Round")),
+    subscription_number: Yup.string().required(translate("{0} is required", "Subscription number")),
+    candidate_id: Yup.string().required(translate("{0} is required", "Candidate")),
   });
   const UpdateCertificateScheme = Yup.object().shape({
-    type: Yup.string().required("Type is required"),
-    year: Yup.string().required("Year is required"),
-    result: Yup.string().required("Result is required"),
-    city: Yup.string().required("City is required"),
-    round: Yup.string().required("Round is required"),
-    subscription_number: Yup.string().required("Subscription number is required"),
-    candidate_id: Yup.string().required("Candidate is required"),
+    type: Yup.string().required(translate("{0} is required", "Type")),
+    year: Yup.string().required(translate("{0} is required", "Year")),
+    result: Yup.string().required(translate("{0} is required", "Result")),
+    city: Yup.string().required(translate("{0} is required", "City")),
+    round: Yup.string().required(translate("{0} is required", "Round")),
+    subscription_number: Yup.string().required(translate("{0} is required", "Subscription number")),
+    candidate_id: Yup.string().required(translate("{0} is required", "Candidate")),
   });
   const submitAddCertificate = async (values: any, setSubmitting) => {
     setSubmitting(true);
@@ -154,32 +156,32 @@ const CertificateList: React.FC<ICertificateListProps> = ({}) => {
     if (Certificates != null && Certificates.length > 0) {
       let columns = [
         {
-          title: "Id",
+          title: translate("Id"),
           field: "id",
           hidden: true,
         },
         {
-          title: "Type",
+          title: translate("Type"),
           field: "type",
         },
         {
-          title: "Year",
+          title: translate("Year"),
           field: "year",
         },
         {
-          title: "Result",
+          title: translate("Result"),
           field: "result",
         },
         {
-          title: "City",
+          title: translate("City"),
           field: "city",
         },
         {
-          title: "Round",
+          title: translate("Round"),
           field: "round",
         },
         {
-          title: "Subscription Number",
+          title: translate("Subscription number"),
           field: "subscription_number",
         },
       ];
@@ -196,18 +198,18 @@ const CertificateList: React.FC<ICertificateListProps> = ({}) => {
       };
       return (
         <ActionTable
-          Title="Certificate List"
+          Title={translate("Certificate List")}
           Columns={columns}
           Data={data}
           Options={options}
           Actions={[
             {
-              tooltip: "Certificate Details",
+              tooltip: translate("Certificate Details"),
               icon: "details",
               onClick: (evt, data) => handleDetails(data),
             },
             // {
-            //   tooltip: "Edit Certificate",
+            //   tooltip: translate("Edit Certificate"),
             //   icon: "edit",
             //   onClick: (evt, data) => handleOpenUpdateCertificate(data),
             // },
@@ -225,14 +227,14 @@ const CertificateList: React.FC<ICertificateListProps> = ({}) => {
           className={classes.submitBtn}
           onClick={handleOpen}
         >
-          {"Add New Certificates"}
+          {translate("Add New Certificate")}
         </Button>
         {renderCertificate()}
       </GridItem>
       <AddCertificateModal
         disabled={disabled}
         key={"addCertificate"}
-        title={"Add Certificate"}
+        title={translate("Add Certificate")}
         open={open}
         formScheme={AddCertificateScheme}
         handleClose={handleClose}
@@ -242,7 +244,7 @@ const CertificateList: React.FC<ICertificateListProps> = ({}) => {
       <AddCertificateModal
         disabled={disabled}
         key={"updateCertificate"}
-        title={!openModalForDetails ? "Update Certificate" : "Certificate Details"}
+        title={!openModalForDetails ? translate("Update Certificate") : translate("Certificate Details")}
         open={openUpdateCertificate}
         formScheme={UpdateCertificateScheme}
         handleClose={handleCloseUpdateCertificate}

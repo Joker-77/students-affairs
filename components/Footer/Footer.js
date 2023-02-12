@@ -7,8 +7,10 @@ import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/footerStyle.js";
+import {useTranslation} from "../../Utility/Translations/useTranslation";
 
 export default function Footer(props) {
+  const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   return (
@@ -48,7 +50,7 @@ export default function Footer(props) {
             >
               Hiast
             </a>
-            , made with love for a better web
+            , {translate('Copyrights')}
           </span>
         </p>
       </div>

@@ -17,6 +17,8 @@ import CardHeader from "../Card/CardHeader.js";
 import CardBody from "../Card/CardBody.js";
 import SuiButton from "../SuiButton";
 import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
+import {useRouter} from "next/router";
+import {useTranslation} from "../../Utility/Translations/useTranslation";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -37,6 +39,9 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
   handleClose,
   specialities,
 }) => {
+  const {locale} = useRouter();
+  const {translate} = useTranslation();
+
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -67,6 +72,7 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
       overflowY: "scroll",
       overflowX: "hidden",
       height: "75%",
+      direction: locale === 'ar' ? "rtl" : "ltr",
     },
     header: {
       height: "5em",
@@ -88,16 +94,14 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
           <CardHeader style={styles.header}>
             <Grid container>
               <Grid md={8}>
-                <center>
-                  <h4 style={{ fontWeight: "bold" }}>{title} </h4>
-                </center>
+                <h4 style={{ fontWeight: "bold" }}>{title} </h4>
               </Grid>
               <Grid md={4}>
                 <IconButton
                   style={{
                     position: "absolute",
-                    right: "2em",
                     top: "1em",
+                    [locale === 'ar' ? 'left' : 'right']: "2em",
                   }}
                   onClick={handleClose}
                 >
@@ -131,7 +135,7 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                          Order
+                          {translate("Order")}
                         </Typography>
                       </Box>
                       <TextField
@@ -147,14 +151,14 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
                         onBlur={handleBlur}
                         error={Boolean(touched.order && errors.order)}
                         helperText={touched.order && errors.order}
-                        placeholder="Order"
+                        placeholder={translate("Order")}
                         fullWidth
                       />
                     </Box>
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                          Speciality
+                          {translate("Speciality")}
                         </Typography>
                       </Box>
                       <TextField
@@ -168,12 +172,12 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
                           value={values.speciality_id}
                           onChange={handleChange(`speciality_id`)}
                           onBlur={handleBlur}
-                          placeholder="Speciality"
+                          placeholder={translate("Speciality")}
                           fullWidth
                       >
                         {specialities.map((speciality) => (
                             <MenuItem key={speciality.id} value={speciality.id}>
-                              {speciality.en_name}
+                              {locale === 'ar' ? speciality.ar_name : speciality.en_name}
                             </MenuItem>
                         ))}
                       </TextField>
@@ -187,7 +191,7 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
                           color="info"
                           fullWidth
                         >
-                          Processing ...
+                          {translate('Processing ...')}
                         </SuiButton>
                       ) : (
                         <SuiButton
@@ -197,7 +201,7 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
                           color="info"
                           fullWidth
                         >
-                          Save
+                          {translate("Save")}
                         </SuiButton>
                       )}
                     </Box>

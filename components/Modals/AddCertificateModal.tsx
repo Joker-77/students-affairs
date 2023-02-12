@@ -16,6 +16,8 @@ import CardHeader from "../Card/CardHeader.js";
 import CardBody from "../Card/CardBody.js";
 import SuiButton from "../SuiButton";
 import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
+import {useRouter} from "next/router";
+import {useTranslation} from "../../Utility/Translations/useTranslation";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -35,6 +37,9 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                                            formScheme,
                                                            handleClose,
                                                          }) => {
+  const {locale} = useRouter();
+  const {translate} = useTranslation();
+
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -65,6 +70,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
       overflowY: "scroll",
       overflowX: "hidden",
       height: "85%",
+      direction: locale === 'ar' ? "rtl" : "ltr",
     },
     header: {
       height: "5em",
@@ -78,82 +84,82 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
   const courses = [
     {
       id: 'Math',
-      value: 'Math',
+      value: translate('Math'),
     },
     {
       id: 'Physics',
-      value: 'Physics',
+      value: translate('Physics'),
     },
     {
       id: 'English',
-      value: 'English',
+      value: translate('English'),
     },
     {
       id: 'Arabic',
-      value: 'Arabic',
+      value: translate('Arabic'),
     },
     {
       id: 'Chemistry',
-      value: 'Chemistry',
+      value: translate('Chemistry'),
     },
   ];
 
   const cities = [
     {
       id: 'Damascus',
-      value: 'Damascus',
+      value: translate('Damascus'),
     },
     {
       id: 'Homs',
-      value: 'Homs',
+      value: translate('Homs'),
     },
     {
       id: 'Hama',
-      value: 'Hama',
+      value: translate('Hama'),
     },
     {
       id: 'Idleb',
-      value: 'Idleb',
+      value: translate('Idleb'),
     },
     {
       id: 'Aleppo',
-      value: 'Aleppo',
+      value: translate('Aleppo'),
     },
     {
       id: 'Latakia',
-      value: 'Latakia',
+      value: translate('Latakia'),
     },
     {
       id: 'Tartus',
-      value: 'Tartus',
+      value: translate('Tartus'),
     },
     {
       id: 'Dir Al-Zour',
-      value: 'Dir Al-Zour',
+      value: translate('Dir Al-Zour'),
     },
     {
       id: 'Al-Raqa',
-      value: 'Al-Raqa',
+      value: translate('Al-Raqa'),
     },
     {
       id: 'Al-Hasaqa',
-      value: 'Al-Hasaqa',
+      value: translate('Al-Hasaqa'),
     },
     {
       id: 'Al-Qonaitra',
-      value: 'Al-Qonaitra',
+      value: translate('Al-Qonaitra'),
     },
     {
       id: 'Al-Qamshli',
-      value: 'Al-Qamshli',
+      value: translate('Al-Qamshli'),
     },
     {
-      id: 'Al-Daraa',
-      value: 'Al-Daraa',
+      id: 'Daraa',
+      value: translate('Daraa'),
     },
     {
       id: 'Al-Sweedaa',
-      value: 'Al-Sweedaa',
+      value: translate('Al-Sweedaa'),
     },
   ];
 
@@ -169,16 +175,14 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
             <CardHeader style={styles.header}>
               <Grid container>
                 <Grid md={8}>
-                  <center>
-                    <h4 style={{ fontWeight: "bold" }}>{title} </h4>
-                  </center>
+                  <h4 style={{ fontWeight: "bold" }}>{title} </h4>
                 </Grid>
                 <Grid md={4}>
                   <IconButton
                       style={{
                         position: "absolute",
-                        right: "2em",
                         top: "1em",
+                        [locale === 'ar' ? 'left' : 'right']: "2em",
                       }}
                       onClick={handleClose}
                   >
@@ -217,7 +221,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                             <Box mb={2}>
                               <Box mb={1} ml={0.5}>
                                 <Typography component="label" variant="caption">
-                                  Type
+                                  {translate("Type")}
                                 </Typography>
                               </Box>
                               <TextField
@@ -232,7 +236,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                   onBlur={handleBlur}
                                   error={Boolean(touched.type && errors.type)}
                                   helperText={touched.type && errors.type}
-                                  placeholder="Type"
+                                  placeholder={translate("Type")}
                                   fullWidth
                               />
                             </Box>
@@ -241,7 +245,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                             <Box mb={2}>
                               <Box mb={1} ml={0.5}>
                                 <Typography component="label" variant="caption">
-                                  Year
+                                  {translate("Year")}
                                 </Typography>
                               </Box>
                               <TextField
@@ -257,7 +261,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                   onBlur={handleBlur}
                                   error={Boolean(touched.year && errors.year)}
                                   helperText={touched.year && errors.year}
-                                  placeholder="Year"
+                                  placeholder={translate("Year")}
                                   fullWidth
                               />
                             </Box>
@@ -266,7 +270,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                             <Box mb={2}>
                               <Box mb={1} ml={0.5}>
                                 <Typography component="label" variant="caption">
-                                  Result
+                                  {translate("Result")}
                                 </Typography>
                               </Box>
                               <TextField
@@ -282,7 +286,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                   onBlur={handleBlur}
                                   error={Boolean(touched.result && errors.result)}
                                   helperText={touched.result && errors.result}
-                                  placeholder="Result"
+                                  placeholder={translate("Result")}
                                   fullWidth
                               />
                             </Box>
@@ -291,7 +295,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                             <Box mb={2}>
                               <Box mb={1} ml={0.5}>
                                 <Typography component="label" variant="caption">
-                                  City
+                                  {translate("City")}
                                 </Typography>
                               </Box>
                               <TextField
@@ -305,7 +309,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                   value={values.city}
                                   onChange={handleChange(`city`)}
                                   onBlur={handleBlur}
-                                  placeholder="City"
+                                  placeholder={translate("City")}
                                   fullWidth
                               >
                                 {cities.map((city) => (
@@ -320,7 +324,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                             <Box mb={2}>
                               <Box mb={1} ml={0.5}>
                                 <Typography component="label" variant="caption">
-                                  Round
+                                  {translate("Round")}
                                 </Typography>
                               </Box>
                               <TextField
@@ -335,7 +339,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                   onBlur={handleBlur}
                                   error={Boolean(touched.round && errors.round)}
                                   helperText={touched.round && errors.round}
-                                  placeholder="Round"
+                                  placeholder={translate("Round")}
                                   fullWidth
                               />
                             </Box>
@@ -344,7 +348,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                             <Box mb={2}>
                               <Box mb={1} ml={0.5}>
                                 <Typography component="label" variant="caption">
-                                  Subscription Number
+                                  {translate("Subscription number")}
                                 </Typography>
                               </Box>
                               <TextField
@@ -360,7 +364,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                   onBlur={handleBlur}
                                   error={Boolean(touched.subscription_number && errors.subscription_number)}
                                   helperText={touched.subscription_number && errors.subscription_number}
-                                  placeholder="Subscription Number"
+                                  placeholder={translate("Subscription number")}
                                   fullWidth
                               />
                             </Box>
@@ -369,7 +373,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                         <Box mb={2}>
                           <Box mb={1} ml={0.5}>
                             <Typography component="label" variant="caption">
-                              Marks
+                              {translate("Marks")}
                             </Typography>
                           </Box>
                           <FieldArray
@@ -393,7 +397,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                                       value={values.details[index].key}
                                                       onChange={handleChange(`details.${index}.key`)}
                                                       onBlur={handleBlur}
-                                                      placeholder="Course"
+                                                      placeholder={translate("Course")}
                                                       fullWidth
                                                   >
                                                     {courses.map((type) => (
@@ -418,7 +422,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                                       onBlur={handleBlur}
                                                       error={Boolean(touched?.details && errors?.details)}
                                                       helperText={touched?.details && errors?.details}
-                                                      placeholder="Mark"
+                                                      placeholder={translate("Mark")}
                                                       //fullWidth
                                                   />
                                                 </Grid>
@@ -451,7 +455,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                               color="success"
                                               onClick={() => arrayHelpers.push('')}>
                                             {/* show this when user has removed all phones from the list */}
-                                            Add a mark
+                                            {translate("Add a mark")}
                                           </SuiButton>}
                                         </React.Fragment>
                                     )}
@@ -479,7 +483,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                   color="info"
                                   fullWidth
                               >
-                                Save
+                                {translate("Save")}
                               </SuiButton>
                           )}
                         </Box>

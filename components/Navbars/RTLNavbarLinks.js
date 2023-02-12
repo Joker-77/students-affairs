@@ -46,7 +46,7 @@ export default function RTLNavbarLinks() {
             className: classes.margin + " " + classes.search,
           }}
           inputProps={{
-            placeholder: "جستجو...",
+            placeholder: "البحث...",
             inputProps: {
               "aria-label": "Search",
             },
@@ -68,84 +68,84 @@ export default function RTLNavbarLinks() {
           <p className={classes.linkText}>آمارها</p>
         </Hidden>
       </Button>
-      <div className={classes.manager}>
-        <Button
-          color={size.width > 959 ? "transparent" : "white"}
-          justIcon={size.width > 959}
-          simple={!(size.width > 959)}
-          aria-owns={open ? "menu-list-grow" : null}
-          aria-haspopup="true"
-          onClick={handleToggle}
-          className={classes.buttonLink}
-        >
-          <Notifications className={classes.icons} />
-          <span className={classes.notifications}>۵</span>
-          <Hidden mdUp implementation="css">
-            <p onClick={handleToggle} className={classes.linkText}>
-              اعلان‌ها
-            </p>
-          </Hidden>
-        </Button>
-        <Poppers
-          open={Boolean(open)}
-          anchorEl={open}
-          transition
-          disablePortal
-          className={
-            classNames({ [classes.popperClose]: !open }) +
-            " " +
-            classes.popperNav
-          }
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              id="menu-list-grow"
-              style={{
-                transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList role="menu">
-                    <MenuItem
-                      onClick={handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      محمدرضا به ایمیل شما پاسخ داد
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      شما ۵ وظیفه جدید دارید
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      از حالا شما با علیرضا دوست هستید
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      اعلان دیگر
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      اعلان دیگر
-                    </MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Poppers>
-      </div>
+      {/*<div className={classes.manager}>*/}
+      {/*  <Button*/}
+      {/*    color={size.width > 959 ? "transparent" : "white"}*/}
+      {/*    justIcon={size.width > 959}*/}
+      {/*    simple={!(size.width > 959)}*/}
+      {/*    aria-owns={open ? "menu-list-grow" : null}*/}
+      {/*    aria-haspopup="true"*/}
+      {/*    onClick={handleToggle}*/}
+      {/*    className={classes.buttonLink}*/}
+      {/*  >*/}
+      {/*    <Notifications className={classes.icons} />*/}
+      {/*    <span className={classes.notifications}>۵</span>*/}
+      {/*    <Hidden mdUp implementation="css">*/}
+      {/*      <p onClick={handleToggle} className={classes.linkText}>*/}
+      {/*        اعلان‌ها*/}
+      {/*      </p>*/}
+      {/*    </Hidden>*/}
+      {/*  </Button>*/}
+      {/*  <Poppers*/}
+      {/*    open={Boolean(open)}*/}
+      {/*    anchorEl={open}*/}
+      {/*    transition*/}
+      {/*    disablePortal*/}
+      {/*    className={*/}
+      {/*      classNames({ [classes.popperClose]: !open }) +*/}
+      {/*      " " +*/}
+      {/*      classes.popperNav*/}
+      {/*    }*/}
+      {/*  >*/}
+      {/*    {({ TransitionProps, placement }) => (*/}
+      {/*      <Grow*/}
+      {/*        {...TransitionProps}*/}
+      {/*        id="menu-list-grow"*/}
+      {/*        style={{*/}
+      {/*          transformOrigin:*/}
+      {/*            placement === "bottom" ? "center top" : "center bottom",*/}
+      {/*        }}*/}
+      {/*      >*/}
+      {/*        <Paper>*/}
+      {/*          <ClickAwayListener onClickAway={handleClose}>*/}
+      {/*            <MenuList role="menu">*/}
+      {/*              <MenuItem*/}
+      {/*                onClick={handleClose}*/}
+      {/*                className={classes.dropdownItem}*/}
+      {/*              >*/}
+      {/*                محمدرضا به ایمیل شما پاسخ داد*/}
+      {/*              </MenuItem>*/}
+      {/*              <MenuItem*/}
+      {/*                onClick={handleClose}*/}
+      {/*                className={classes.dropdownItem}*/}
+      {/*              >*/}
+      {/*                شما ۵ وظیفه جدید دارید*/}
+      {/*              </MenuItem>*/}
+      {/*              <MenuItem*/}
+      {/*                onClick={handleClose}*/}
+      {/*                className={classes.dropdownItem}*/}
+      {/*              >*/}
+      {/*                از حالا شما با علیرضا دوست هستید*/}
+      {/*              </MenuItem>*/}
+      {/*              <MenuItem*/}
+      {/*                onClick={handleClose}*/}
+      {/*                className={classes.dropdownItem}*/}
+      {/*              >*/}
+      {/*                اعلان دیگر*/}
+      {/*              </MenuItem>*/}
+      {/*              <MenuItem*/}
+      {/*                onClick={handleClose}*/}
+      {/*                className={classes.dropdownItem}*/}
+      {/*              >*/}
+      {/*                اعلان دیگر*/}
+      {/*              </MenuItem>*/}
+      {/*            </MenuList>*/}
+      {/*          </ClickAwayListener>*/}
+      {/*        </Paper>*/}
+      {/*      </Grow>*/}
+      {/*    )}*/}
+      {/*  </Poppers>*/}
+      {/*</div>*/}
       <Button
         color={size.width > 959 ? "transparent" : "white"}
         justIcon={size.width > 959}

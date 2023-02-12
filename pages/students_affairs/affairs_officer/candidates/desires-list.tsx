@@ -13,9 +13,11 @@ import AddDesireModal from "../../../../components/Modals/AddDesireModal";
 import * as Yup from "yup";
 import {useRouter} from "next/router";
 import SpecialityService from "../../../../Services/SpecialityService";
+import {useTranslation} from "../../../../Utility/Translations/useTranslation";
 
 interface IDesireListProps {}
 const DesireList: React.FC<IDesireListProps> = ({}) => {
+  const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
@@ -49,14 +51,14 @@ const DesireList: React.FC<IDesireListProps> = ({}) => {
     candidate_id: +candidateId
   });
   const AddDesireScheme = Yup.object().shape({
-    order: Yup.string().required("Order is required"),
-    speciality_id: Yup.string().required("Speciality is required"),
-    candidate_id: Yup.string().required("Candidate is required"),
+    order: Yup.string().required(translate("{0} is required", "Order")),
+    speciality_id: Yup.string().required(translate("{0} is required", "Speciality")),
+    candidate_id: Yup.string().required(translate("{0} is required", "Candidate")),
   });
   const UpdateDesireScheme = Yup.object().shape({
-    speciality_id: Yup.string().required("Order is required"),
-    order: Yup.string().required("Speciality is required"),
-    candidate_id: Yup.string().required("Candidate is required"),
+    order: Yup.string().required(translate("{0} is required", "Order")),
+    speciality_id: Yup.string().required(translate("{0} is required", "Speciality")),
+    candidate_id: Yup.string().required(translate("{0} is required", "Candidate")),
   });
   const submitAddDesire = async (values: any, setSubmitting) => {
     setSubmitting(true);
@@ -144,16 +146,16 @@ const DesireList: React.FC<IDesireListProps> = ({}) => {
     if (Desires != null && Desires.length > 0) {
       let columns = [
         {
-          title: "Id",
+          title: translate("Id"),
           field: "id",
           hidden: true,
         },
         {
-          title: "Speciality",
-          field: "speciality.en_name",
+          title: translate("Speciality"),
+          field: router?.locale === 'ar' ? "speciality.ar_name" : "speciality.en_name",
         },
         {
-          title: "Order",
+          title: translate("Order"),
           field: "order",
         },
         // {
@@ -174,18 +176,18 @@ const DesireList: React.FC<IDesireListProps> = ({}) => {
       };
       return (
         <ActionTable
-          Title="Desire List"
+          Title={translate("Desire List")}
           Columns={columns}
           Data={data}
           Options={options}
           Actions={[
             {
-              tooltip: "Desire Details",
+              tooltip: translate("Desire Details"),
               icon: "details",
               onClick: (evt, data) => handleDetails(data),
             },
             {
-              tooltip: "Edit Desire",
+              tooltip: translate("Edit Desire"),
               icon: "edit",
               onClick: (evt, data) => handleOpenUpdateDesire(data),
             },
@@ -203,14 +205,14 @@ const DesireList: React.FC<IDesireListProps> = ({}) => {
           className={classes.submitBtn}
           onClick={handleOpen}
         >
-          {"Add New Desire"}
+          {translate("Add New Desire")}
         </Button>
         {renderDesire()}
       </GridItem>
       <AddDesireModal
         disabled={disabled}
         key={"addDesire"}
-        title={"Add Desire"}
+        title={translate("Add Desire")}
         open={open}
         formScheme={AddDesireScheme}
         handleClose={handleClose}
@@ -221,7 +223,7 @@ const DesireList: React.FC<IDesireListProps> = ({}) => {
       <AddDesireModal
         disabled={disabled}
         key={"updateDesire"}
-        title={!openModalForDetails ? "Update Desire" : "Desire Details"}
+        title={!openModalForDetails ? translate("Update Desire") : translate("Desire Details")}
         open={openUpdateDesire}
         formScheme={UpdateDesireScheme}
         handleClose={handleCloseUpdateDesire}

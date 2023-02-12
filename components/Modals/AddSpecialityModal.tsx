@@ -17,6 +17,8 @@ import CardHeader from "../Card/CardHeader.js";
 import CardBody from "../Card/CardBody.js";
 import SuiButton from "../SuiButton";
 import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
+import {useRouter} from "next/router";
+import {useTranslation} from "../../Utility/Translations/useTranslation";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -36,6 +38,9 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
   formScheme,
   handleClose,
 }) => {
+  const {locale} = useRouter();
+  const {translate} = useTranslation();
+
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -66,6 +71,7 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
       overflowY: "scroll",
       overflowX: "hidden",
       height: "75%",
+      direction: locale === 'ar' ? "rtl" : "ltr",
     },
     header: {
       height: "5em",
@@ -87,16 +93,14 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
           <CardHeader style={styles.header}>
             <Grid container>
               <Grid md={8}>
-                <center>
-                  <h4 style={{ fontWeight: "bold" }}>{title} </h4>
-                </center>
+                <h4 style={{ fontWeight: "bold" }}>{title} </h4>
               </Grid>
               <Grid md={4}>
                 <IconButton
                   style={{
                     position: "absolute",
-                    right: "2em",
                     top: "1em",
+                    [locale === 'ar' ? 'left' : 'right']: "2em",
                   }}
                   onClick={handleClose}
                 >
@@ -130,7 +134,7 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                          English Name
+                          {translate("English Name")}
                         </Typography>
                       </Box>
                       <TextField
@@ -145,14 +149,14 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
                         onBlur={handleBlur}
                         error={Boolean(touched.en_name && errors.en_name)}
                         helperText={touched.en_name && errors.en_name}
-                        placeholder="English Name"
+                        placeholder={translate("English Name")}
                         fullWidth
                       />
                     </Box>
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                          Arabic Name
+                          {translate("Arabic Name")}
                         </Typography>
                       </Box>
                       <TextField
@@ -167,14 +171,14 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
                         onBlur={handleBlur}
                         error={Boolean(touched.ar_name && errors.ar_name)}
                         helperText={touched.ar_name && errors.ar_name}
-                        placeholder="Arabic Name"
+                        placeholder={translate("Arabic Name")}
                         fullWidth
                       />
                     </Box>
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
-                          Code
+                          {translate("Code")}
                         </Typography>
                       </Box>
                       <TextField
@@ -191,7 +195,7 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
                           touched.code && errors.code
                         )}
                         helperText={touched.code && errors.code}
-                        placeholder="Code"
+                        placeholder={translate("Code")}
                         fullWidth
                       />
                     </Box>
@@ -204,7 +208,7 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
                           color="info"
                           fullWidth
                         >
-                          Processing ...
+                          {translate("Processing ...")}
                         </SuiButton>
                       ) : (
                         <SuiButton
@@ -214,7 +218,7 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
                           color="info"
                           fullWidth
                         >
-                          Save
+                          {translate("Save")}
                         </SuiButton>
                       )}
                     </Box>

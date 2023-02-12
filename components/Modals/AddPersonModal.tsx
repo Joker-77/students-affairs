@@ -17,6 +17,8 @@ import CardHeader from "../Card/CardHeader.js";
 import CardBody from "../Card/CardBody.js";
 import SuiButton from "../SuiButton";
 import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
+import {useRouter} from "next/router";
+import {useTranslation} from "../../Utility/Translations/useTranslation";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -36,6 +38,9 @@ const AddPersonModal: React.FC<ICusomModalProps> = ({
   formScheme,
   handleClose,
 }) => {
+  const {locale} = useRouter();
+  const {translate} = useTranslation();
+
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -75,6 +80,7 @@ const AddPersonModal: React.FC<ICusomModalProps> = ({
       overflowY: "scroll",
       overflowX: "hidden",
       height: "75%",
+      direction: locale === 'ar' ? "rtl" : "ltr",
     },
     header: {
       height: "5em",
@@ -96,16 +102,14 @@ const AddPersonModal: React.FC<ICusomModalProps> = ({
           <CardHeader style={styles.header}>
             <Grid container>
               <Grid md={8}>
-                <center>
-                  <h4 style={{ fontWeight: "bold" }}>{title} </h4>
-                </center>
+                <h4 style={{ fontWeight: "bold" }}>{title} </h4>
               </Grid>
               <Grid md={4}>
                 <IconButton
                   style={{
                     position: "absolute",
-                    right: "2em",
                     top: "1em",
+                    [locale === 'ar' ? 'left' : 'right']: "2em",
                   }}
                   onClick={handleClose}
                 >

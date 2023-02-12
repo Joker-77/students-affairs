@@ -8,6 +8,11 @@ const nextEnv = require("next-env");
 const dotenvLoad = require("dotenv-load");
 const withNextEnv = nextEnv();
 module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
+  i18n: {
+    locales: ['ar', 'en'],
+    defaultLocale: 'ar',
+    localeDetection: false,
+  },
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if
