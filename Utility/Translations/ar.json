@@ -37,6 +37,8 @@
   "Add a phone": "أضف رقم هاتف",
   "Nationality": "الجنسية",
   "National number": "الرقم الوطني",
+  "Full Name": "الاسم الثلاثي",
+  "Mother Name": "اسم الأم",
 
   "Registeration number": "رقم التسجيل",
   "Birth date": "تاريخ الولادة",
@@ -61,8 +63,6 @@
   "English Name": "الاسم بالانكليزية",
   "Arabic Name": "الاسم بالعربية",
   "Code": "الرمز",
-
-  "Add New Certificate": "إضافة شهادة جديدة",
 
   "Certificate List": "قائمة الشهادات",
   "Add Certificate": "إضافة شهادة",
@@ -92,7 +92,7 @@
   "Tartus": "طرطوس",
   "Dir Al-Zour": "دير الزور",
   "Al-Raqa": "الرقة",
-  "Al-Hasaqa": "الحسكة",
+  "Al-Hasaqa": "الحسكه",
   "Al-Qonaitra": "القنيطرة",
   "Al-Qamshli": "القامشلي",
   "Daraa": "درعا",
@@ -121,7 +121,7 @@
   "Registration Desire Details": "تفاصيل رغبة التسجيل",
 
   "Internal": "دراسة لصالح المركز",
-  "Private": "دراسة خاصة",
+  "Private Study": "دراسة خاصة",
   "Institutions": "مؤسسات",
 
   "Password is too short - should be {0} chars minimum": "كلمة السر قصيرة جداً - يجب أن تكون على الأقل {0} أحرف",
@@ -131,5 +131,11 @@
   "Password": "كلمة المرور",
   "Remember me": "تذكرني",
   "Signing in...": "جاري تسجيل الدخول",
-  "Sign in": "تسجيل الدخول"
+  "Sign in": "تسجيل الدخول",
+  "First": "الأولى",
+  "Second": "الثانية",
+  "Search": "بحث",
+  "Student is not exist": "الطالب غير موجود",
+  "Add to candidates": "إضافة إلى المرشحين",
+  "This Candidate Already Exists": "المرشح مضاف مسبقاً"
 }

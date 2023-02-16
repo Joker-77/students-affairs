@@ -2,7 +2,7 @@ import axios from "axios";
 import https from "https";
 import { AxiosRequestConfig } from "axios/index";
 import { toast } from "react-toastify";
-import { error } from "console";
+
 const configs: AxiosRequestConfig = {
   baseURL: process.env.BASE_URL,
   httpsAgent: new https.Agent({
@@ -10,7 +10,7 @@ const configs: AxiosRequestConfig = {
   }),
 };
 const instance = axios.create(configs);
-instance.defaults.headers.common["Content-Type"] = "application/json";
+instance.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
 // instance.defaults.timeout = 2500;
 
 instance.interceptors.response.use(

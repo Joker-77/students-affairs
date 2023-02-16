@@ -29,7 +29,7 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     // SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
     // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public/api",
-    BASE_URL: "http://student.hiast.edu.sy/backend/public/api",
+    BASE_URL: "http://teststudent.hiast.edu.sy/backend/public/api",
     LIST_ROLES_URL: "/roles",
     ADD_ROLE_URL:
       "/roles/add",
@@ -57,6 +57,10 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
       "/person/edit-phone",
     DELETE_PHONE_URL:
       "/person/delete-phone",
+    SEARCH_CANDIDATE_URL:
+      "/ministry/candidate/get",
+    SEARCH_ADD_CANDIDATE_URL:
+      "/ministry/candidate/add",
     ADD_CANDIDATE_URL:
       "/candidate/add",
     EDIT_CANDIDATE_URL:

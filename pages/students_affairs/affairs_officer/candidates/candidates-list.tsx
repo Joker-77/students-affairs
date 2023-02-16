@@ -11,6 +11,7 @@ import {
 import ActionTable from "../../../../components/MaterialTable/ActionTable";
 import Placeholder from "../../../../Utility/Placeholders";
 import CandidateService from "../../../../Services/CandidateService";
+import SearchAddCandidateModal from "../../../../components/Modals/SearchAddCandidateModal";
 import AddCandidateModal from "../../../../components/Modals/AddCandidateModal";
 import * as Yup from "yup";
 import { useRouter } from 'next/router';
@@ -24,80 +25,38 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
   const router = useRouter();
 
   const [open, setOpen] = React.useState(false);
+  const [searchResult, setSearchResult] = React.useState(null);
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
+    setSearchResult(null);
     setOpen(false);
   };
   const [selectedCandidate, setSelectedCandidate] = React.useState<number>(0);
-  const [initAddCandidate, setInitAddCandidate] = React.useState<ICandidateModel>({
-    id: 0,
-    registeration_number: "",
-    birth_date: "",
-    birth_place: "",
-    qaid_place: "",
-    qaid_number: "",
-    military_office: "",
-    person: {
-      id: 0,
-      first_name: "",
-      last_name: "",
-      passport_first_name: "",
-      passport_last_name: "",
-      passport_number: "",
-      national_number: "",
-      sex: "",
-      nationality: "",
-      phones:[]
-    },
-    father: {
-      id: 0,
-      first_name: "",
-      last_name: "",
-      passport_first_name: "",
-      passport_last_name: "",
-      passport_number: "",
-      national_number: "",
-      sex: "",
-      nationality: "",
-      phones:[]
-    },
-    mother: {
-      id: 0,
-      first_name: "",
-      last_name: "",
-      passport_first_name: "",
-      passport_last_name: "",
-      passport_number: "",
-      national_number: "",
-      sex: "",
-      nationality: "",
-      phones:[]
-    },
+  const [initAddCandidate, setInitAddCandidate] = React.useState<object>({
+    subscription_number: "",
+    year: "",
+    governorate: "",
+    round: "",
   });
 
-  const PersonScheme = Yup.object().shape({
-    first_name: Yup.string().required(translate("{0} is required", "First name")),
-    last_name: Yup.string().required(translate("{0} is required", "Last name")),
-    passport_first_name: Yup.string().required(translate("{0} is required", "Passport First Name")),
-    passport_last_name: Yup.string().required(translate("{0} is required", "Passport Last Name")),
-    passport_number: Yup.string().required(translate("{0} is required", "Passport Number")),
-    national_number: Yup.string().required(translate("{0} is required", "National number")),
-    sex: Yup.string().required(translate("{0} is required", "Gender")),
-    nationality: Yup.string().required(translate("{0} is required", "Nationality")),
-  });
+  // const PersonScheme = Yup.object().shape({
+  //   first_name: Yup.string().required(translate("{0} is required", "First name")),
+  //   last_name: Yup.string().required(translate("{0} is required", "Last name")),
+  //   passport_first_name: Yup.string().required(translate("{0} is required", "Passport First Name")),
+  //   passport_last_name: Yup.string().required(translate("{0} is required", "Passport Last Name")),
+  //   passport_number: Yup.string().required(translate("{0} is required", "Passport Number")),
+  //   national_number: Yup.string().required(translate("{0} is required", "National number")),
+  //   sex: Yup.string().required(translate("{0} is required", "Gender")),
+  //   nationality: Yup.string().required(translate("{0} is required", "Nationality")),
+  // });
 
   const AddCandidateScheme = Yup.object().shape({
-    registeration_number: Yup.string().required(translate("{0} is required", "Registeration number")),
-    birth_date: Yup.string().required(translate("{0} is required", "Birth date")),
-    birth_place: Yup.string().required(translate("{0} is required", "Birth place")),
-    qaid_place: Yup.string().required(translate("{0} is required", "QAID place")),
-    qaid_number: Yup.string().required(translate("{0} is required", "QAID number")),
-    military_office: Yup.string().required(translate("{0} is required", "Military office")),
-    father: PersonScheme,
-    mother: PersonScheme,
-    person: PersonScheme,
+    subscription_number: Yup.string().required(translate("{0} is required", "Subscription number")),
+    year: Yup.string().required(translate("{0} is required", "Year")),
+    governorate: Yup.string().required(translate("{0} is required", "City")),
+    round: Yup.string().required(translate("{0} is required", "Round")),
   });
   const UpdateCandidateScheme = Yup.object().shape({
     first_name: Yup.string().required(translate("{0} is required", "First name")),
@@ -109,13 +68,12 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
     sex: Yup.string().required(translate("{0} is required", "Gender")),
     nationality: Yup.string().required(translate("{0} is required", "Nationality")),
   });
-  const submitAddCandidate = async (values: any, setSubmitting) => {
+  const submitSearchCandidate = async (values: any, setSubmitting) => {
     setSubmitting(true);
-    CandidateService.Add(values)
+    CandidateService.Search(values)
       .then((res) => {
-        const candidatesCopy = [res.result, ...Candidates];
-        setCandidates(candidatesCopy);
-        setOpen(false);
+        setSearchResult({found: Boolean(res.result), result: res.result});
+        // setOpen(false);
       })
       .catch((error) => {
         console.error("error", error);
@@ -123,6 +81,23 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
       .finally(() => {
         setSubmitting(false);
       });
+    ;
+  };
+
+  const submitAddCandidate = async (values: any, setSubmitting) => {
+    setSubmitting(true);
+    CandidateService.AddAfterSearch(values)
+        .then((res) => {
+          const candidatesCopy = [res.result, ...Candidates];
+          setCandidates(candidatesCopy);
+          handleClose();
+        })
+        .catch((error) => {
+          console.error("error", error);
+        })
+        .finally(() => {
+          setSubmitting(false);
+        });
     ;
   };
 
@@ -163,6 +138,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
     setDisabled(false);
     setOpenUpdateCandidate(false);
   };
+
   const [initUpdateCandidate, setInitUpdateCandidate] = React.useState<ICandidateModel>({
     id: 0,
     registeration_number: "",
@@ -330,7 +306,9 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
         </Button>
         {renderCandidates()}
       </GridItem>
-      <AddCandidateModal
+      <SearchAddCandidateModal
+          searchResult={searchResult}
+          onAddClick={submitAddCandidate}
         disabled={disabled}
         key={"addCandidate"}
         title={translate("Add Candidate")}
@@ -338,8 +316,8 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
         formScheme={AddCandidateScheme}
         handleClose={handleClose}
         initValues={initAddCandidate}
-        submitForm={submitAddCandidate}
-      ></AddCandidateModal>
+        submitForm={submitSearchCandidate}
+      ></SearchAddCandidateModal>
       <AddCandidateModal
         disabled={disabled}
         key={"updateCandidate"}

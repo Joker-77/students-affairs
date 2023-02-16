@@ -72,7 +72,7 @@ const AddRegistrationDesireModal: React.FC<ICusomModalProps> = ({
     },
     {
       id: 'Private',
-      value: translate('Private'),
+      value: translate('Private Study'),
     },
     {
       id: 'Institutions',

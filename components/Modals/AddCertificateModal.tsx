@@ -18,6 +18,8 @@ import SuiButton from "../SuiButton";
 import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
+import { governorates } from "../../Static/resources.js";
+import {governorates} from "../../Static/resources";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -101,65 +103,6 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
     {
       id: 'Chemistry',
       value: translate('Chemistry'),
-    },
-  ];
-
-  const cities = [
-    {
-      id: 'Damascus',
-      value: translate('Damascus'),
-    },
-    {
-      id: 'Homs',
-      value: translate('Homs'),
-    },
-    {
-      id: 'Hama',
-      value: translate('Hama'),
-    },
-    {
-      id: 'Idleb',
-      value: translate('Idleb'),
-    },
-    {
-      id: 'Aleppo',
-      value: translate('Aleppo'),
-    },
-    {
-      id: 'Latakia',
-      value: translate('Latakia'),
-    },
-    {
-      id: 'Tartus',
-      value: translate('Tartus'),
-    },
-    {
-      id: 'Dir Al-Zour',
-      value: translate('Dir Al-Zour'),
-    },
-    {
-      id: 'Al-Raqa',
-      value: translate('Al-Raqa'),
-    },
-    {
-      id: 'Al-Hasaqa',
-      value: translate('Al-Hasaqa'),
-    },
-    {
-      id: 'Al-Qonaitra',
-      value: translate('Al-Qonaitra'),
-    },
-    {
-      id: 'Al-Qamshli',
-      value: translate('Al-Qamshli'),
-    },
-    {
-      id: 'Daraa',
-      value: translate('Daraa'),
-    },
-    {
-      id: 'Al-Sweedaa',
-      value: translate('Al-Sweedaa'),
     },
   ];
 
@@ -312,7 +255,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                   placeholder={translate("City")}
                                   fullWidth
                               >
-                                {cities.map((city) => (
+                                {governorates.map((city) => (
                                     <MenuItem key={city.id} value={city.id}>
                                       {city.value}
                                     </MenuItem>
