@@ -18,7 +18,7 @@ import SuiButton from "../SuiButton";
 import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
-import { governorates } from "../../Static/resources.js";
+import {governorates} from "../../Static/resources";
 
 interface ICusomModalProps {
   disabled?: boolean;
