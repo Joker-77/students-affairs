@@ -19,7 +19,6 @@ import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
 import { governorates } from "../../Static/resources.js";
-import {governorates} from "../../Static/resources";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -255,7 +254,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                   placeholder={translate("City")}
                                   fullWidth
                               >
-                                {governorates.map((city) => (
+                                {governorates(translate).map((city) => (
                                     <MenuItem key={city.id} value={city.id}>
                                       {city.value}
                                     </MenuItem>
