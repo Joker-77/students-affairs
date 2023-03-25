@@ -14,14 +14,16 @@ import * as Yup from "yup";
 import {useRouter} from "next/router";
 import SpecialityService from "../../../../Services/SpecialityService";
 import {useTranslation} from "../../../../Utility/Translations/useTranslation";
+import CardHeader from "../../../../components/Card/CardHeader";
+import Card from "../../../../components/Card/Card";
+import CardBody from "../../../../components/Card/CardBody";
 
-interface IDesireListProps {}
-const DesireList: React.FC<IDesireListProps> = ({}) => {
+interface IDesireListProps {candidateId: number}
+const CandidateDesireList: React.FC<IDesireListProps> = ({candidateId}) => {
   const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
-  const candidateId = router.query?.id;
 
   const [open, setOpen] = React.useState(false);
   const [specialities, setSpecialities] = React.useState([]);
@@ -80,13 +82,13 @@ const DesireList: React.FC<IDesireListProps> = ({}) => {
   /************************** Data ****************************/
   useEffect(() => {
     DesireService.GetAll(candidateId)
-      .then((res) => {
-        console.log("Desire", res);
-        setDesires(res.result);
-      })
-      .catch((error) => {
-        console.error("error", error);
-      });
+        .then((res) => {
+          console.log("Desire", res);
+          setDesires(res.result);
+        })
+        .catch((error) => {
+          console.error("error", error);
+        });
   }, []);
   /************************** Finish Data ****************************/
   /************************** Handle edit data ****************************/
@@ -175,65 +177,72 @@ const DesireList: React.FC<IDesireListProps> = ({}) => {
         maxBodyHeight: "500px",
       };
       return (
-        <ActionTable
-          Title={translate("Desire List")}
-          Columns={columns}
-          Data={data}
-          Options={options}
-          Actions={[
-            {
-              tooltip: translate("Desire Details"),
-              icon: "details",
-              onClick: (evt, data) => handleDetails(data),
-            },
-            {
-              tooltip: translate("Edit Desire"),
-              icon: "edit",
-              onClick: (evt, data) => handleOpenUpdateDesire(data),
-            },
-          ]}
-        />
+          <ActionTable
+              Title={translate("Desire List")}
+              Columns={columns}
+              Data={data}
+              Options={options}
+              Actions={[
+                {
+                  tooltip: translate("Desire Details"),
+                  icon: "details",
+                  onClick: (evt, data) => handleDetails(data),
+                },
+                {
+                  tooltip: translate("Edit Desire"),
+                  icon: "edit",
+                  onClick: (evt, data) => handleOpenUpdateDesire(data),
+                },
+              ]}
+          />
       );
     } else return <Placeholder />;
   };
   return (
-    <GridContainer>
-      <GridItem md={12}>
-        <Button
-          disabled={false}
-          variant="contained"
-          className={classes.submitBtn}
-          onClick={handleOpen}
-        >
-          {translate("Add New Desire")}
-        </Button>
-        {renderDesire()}
-      </GridItem>
-      <AddDesireModal
-        disabled={disabled}
-        key={"addDesire"}
-        title={translate("Add Desire")}
-        open={open}
-        formScheme={AddDesireScheme}
-        handleClose={handleClose}
-        initValues={initAddDesire}
-        submitForm={submitAddDesire}
-        specialities={specialities}
-      ></AddDesireModal>
-      <AddDesireModal
-        disabled={disabled}
-        key={"updateDesire"}
-        title={!openModalForDetails ? translate("Update Desire") : translate("Desire Details")}
-        open={openUpdateDesire}
-        formScheme={UpdateDesireScheme}
-        handleClose={handleCloseUpdateDesire}
-        initValues={initUpdateDesire}
-        submitForm={submitUpdateDesire}
-        specialities={specialities}
-      ></AddDesireModal>
-    </GridContainer>
+      <Card>
+        <CardHeader>
+          <h4 style={{ fontWeight: "bold", color: "#01579b" }}>{translate('Desires')}</h4>
+        </CardHeader>
+        <CardBody>
+          <GridContainer>
+            <GridItem md={12}>
+              <Button
+                  disabled={false}
+                  variant="contained"
+                  className={classes.submitBtn}
+                  onClick={handleOpen}
+              >
+                {translate("Add New Desire")}
+              </Button>
+              {renderDesire()}
+            </GridItem>
+            <AddDesireModal
+                disabled={disabled}
+                key={"addDesire"}
+                title={translate("Add Desire")}
+                open={open}
+                formScheme={AddDesireScheme}
+                handleClose={handleClose}
+                initValues={initAddDesire}
+                submitForm={submitAddDesire}
+                specialities={specialities}
+            ></AddDesireModal>
+            <AddDesireModal
+                disabled={disabled}
+                key={"updateDesire"}
+                title={!openModalForDetails ? translate("Update Desire") : translate("Desire Details")}
+                open={openUpdateDesire}
+                formScheme={UpdateDesireScheme}
+                handleClose={handleCloseUpdateDesire}
+                initValues={initUpdateDesire}
+                submitForm={submitUpdateDesire}
+                specialities={specialities}
+            ></AddDesireModal>
+          </GridContainer>
+        </CardBody>
+      </Card>
   );
 };
-(DesireList as any).auth = true;
-(DesireList as any).layout = Admin;
-export default DesireList;
+(CandidateDesireList as any).auth = true;
+(CandidateDesireList as any).layout = Admin;
+export default CandidateDesireList;

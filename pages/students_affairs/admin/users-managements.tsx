@@ -51,6 +51,21 @@ function UsersManagement() {
       ],
       selectedPermission: 1,
     },
+    {
+      id: "3",
+      name: "Another One 1",
+      permissions: [
+        {
+          id: 1,
+          name: "Read Only",
+        },
+        {
+          id: 2,
+          name: "Write & Read",
+        },
+      ],
+      selectedPermission: 1,
+    },
   ];
   const privilegeStatus = {
     system: {

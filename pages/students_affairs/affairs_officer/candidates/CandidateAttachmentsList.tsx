@@ -12,16 +12,14 @@ import RegistrationDesireService from "../../../../Services/RegistrationDesireSe
 import AddRegistrationDesireModal from "../../../../components/Modals/AddRegistrationDesireModal";
 import * as Yup from "yup";
 import {useRouter} from "next/router";
-import DesireService from "../../../../Services/DesireService";
 import {useTranslation} from "../../../../Utility/Translations/useTranslation";
 
-interface IRegistrationDesireListProps {}
-const RegistrationDesireList: React.FC<IRegistrationDesireListProps> = ({}) => {
+interface IRegistrationDesireListProps {candidateId: number}
+const CandidateRegistrationDesireList: React.FC<IRegistrationDesireListProps> = ({candidateId}) => {
   const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
-  const candidateId = router.query?.id;
 
   const [open, setOpen] = React.useState(false);
 
@@ -221,6 +219,6 @@ const RegistrationDesireList: React.FC<IRegistrationDesireListProps> = ({}) => {
     </GridContainer>
   );
 };
-(RegistrationDesireList as any).auth = true;
-(RegistrationDesireList as any).layout = Admin;
-export default RegistrationDesireList;
+(CandidateRegistrationDesireList as any).auth = true;
+(CandidateRegistrationDesireList as any).layout = Admin;
+export default CandidateRegistrationDesireList;
