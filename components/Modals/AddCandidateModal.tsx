@@ -20,6 +20,7 @@ import { ICandidateModel } from "../../Models/ApiResponse/CandidateModel.jsx";
 import PersonInfoPartialForm from "./PersonInfoPartialForm";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
+import colors from "../../assets/theme/base/colors";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -78,7 +79,8 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
       position: "sticky",
       borderTopRightRadius: "inherit",
       borderTopLeftRadius: "inherit",
-      backgroundColor: "#A69577",
+      backgroundColor: colors.gradients.primary.main,
+      color: "#fff",
     },
   };
 
@@ -99,6 +101,7 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
               <Grid md={4} style={{display: 'flex'}}>
                 <IconButton
                   style={{
+                    color: "#fff",
                     position: "absolute",
                     top: "1em",
                     [locale === 'ar' ? 'left' : 'right']: "2em",

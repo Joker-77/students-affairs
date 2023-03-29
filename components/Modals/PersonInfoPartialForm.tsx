@@ -361,7 +361,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
 
                                 <SuiButton
                                     style={{ margin: 5 }}
-                                    color="success"
+                                    color="primary"
                                     onClick={() => arrayHelpers.insert(index+1, {phone: '', type: ''})} // insert an empty string at a position
                                 >
                                   +
@@ -375,7 +375,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                       <React.Fragment>
                       {!disabled && <SuiButton
                           variant="gradient"
-                          color="success"
+                          color="primary"
                           onClick={() => arrayHelpers.push('')}>
                         {/* show this when user has removed all phones from the list */}
                         {translate("Add a phone")}

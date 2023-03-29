@@ -1,6 +1,6 @@
-export interface IDesireModel {
+export interface IAttachmentModel {
   id: number;
-  order: number;
-  speciality_id: number;
-  candidate_id: number,
+  type: number;
+  url: string;
+  name: string;
 }

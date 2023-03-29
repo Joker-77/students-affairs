@@ -40,7 +40,7 @@ export default function Sidebar(props) {
   const classes = useStyles();
   // verifies if routeName is the one active (in browser input)
   function activeRoute(routeName) {
-    return router.route.indexOf(routeName) > -1 ? true : false;
+    return router.route.indexOf(routeName) > -1;
   }
   const handleMenuToggle = () => {
     dispatchMenu(collapseMenu(_collapseMenu));

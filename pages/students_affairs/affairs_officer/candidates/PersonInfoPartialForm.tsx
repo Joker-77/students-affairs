@@ -3,14 +3,12 @@ import {
   TextField,
   Box,
   Typography,
-  Select,
   MenuItem,
-  IconButton,
   Grid,
 } from "@material-ui/core";
 import {FieldArray} from "formik";
-import SuiButton from "../SuiButton";
-import {useTranslation} from "../../Utility/Translations/useTranslation";
+import SuiButton from "../../../../components/SuiButton";
+import {useTranslation} from "../../../../Utility/Translations/useTranslation";
 
 interface IPersonInfoPartialProps {
   title: string;
@@ -47,8 +45,8 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
 
   const phoneTypes = [
     {
-      id: "private",
-      value: translate("Private"),
+      id: "personal",
+      value: translate("Personal"),
     },
     {
       id: "family",
@@ -122,7 +120,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           </Box>
         </Grid>
 
-        <Grid item md={3}>
+        <Grid item md={3} style={prefix != 'person' ? {display: 'none'} : {}}>
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
@@ -336,7 +334,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                                     id={`${prefix}.phones.${index}.type`}
                                     name={`${prefix}.phones.${index}.type`}
                                     select={true}
-                                    // value={values[prefix]?.sex}
+                                    value={phone.type}
                                     onChange={handleChange(`${prefix}.phones.${index}.type`)}
                                     onBlur={handleBlur}
                                     placeholder="Phone type"
@@ -361,7 +359,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
 
                                 <SuiButton
                                     style={{ margin: 5 }}
-                                    color="success"
+                                    color="primary"
                                     onClick={() => arrayHelpers.insert(index+1, {phone: '', type: ''})} // insert an empty string at a position
                                 >
                                   +
@@ -375,7 +373,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
                       <React.Fragment>
                       {!disabled && <SuiButton
                           variant="gradient"
-                          color="success"
+                          color="primary"
                           onClick={() => arrayHelpers.push('')}>
                         {/* show this when user has removed all phones from the list */}
                         {translate("Add a phone")}

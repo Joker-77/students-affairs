@@ -2,7 +2,7 @@ import apiConnector from "./ApiClient";
 import { ApiResponse } from "../Models/ApiResponse/ApiResponse";
 
 export default class DesireService {
-  static async Add(payload): Promise<ApiResponse> {
+  static async Save(payload): Promise<ApiResponse> {
     const addUrl = process.env.ADD_DESIRES_URL as string;
     return await apiConnector
       .post(addUrl, payload)

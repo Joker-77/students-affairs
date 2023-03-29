@@ -11,7 +11,7 @@ import {
   IconButton,
   Grid,
 } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import {Close} from "@material-ui/icons";
 import Card from "../Card/Card.js";
 import CardHeader from "../Card/CardHeader.js";
 import CardBody from "../Card/CardBody.js";
@@ -19,6 +19,7 @@ import SuiButton from "../SuiButton";
 import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
+import colors from "../../assets/theme/base/colors";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -87,8 +88,8 @@ const AddPersonModal: React.FC<ICusomModalProps> = ({
       position: "sticky",
       borderTopRightRadius: "inherit",
       borderTopLeftRadius: "inherit",
-      backgroundColor: "#A69577",
-    },
+      backgroundColor: colors.gradients.primary.main,
+      color: "#fff",    },
   };
   return (
     <Modal
@@ -107,6 +108,7 @@ const AddPersonModal: React.FC<ICusomModalProps> = ({
               <Grid md={4}>
                 <IconButton
                   style={{
+                    color: "#fff",
                     position: "absolute",
                     top: "1em",
                     [locale === 'ar' ? 'left' : 'right']: "2em",
@@ -146,6 +148,7 @@ const AddPersonModal: React.FC<ICusomModalProps> = ({
                           First Name
                         </Typography>
                       </Box>
+                      <
                       <TextField
                         disabled={disabled}
                         onChange={handleChange}

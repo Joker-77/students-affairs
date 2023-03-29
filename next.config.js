@@ -28,8 +28,8 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     // SITE_URL: "http://teststudent.hiast.edu.sy:3000",
     SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
-    // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public/api",
-    BASE_URL: "http://teststudent.hiast.edu.sy/backend/public/api",
+    // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public",
+    BASE_URL: "http://student.hiast.edu.sy/backend/public",
     LIST_ROLES_URL: "/roles",
     ADD_ROLE_URL:
       "/roles/add",
@@ -72,7 +72,7 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     ADD_CERTIFICATE_URL:
       "/certificate/add",
     EDIT_CERTIFICATE_URL:
-      "/candidate/edit",
+      "/certificate/edit",
     DETAILS_CERTIFICATE_URL:
       "/certificate/details",
     LIST_CERTIFICATE_URL:
@@ -86,6 +86,8 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     LIST_SPECIALITY_URL:
       "/speciality",
     ADD_REGISTERATION_URL:
+      "/registeration/add",
+    LIST_REGISTERATION_URL:
       "/registeration/add",
     EDIT_REGISTERATION_URL:
       "/registeration/edit",
@@ -103,5 +105,9 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
       "/desire/edit",
     LIST_DESIRES_URL:
       "/desire/list",
+    ADD_ATTACHMENT_URL:
+      "/attachement/add",
+    DELETE_ATTACHMENT_URL:
+      "/attachement/delete",
   },
 });

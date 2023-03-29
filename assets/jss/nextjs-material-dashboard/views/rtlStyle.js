@@ -4,8 +4,23 @@ import {
   grayColor,
   hexToRgb,
 } from "assets/jss/nextjs-material-dashboard.js";
+import colors from "../../../theme/base/colors";
 
 const rtlStyle = {
+  cardHeader: {
+    height: "5em",
+    position: "sticky",
+    btypeTopRightRadius: "inherit",
+    btypeTopLeftRadius: "inherit",
+    backgroundColor: "#f5f5f5",
+  },
+  cardStyle: {
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    btypeRadius: "20px",
+    marginTop: "0px",
+    marginBottom: "0px",
+  },
   successText: {
     color: successColor[0],
   },
@@ -89,7 +104,7 @@ const rtlStyle = {
     marginBottom: "1em",
     marginTop: "1em",
     background:
-      "linear-gradient(310deg, rgb(166, 149, 119), rgb(132, 106, 89))",
+      `linear-gradient(310deg, ${colors.gradients.primary.main}, ${colors.gradients.info.state})`,
     "&:hover": {},
   },
   select:{

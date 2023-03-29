@@ -74,3 +74,43 @@ export const governorates = (translate) => [
         value: translate('Al-Sweedaa'),
     },
 ];
+
+export const acceptStatus = (translate) => [
+    translate('Accepted'),
+    translate('Not Accepted'),
+    translate('Canceled'),
+    translate('Waiting'),
+];
+export const acceptPlaces = (translate) => [
+    translate('Damascus'),
+    translate('Aleppo'),
+];
+export const studyPlaces = (translate) => [
+    ...acceptPlaces(translate),
+    translate('No problem')
+];
+export const registerationMethods = (translate) => [
+    translate('Personal'),
+    translate('Automatic'),
+    translate('Electronic')
+];
+export const examPlaces = (translate) => [
+    translate('Damascus'),
+    translate('Aleppo'),
+    translate('Latakia'),
+];
+export const registerationClasses = (translate) => [
+    translate('Internal'),
+    translate('Private Study'),
+    // translate('Institutions'),
+];
+export const yesNo = (translate) => [
+    {
+        value: '1',
+        label: translate('Yes'),
+    },
+    {
+        value: '0',
+        label: translate('No'),
+    },
+];

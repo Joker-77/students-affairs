@@ -66,10 +66,10 @@ export default class CandidateService {
             });
     }
 
-  static async Edit(): Promise<ApiResponse> {
+  static async Edit(payload): Promise<ApiResponse> {
     const editUrl = process.env.EDIT_CANDIDATE_URL as string;
     return await apiConnector
-      .get(editUrl)
+      .post(editUrl, payload)
       .then((response) => {
         if (response.data.success) {
           let result = response.data;

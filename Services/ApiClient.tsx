@@ -4,7 +4,7 @@ import { AxiosRequestConfig } from "axios/index";
 import { toast } from "react-toastify";
 
 const configs: AxiosRequestConfig = {
-  baseURL: process.env.BASE_URL,
+  baseURL: `${process.env.BASE_URL}/api`,
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
   }),
