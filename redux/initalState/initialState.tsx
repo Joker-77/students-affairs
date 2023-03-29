@@ -13,4 +13,5 @@ export type IInitialState = {
     Content: string;
     Type: number;
   };
+  candidate: any;
 };

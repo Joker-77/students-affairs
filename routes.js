@@ -6,6 +6,7 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
+import {People} from "@material-ui/icons";
 
 const dashboardRoutes = [
   {
@@ -18,7 +19,14 @@ const dashboardRoutes = [
   {
     path: "/affairs_officer/candidates/candidates-list",
     name: "Candidates",
-    rtlName: "المرشحين",
+    rtlName: "المرشحون",
+    icon: People,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/affairs_officer/candidates/registrations-list",
+    name: "Attendees",
+    rtlName: "المتقدمون للمفاضلة",
     icon: Person,
     layout: "/students_affairs",
   },

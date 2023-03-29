@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Admin from "../../../../layouts/Admin";
 import Card from "../../../../components/Card/Card.js";
 import CardHeader from "../../../../components/Card/CardHeader.js";
@@ -15,21 +15,82 @@ import {
   resetServerContext,
 } from "react-beautiful-dnd";
 import {useTranslation} from "../../../../Utility/Translations/useTranslation";
+import SpecialityService from "../../../../Services/SpecialityService";
+import DesireService from "../../../../Services/DesireService";
+import {IDesireModel} from "../../../../Models/ApiResponse/DesireModel";
+import SuiButton from "../../../../components/SuiButton";
 
-function UsersManagement() {
+interface IDesireListProps {candidateId: number}
+const CandidateDesireList: React.FC<IDesireListProps> = ({candidateId}) => {
   resetServerContext();
   const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
-  const classes = useStyles();
-  const specialities = [];
+  const [Desires, setDesires] = React.useState<IDesireModel[]>(null);
+  const [columns, setColumns] = useState({});
 
-  const privilegeStatus = {
-    system: {
-      type: 1,
-      name: translate('Desires'),
-      items: specialities,
-    },
+  const getSpecialities = () => {
+    SpecialityService.GetAll()
+        .then((res) => {
+          console.log("Speciality", res);
+          setColumns({
+            system: {
+              type: 1,
+              name: translate('Desires'),
+              items: res.result.map((item) => {return {...item, id: item.id.toString()}}),
+            },
+          });
+        })
+        .catch((error) => {
+          console.error("error", error);
+        });
   };
+
+  /************************** Data ****************************/
+  useEffect(() => {
+    DesireService.GetAll(candidateId)
+        .then((res) => {
+          console.log("Desire", res);
+          const desires = res.result;
+          if(desires.length > 0) {
+              setColumns({
+                  system: {
+                      type: 1,
+                      name: translate('Desires'),
+                      items: desires.map((item) => {return {...item.speciality, id: item.speciality_id.toString()}}),
+                  },
+              });
+          } else {
+              getSpecialities();
+          }
+        })
+        .catch((error) => {
+          console.error("error", error);
+        });
+  }, []);
+  /************************** Finish Data ****************************/
+
+  const [isSubmitting, setSubmitting] = useState(false);
+  /************************** Handle edit data ****************************/
+  const submitUpdateDesire = async () => {
+      setSubmitting(true);
+      console.log("items order: ", columns.system.items);
+      const values = {
+          candidate_id: candidateId,
+          desires: columns.system.items.map((item, index) => {return {speciality_id: item.id, order: index + 1}})
+      }
+      DesireService.Save(values)
+          .then((res) => {
+              console.log("Desire", res);
+          })
+          .catch((error) => {
+              console.error("error", error);
+          })
+          .finally(() => {
+              setSubmitting(false);
+          });
+  };
+  /************************** Finish Edit Data ****************************/
+
 
   const onDragEnd = (result, columns, setColumns) => {
     console.log(result, columns);
@@ -49,7 +110,6 @@ function UsersManagement() {
     });
 
   };
-  const [columns, setColumns] = useState(privilegeStatus);
 
   return (
       <div>
@@ -60,7 +120,7 @@ function UsersManagement() {
             {Object.entries(columns).map(([columnId, column], index) => {
               return (
                   <Grid
-                      md={8}
+                      md={12}
                       xs={12}
                       sm={12}
                       style={{
@@ -85,9 +145,10 @@ function UsersManagement() {
                                     ref={provided.innerRef}
                                     style={{
                                       background: snapshot.isDraggingOver
-                                          ? "lightblue"
-                                          : "lightgrey",
+                                          ? "rgb(1, 87, 155, 0.4)"
+                                          : "rgba(211, 211, 211, 0.15)",
                                       padding: 20,
+                                      marginBottom: 20,
                                       borderRadius: 10,
                                     }}
                                 >
@@ -135,6 +196,28 @@ function UsersManagement() {
                             );
                           }}
                         </Droppable>
+
+                          {isSubmitting ? (
+                              <SuiButton
+                                  disabled={true}
+                                  variant="gradient"
+                                  color="info"
+                                  fullWidth
+                              >
+                                  {translate("Processing ...")}
+                              </SuiButton>
+                          ) : (
+                              <SuiButton
+                                  variant="gradient"
+                                  color="info"
+                                  fullWidth
+                                  onClick={submitUpdateDesire}
+                              >
+                                  {translate("Save")}
+                              </SuiButton>
+                          )}
+
+
                       </CardBody>
                     </Card>
                   </Grid>
@@ -146,6 +229,6 @@ function UsersManagement() {
   );
 }
 
-(UsersManagement as any).layout = Admin;
-(UsersManagement as any).auth = false;
-export default UsersManagement;
+(CandidateDesireList as any).auth = true;
+(CandidateDesireList as any).layout = Admin;
+export default CandidateDesireList;

@@ -64,7 +64,7 @@ const CandidateDesireList: React.FC<IDesireListProps> = ({candidateId}) => {
   });
   const submitAddDesire = async (values: any, setSubmitting) => {
     setSubmitting(true);
-    DesireService.Add(values)
+    DesireService.Save(values)
         .then((res) => {
           console.log("Desire", res);
           const DesireCopy = [res.result, ...Desires];

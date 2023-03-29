@@ -64,14 +64,19 @@ export default function ActionTable(props) {
       <MaterialTable
           icons={tableIcons}
           title={props.Title}
-          columns={props.Columns}
+          columns={props.Columns.map((column) => {
+            return {
+              cellStyle: {textAlign: locale === 'ar' ? 'right' : 'left'},
+              headerStyle: {textAlign: locale === 'ar' ? 'right' : 'left'},
+              ...column
+            }})}
           data={props.Data}
           options={props.Options}
           //onSelectionChange={(rows) => props.ChangeSelected(rows)}
           actions={props.Actions}
           localization={{
             header: {
-              actions: translate('Actions')
+              actions: ''
             },
             pagination: {
               firstTooltip: translate('First Page'),
@@ -81,6 +86,10 @@ export default function ActionTable(props) {
               labelRowsPerPage: translate('Rows per page'),
               lastTooltip: translate('Last Page'),
               labelRowsSelect: translate('Rows'),
+            },
+            toolbar: {
+              exportTitle: translate('Export'),
+              exportName: translate('Export to excel'),
             }
           }}
           {...props}

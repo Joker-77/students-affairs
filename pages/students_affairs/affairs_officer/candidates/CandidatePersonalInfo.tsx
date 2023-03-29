@@ -1,123 +1,78 @@
 import React from "react";
-import { Formik, Form, FieldArray } from "formik";
-import * as Yup from "yup";
+import { Formik, Form } from "formik";
 import {
-  Modal,
-  TextField,
-  Box,
-  Typography,
-  Select,
-  MenuItem,
-  IconButton,
-  Grid,
+    TextField,
+    Box,
+    Grid,
+    Typography, FormControlLabel, Radio, RadioGroup, MenuItem,
 } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
-import Card from "../Card/Card.js";
-import CardHeader from "../Card/CardHeader.js";
-import CardBody from "../Card/CardBody.js";
-import SuiButton from "../SuiButton";
-import { ICandidateModel } from "../../Models/ApiResponse/CandidateModel.jsx";
+import Card from "../../../../components/Card/Card.js";
+import CardHeader from "../../../../components/Card/CardHeader.js";
+import CardBody from "../../../../components/Card/CardBody.js";
+import SuiButton from "../../../../components/SuiButton";
 import PersonInfoPartialForm from "./PersonInfoPartialForm";
 import {useRouter} from "next/router";
-import {useTranslation} from "../../Utility/Translations/useTranslation";
+import {useTranslation} from "../../../../Utility/Translations/useTranslation";
+import * as Yup from "yup";
+import {makeStyles} from "@material-ui/core/styles";
+import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle";
+import CandidateService from "../../../../Services/CandidateService";
+import {examPlaces, registerationClasses, registerationMethods, studyPlaces, yesNo} from "../../../../Static/resources";
 
-interface ICusomModalProps {
-  disabled?: boolean;
-  title: string;
-  open: boolean;
-  handleClose();
-  submitForm(values, submitting): void;
+interface ICandidatePersonalInfoProps {
   initValues: any;
-  formScheme: any;
 }
-const AddCandidateModal: React.FC<ICusomModalProps> = ({
-  disabled,
-  title,
-  open,
-  initValues,
-  submitForm,
-  formScheme,
-  handleClose,
-}) => {
+const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
+                                                                        initValues,
+                                                                      }) => {
   const {locale} = useRouter();
   const {translate} = useTranslation();
+  const useStyles = makeStyles(styles);
+  const classes = useStyles();
 
-  const style = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "70%",
-    bgcolor: "background.paper",
-    // border: "2px solid brown",
-    boxShadow: 24,
-    borderRadius: "20px",
+  const [disabled, setDisabled] = React.useState<boolean>(false);
+
+  const submitForm = async (values: any, setSubmitting) => {
+    console.log("values", values);
+
+      setSubmitting(true);
+      CandidateService.Edit(values)
+          .then((res) => {
+              console.log("res", res);
+          })
+          .catch((error) => {
+              console.error("error", error);
+          })
+          .finally(() => {
+              setSubmitting(false);
+          });
+      ;
   };
-  const cardStyle = {
-    position: "absolute" as "absolute",
-    //top: "50%",
-    //left: "50%",
-    //transform: "translate(-50%, -50%)",
-    // width: 400,
-    bgcolor: "background.paper",
-    // border: "2px solid brown",
-    boxShadow: 24,
-    borderRadius: "20px",
-    marginTop: "0px",
-    marginBottom: "0px",
-  };
-  const styles = {
-    modal: {
-      overflowY: "scroll",
-      overflowX: "hidden",
-      height: "95%",
-      direction: locale === 'ar' ? "rtl" : "ltr",
-    },
-    header: {
-      height: "5em",
-      position: "sticky",
-      borderTopRightRadius: "inherit",
-      borderTopLeftRadius: "inherit",
-      backgroundColor: "#A69577",
-    },
-  };
+
+  const formScheme = Yup.object().shape({
+    // first_name: Yup.string().required(translate("{0} is required", "First name")),
+    // last_name: Yup.string().required(translate("{0} is required", "Last name")),
+    // passport_first_name: Yup.string().required(translate("{0} is required", "Passport First Name")),
+    // passport_last_name: Yup.string().required(translate("{0} is required", "Passport Last Name")),
+    // passport_number: Yup.string().required(translate("{0} is required", "Passport Number")),
+    // national_number: Yup.string().required(translate("{0} is required", "National number")),
+    // sex: Yup.string().required(translate("{0} is required", "Gender")),
+    // nationality: Yup.string().required(translate("{0} is required", "Nationality")),
+  });
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style} style={styles.modal}>
-        <Card style={cardStyle}>
-          <CardHeader style={styles.header}>
-            <Grid container>
-              <Grid md={8}>
-                <h4 style={{ fontWeight: "bold" }}>{title} </h4>
-              </Grid>
-              <Grid md={4} style={{display: 'flex'}}>
-                <IconButton
-                  style={{
-                    position: "absolute",
-                    top: "1em",
-                    [locale === 'ar' ? 'left' : 'right']: "2em",
-                  }}
-                  onClick={handleClose}
-                >
-                  <Close />
-                </IconButton>
-              </Grid>
-            </Grid>
+      <Box>
+        <Card>
+          <CardHeader>
+            <h4 style={{ fontWeight: "bold", color: "#01579b" }}>{translate('Personal Info')}</h4>
           </CardHeader>
           <CardBody>
-
             <Formik
-              initialValues={initValues}
-              validationSchema={formScheme}
-              onSubmit={(values, { setSubmitting }) => {
-                submitForm(values, setSubmitting);
-              }}
+                initialValues={initValues}
+                validationSchema={formScheme}
+                onSubmit={(values, { setSubmitting }) => {
+                  submitForm(values, setSubmitting);
+                }}
             >
               {(formik) => {
                 const {
@@ -132,186 +87,302 @@ const AddCandidateModal: React.FC<ICusomModalProps> = ({
                   dirty,
                 } = formik;
                 return (
-                  <Form>
-                    <PersonInfoPartialForm prefix={"person"} formik={formik} disabled={disabled}/>
+                    <Form>
+                      <PersonInfoPartialForm prefix={"person"} formik={formik} disabled={disabled}/>
 
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                          {translate("Registeration number")}
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="registeration_number"
-                        name="registeration_number"
-                        value={values.registeration_number}
-                        onBlur={handleBlur}
-                        error={Boolean(touched.registeration_number && errors.registeration_number)}
-                        helperText={touched.registeration_number && errors.registeration_number}
-                        placeholder={translate("Registeration number")}
-                        fullWidth
-                      />
-                    </Box>
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                          {translate("Birth date")}
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="date"
-                        id="birth_date"
-                        name="birth_date"
-                        value={values.birth_date}
-                        onBlur={handleBlur}
-                        error={Boolean(touched.birth_date && errors.birth_date)}
-                        helperText={touched.birth_date && errors.birth_date}
-                        placeholder={translate("Birth date")}
-                        fullWidth
-                      />
-                    </Box>
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                          {translate("Birth place")}
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="birth_place"
-                        name="birth_place"
-                        value={values.birth_place}
-                        onBlur={handleBlur}
-                        error={Boolean(
-                          touched.birth_place && errors.birth_place
-                        )}
-                        helperText={touched.birth_place && errors.birth_place}
-                        placeholder={translate("Birth place")}
-                        fullWidth
-                      />
-                    </Box>
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                          {translate("QAID place")}
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="qaid_place"
-                        name="qaid_place"
-                        value={values.qaid_place}
-                        onBlur={handleBlur}
-                        error={Boolean(touched.qaid_place && errors.qaid_place)}
-                        helperText={touched.qaid_place && errors.qaid_place}
-                        placeholder={translate("QAID place")}
-                        fullWidth
-                      />
-                    </Box>
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                          {translate("QAID number")}
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="qaid_number"
-                        name="qaid_number"
-                        value={values.qaid_number}
-                        onBlur={handleBlur}
-                        error={Boolean(
-                          touched.qaid_number && errors.qaid_number
-                        )}
-                        helperText={
-                          touched.qaid_number && errors.qaid_number
-                        }
-                        placeholder={translate("QAID number")}
-                        fullWidth
-                      />
-                    </Box>
-                    <Box mb={2}>
-                      <Box mb={1} ml={0.5}>
-                        <Typography component="label" variant="caption">
-                          {translate("Military office")}
-                        </Typography>
-                      </Box>
-                      <TextField
-                        disabled={disabled}
-                        onChange={handleChange}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="military_office"
-                        name="military_office"
-                        value={values.military_office}
-                        onBlur={handleBlur}
-                        error={Boolean(
-                          touched.military_office && errors.military_office
-                        )}
-                        helperText={
-                          touched.military_office && errors.military_office
-                        }
-                        placeholder={translate("Military office")}
-                        fullWidth
-                      />
-                    </Box>
+                        <Grid container spacing={2}>
+                            <Grid item md={4}>
+                                <Box mb={2}>
+                                    <Box mb={1} ml={0.5}>
+                                        <Typography component="label" variant="caption">
+                                            {translate("Registeration Class")}
+                                        </Typography>
+                                    </Box>
+                                    <TextField
+                                        disabled={disabled}
+                                        variant="outlined"
+                                        size="small"
+                                        type="select"
+                                        id={`registeration_class`}
+                                        name={`registeration_class`}
+                                        select={true}
+                                        value={values.registeration_class}
+                                        onChange={handleChange(`registeration_class`)}
+                                        onBlur={handleBlur}
+                                        placeholder={translate("registeration_class")}
+                                        fullWidth
+                                    >
+                                        {registerationClasses(translate).map((_class) => (
+                                            <MenuItem key={_class} value={_class}>
+                                                {_class}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Box>
+                            </Grid>
+                            <Grid item md={4}>
+                                <Box mb={2}>
+                                    <Box mb={1} ml={0.5}>
+                                        <Typography component="label" variant="caption">
+                                            {translate("Exam Place")}
+                                        </Typography>
+                                    </Box>
+                                    <TextField
+                                        disabled={disabled}
+                                        variant="outlined"
+                                        size="small"
+                                        type="select"
+                                        id={`exam_place`}
+                                        name={`exam_place`}
+                                        select={true}
+                                        value={values.exam_place}
+                                        onChange={handleChange(`exam_place`)}
+                                        onBlur={handleBlur}
+                                        placeholder={translate("exam_place")}
+                                        fullWidth
+                                    >
+                                        {examPlaces(translate).map((place) => (
+                                            <MenuItem key={place} value={place}>
+                                                {place}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Box>
+                            </Grid>
+                            <Grid item md={4}>
+                                <Box mb={2}>
+                                    <Box mb={1} ml={0.5}>
+                                        <Typography component="label" variant="caption">
+                                            {translate("Registeration number")}
+                                        </Typography>
+                                    </Box>
+                                    <TextField
+                                        disabled={disabled}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        size="small"
+                                        type="text"
+                                        id="registeration_number"
+                                        name="registeration_number"
+                                        value={values.registeration_number}
+                                        onBlur={handleBlur}
+                                        error={Boolean(touched.registeration_number && errors.registeration_number)}
+                                        helperText={touched.registeration_number && errors.registeration_number}
+                                        placeholder={translate("Registeration number")}
+                                        fullWidth
+                                    />
+                                </Box>
+                            </Grid>
+                            <Grid item md={4}>
+                                <Box mb={2}>
+                                    <Box mb={1} ml={0.5}>
+                                        <Typography component="label" variant="caption">
+                                            {translate("Registeration Method")}
+                                        </Typography>
+                                    </Box>
+                                    <RadioGroup id={'registeration_method'} name={'registeration_method'} value={values?.registeration_method} onChange={handleChange}
+                                         defaultValue={registerationMethods(translate)[0]}>
+                                        {registerationMethods(translate).map((place) => (
+                                            <FormControlLabel value={place} control={<Radio />} label={place} />
+                                        ))}
+                                    </RadioGroup>
+                                </Box>
+                            </Grid>
+                            <Grid item md={4}>
+                                <Box mb={2}>
+                                    <Box mb={1} ml={0.5}>
+                                        <Typography component="label" variant="caption">
+                                            {translate("Study Place")}
+                                        </Typography>
+                                    </Box>
+                                    <RadioGroup id={'study_place'} name={'study_place'} value={values?.study_place} onChange={handleChange}
+                                         defaultValue={studyPlaces(translate)[0]}>
+                                        {studyPlaces(translate).map((place) => (
+                                            <FormControlLabel value={place} control={<Radio />} label={place} />
+                                        ))}
+                                    </RadioGroup>
+                                </Box>
+                            </Grid>
+                            <Grid item md={4}>
+                                <Box mb={2}>
+                                    <Box mb={1} ml={0.5}>
+                                        <Typography component="label" variant="caption">
+                                            {translate("Need Residance")}
+                                        </Typography>
+                                    </Box>
+                                    <RadioGroup id={'residance'} name={'residance'} value={values?.residance?.toString()} onChange={handleChange} defaultValue={yesNo(translate)[0].value}>
+                                        {yesNo(translate).map((option) => (
+                                            <FormControlLabel control={<Radio />} value={option.value} label={option.label}/>
+                                        ))}
+                                    </RadioGroup>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                      <Grid container spacing={2}>
+                        <Grid item md={4}>
+                          <Box mb={2}>
+                            <Box mb={1} ml={0.5}>
+                              <Typography component="label" variant="caption">
+                                {translate("Birth date")}
+                              </Typography>
+                            </Box>
+                            <TextField
+                                disabled={disabled}
+                                onChange={handleChange}
+                                variant="outlined"
+                                size="small"
+                                type="date"
+                                id="birth_date"
+                                name="birth_date"
+                                value={values.birth_date}
+                                onBlur={handleBlur}
+                                error={Boolean(touched.birth_date && errors.birth_date)}
+                                helperText={touched.birth_date && errors.birth_date}
+                                placeholder={translate("Birth date")}
+                                fullWidth
+                            />
+                          </Box>
+                        </Grid>
+                        <Grid item md={4}>
+                          <Box mb={2}>
+                            <Box mb={1} ml={0.5}>
+                              <Typography component="label" variant="caption">
+                                {translate("Birth place")}
+                              </Typography>
+                            </Box>
+                            <TextField
+                                disabled={disabled}
+                                onChange={handleChange}
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="birth_place"
+                                name="birth_place"
+                                value={values.birth_place}
+                                onBlur={handleBlur}
+                                error={Boolean(
+                                    touched.birth_place && errors.birth_place
+                                )}
+                                helperText={touched.birth_place && errors.birth_place}
+                                placeholder={translate("Birth place")}
+                                fullWidth
+                            />
+                          </Box>
+                        </Grid>
+                        <Grid item md={4}>
+                          <Box mb={2}>
+                            <Box mb={1} ml={0.5}>
+                              <Typography component="label" variant="caption">
+                                {translate("QAID place")}
+                              </Typography>
+                            </Box>
+                            <TextField
+                                disabled={disabled}
+                                onChange={handleChange}
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="qaid_place"
+                                name="qaid_place"
+                                value={values.qaid_place}
+                                onBlur={handleBlur}
+                                error={Boolean(touched.qaid_place && errors.qaid_place)}
+                                helperText={touched.qaid_place && errors.qaid_place}
+                                placeholder={translate("QAID place")}
+                                fullWidth
+                            />
+                          </Box>
+                        </Grid>
+                        <Grid item md={4}>
+                          <Box mb={2}>
+                            <Box mb={1} ml={0.5}>
+                              <Typography component="label" variant="caption">
+                                {translate("QAID number")}
+                              </Typography>
+                            </Box>
+                            <TextField
+                                disabled={disabled}
+                                onChange={handleChange}
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="qaid_number"
+                                name="qaid_number"
+                                value={values.qaid_number}
+                                onBlur={handleBlur}
+                                error={Boolean(
+                                    touched.qaid_number && errors.qaid_number
+                                )}
+                                helperText={
+                                    touched.qaid_number && errors.qaid_number
+                                }
+                                placeholder={translate("QAID number")}
+                                fullWidth
+                            />
+                          </Box>
+                        </Grid>
+                        <Grid item md={4}>
+                          <Box mb={2}>
+                            <Box mb={1} ml={0.5}>
+                              <Typography component="label" variant="caption">
+                                {translate("Military office")}
+                              </Typography>
+                            </Box>
+                            <TextField
+                                disabled={disabled}
+                                onChange={handleChange}
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                id="military_office"
+                                name="military_office"
+                                value={values.military_office}
+                                onBlur={handleBlur}
+                                error={Boolean(
+                                    touched.military_office && errors.military_office
+                                )}
+                                helperText={
+                                    touched.military_office && errors.military_office
+                                }
+                                placeholder={translate("Military office")}
+                                fullWidth
+                            />
+                          </Box>
+                        </Grid>
+                      </Grid>
+                      <PersonInfoPartialForm prefix={"father"} title={translate("Father")} formik={formik} disabled={disabled} isGray/>
+                      <PersonInfoPartialForm prefix={"mother"} title={translate("Mother")} formik={formik} disabled={disabled} isGray/>
 
-                    <PersonInfoPartialForm prefix={"father"} title={translate("Father")} formik={formik} disabled={disabled} isGray/>
-                    <PersonInfoPartialForm prefix={"mother"} title={translate("Mother")} formik={formik} disabled={disabled} isGray/>
-
-                    <Box mt={4} mb={1}>
-                      {isSubmitting ? (
-                        <SuiButton
-                          disabled={true}
-                          variant="gradient"
-                          color="info"
-                          fullWidth
-                        >
-                          {translate("Processing ...")}
-                        </SuiButton>
-                      ) : (
-                        <SuiButton
-                          disabled={!(dirty && isValid)}
-                          type="submit"
-                          variant="gradient"
-                          color="info"
-                          fullWidth
-                        >
-                          {translate("Save")}
-                        </SuiButton>
-                      )}
-                    </Box>
-                  </Form>
+                      <Box mt={4} mb={1}>
+                        {isSubmitting ? (
+                            <SuiButton
+                                disabled={true}
+                                variant="gradient"
+                                color="info"
+                                fullWidth
+                            >
+                              {translate("Processing ...")}
+                            </SuiButton>
+                        ) : (
+                            <SuiButton
+                                // disabled={!(dirty && isValid)}
+                                type="submit"
+                                variant="gradient"
+                                color="info"
+                                fullWidth
+                            >
+                              {translate("Save")}
+                            </SuiButton>
+                        )}
+                      </Box>
+                    </Form>
                 );
               }}
             </Formik>
           </CardBody>
         </Card>
       </Box>
-    </Modal>
   );
 };
 
-export default AddCandidateModal;
+export default CandidatePersonalInfo;

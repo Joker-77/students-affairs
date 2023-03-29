@@ -45,9 +45,9 @@ const colors = {
   },
 
   primary: {
-    main: "#A69577" /* "#cb0c9f", */,
-    // main: "#007bff",
-    focus: "#ad0a87",
+    // main: "#01579b" /* "#cb0c9f", */,
+    main: "#01579b",
+    focus: "#344767",
   },
 
   secondary: {
@@ -99,21 +99,21 @@ const colors = {
 
   gradients: {
     primary: {
-      main: "#A69577" /* "#cb0c9f", */,
+      main: "#01579b" /* "#cb0c9f", */,
       // main: "#7928ca",
-      state: "#ff0080",
+      state: "#344767",
     },
 
     secondary: {
-      main: "#A69577" /* "#cb0c9f", */,
+      main: "#01579b" /* "#cb0c9f", */,
       // main: "#627594",
       state: "#a8b8d8",
     },
 
     info: {
-      main: "#A69577" /* "#cb0c9f", */,
+      main: "#01579b" /* "#cb0c9f", */,
       // main: "#2152ff",
-      state: "#846A59" /* "#21d4fd" */,
+      state: "#0077b5" /* "#21d4fd" */,
     },
 
     success: {
@@ -184,8 +184,8 @@ const colors = {
     },
 
     dribbble: {
-      main: "#ea4c89",
-      dark: "#e73177",
+      main: "#344767",
+      dark: "#344767",
     },
 
     github: {

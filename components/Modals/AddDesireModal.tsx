@@ -19,6 +19,7 @@ import SuiButton from "../SuiButton";
 import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
+import colors from "../../assets/theme/base/colors";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -79,8 +80,8 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
       position: "sticky",
       borderTopRightRadius: "inherit",
       borderTopLeftRadius: "inherit",
-      backgroundColor: "#A69577",
-    },
+      backgroundColor: colors.gradients.primary.main,
+      color: "#fff",    },
   };
   return (
     <Modal
@@ -99,6 +100,7 @@ const AddDesireModal: React.FC<ICusomModalProps> = ({
               <Grid md={4}>
                 <IconButton
                   style={{
+                    color: "#fff",
                     position: "absolute",
                     top: "1em",
                     [locale === 'ar' ? 'left' : 'right']: "2em",

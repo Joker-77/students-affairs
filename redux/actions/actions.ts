@@ -29,3 +29,7 @@ export const updateProfile = createAction<any | undefined>(
 export const lockScreen = createAction<boolean | undefined>(
   actionTypes.LOCK_SCREEN
 );
+
+export const setCandidate = createAction<any | undefined>(
+    actionTypes.SELECT_CANDIDATE
+);

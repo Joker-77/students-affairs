@@ -69,3 +69,11 @@ export const userProfileSelector = createSelector(
   selectUserProfile,
   (state) => state
 );
+
+// Candidate Selector
+export const selectCandidate = (state: RootState) =>
+    state.baseReducer.candidate;
+export const candidateSelector = createSelector(
+    selectCandidate,
+    (state) => state
+);

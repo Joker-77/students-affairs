@@ -8,6 +8,7 @@ import CardBody from "../Card/CardBody.js";
 import SuiButton from "../SuiButton";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
+import colors from "../../assets/theme/base/colors";
 
 interface ICusomModalProps {
   title: string;
@@ -66,8 +67,8 @@ const EditRoleModal: React.FC<ICusomModalProps> = ({
               height: "5em",
               borderTopRightRadius: "inherit",
               borderTopLeftRadius: "inherit",
-              backgroundColor: "#A69577",
-            }}
+              backgroundColor: colors.gradients.primary.main,
+      color: "#fff",            }}
           >
             <h4 style={{ fontWeight: "bold" }}>{title}</h4>
           </CardHeader>

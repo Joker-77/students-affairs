@@ -1,5 +1,4 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { string } from "prop-types";
 import {
   setLayout,
   clearSessionKey,
@@ -12,6 +11,7 @@ import {
   updateProfile,
   lockScreen,
   setDirection,
+  setCandidate,
 } from "../actions/actions";
 import { IInitialState } from "../initalState/initialState";
 
@@ -30,6 +30,7 @@ const initialState: IInitialState = {
     Content: "",
     Type: 0,
   }, // 0 is confirmation 1 is error 2 is warning
+  candidate: null,
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -103,5 +104,8 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setDirection, (state, action) => {
       state.direction = action.payload;
+    })
+    .addCase(setCandidate, (state, action) => {
+      state.candidate = action.payload;
     });
 });

@@ -19,6 +19,7 @@ import { IPersonModel } from "../../Models/ApiResponse/PersonModel.jsx";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
 import {governorates} from "../../Static/resources";
+import colors from "../../assets/theme/base/colors";
 
 interface ICusomModalProps {
   disabled?: boolean;
@@ -78,8 +79,8 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
       position: "sticky",
       btypeTopRightRadius: "inherit",
       btypeTopLeftRadius: "inherit",
-      backgroundColor: "#A69577",
-    },
+      backgroundColor: colors.gradients.primary.main,
+      color: "#fff",    },
   };
 
   const courses = [
@@ -380,7 +381,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
 
                                                   <SuiButton
                                                       style={{ margin: 5 }}
-                                                      color="success"
+                                                      color="primary"
                                                       onClick={() => arrayHelpers.insert(index+1, {phone: '', type: ''})} // insert an empty string at a position
                                                   >
                                                     +
@@ -394,7 +395,7 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({
                                         <React.Fragment>
                                           {!disabled && <SuiButton
                                               variant="gradient"
-                                              color="success"
+                                              color="primary"
                                               onClick={() => arrayHelpers.push('')}>
                                             {/* show this when user has removed all phones from the list */}
                                             {translate("Add a mark")}

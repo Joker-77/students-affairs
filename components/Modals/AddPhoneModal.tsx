@@ -9,6 +9,7 @@ import SuiButton from "../SuiButton";
 import { IPhoneModel } from "../../Models/ApiResponse/PersonModel.jsx";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
+import colors from "../../assets/theme/base/colors";
 
 interface ICusomModalProps {
   title: string;
@@ -67,8 +68,8 @@ const AddPhoneModal: React.FC<ICusomModalProps> = ({
               height: "5em",
               borderTopRightRadius: "inherit",
               borderTopLeftRadius: "inherit",
-              backgroundColor: "#A69577",
-            }}
+              backgroundColor: colors.gradients.primary.main,
+      color: "#fff",            }}
           >
             <h4 style={{ fontWeight: "bold" }}>{title}</h4>
           </CardHeader>

@@ -1,13 +1,14 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import {
-  Modal,
-  TextField,
-  Box,
-  Typography,
-  MenuItem,
-  IconButton,
-  Grid,
+    Modal,
+    TextField,
+    Radio,
+    Box,
+    Typography,
+    MenuItem,
+    IconButton,
+    Grid, RadioGroup, FormControlLabel,
 } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import Card from "../Card/Card.js";
@@ -17,6 +18,7 @@ import SuiButton from "../SuiButton";
 import {useRouter} from "next/router";
 import {useTranslation} from "../../Utility/Translations/useTranslation";
 import {governorates, rounds, years} from "../../Static/resources";
+import colors from "../../assets/theme/base/colors";
 
 interface ICusomModalProps {
   searchResult?: object,
@@ -85,8 +87,8 @@ const SearchAddCandidateModal: React.FC<ICusomModalProps> = ({
       position: "sticky",
       borderTopRightRadius: "inherit",
       borderTopLeftRadius: "inherit",
-      backgroundColor: "#A69577",
-    },
+      backgroundColor: colors.gradients.primary.main,
+      color: "#fff",    },
   };
 
   const renderCardItem = (label, value) => (
@@ -112,6 +114,7 @@ const SearchAddCandidateModal: React.FC<ICusomModalProps> = ({
                 <Grid md={4} style={{display: 'flex'}}>
                   <IconButton
                       style={{
+                        color: "#fff",
                         position: "absolute",
                         top: "1em",
                         [locale === 'ar' ? 'left' : 'right']: "2em",
@@ -230,6 +233,7 @@ const SearchAddCandidateModal: React.FC<ICusomModalProps> = ({
                                 <Typography component="label" variant="caption">
                                   {translate('Round')}
                                 </Typography>
+
                                 <TextField
                                     disabled={disabled||searchResult?.found}
                                     id="round"
@@ -269,30 +273,30 @@ const SearchAddCandidateModal: React.FC<ICusomModalProps> = ({
                                 : <h4>{translate('Student is not exist')}</h4>}
                           </Card>
 
-                          {searchResult.found &&
-                            <Box mb={2}>
-                            <Box mb={1} ml={0.5}>
-                              <Typography component="label" variant="caption">
-                                {translate("Registeration number")}
-                              </Typography>
-                            </Box>
-                            <TextField
-                                disabled={disabled}
-                                onChange={handleChange}
-                                variant="outlined"
-                                size="small"
-                                type="text"
-                                id="registeration_number"
-                                name="registeration_number"
-                                value={values.registeration_number}
-                                onBlur={handleBlur}
-                                error={Boolean(touched.registeration_number && errors.registeration_number)}
-                                helperText={touched.registeration_number && errors.registeration_number}
-                                placeholder={translate("Registeration number")}
-                                fullWidth
-                            />
-                          </Box>
-                          }
+                          {/*{searchResult.found &&*/}
+                          {/*  <Box mb={2}>*/}
+                          {/*  <Box mb={1} ml={0.5}>*/}
+                          {/*    <Typography component="label" variant="caption">*/}
+                          {/*      {translate("Registeration number")}*/}
+                          {/*    </Typography>*/}
+                          {/*  </Box>*/}
+                          {/*  <TextField*/}
+                          {/*      disabled={disabled}*/}
+                          {/*      onChange={handleChange}*/}
+                          {/*      variant="outlined"*/}
+                          {/*      size="small"*/}
+                          {/*      type="text"*/}
+                          {/*      id="registeration_number"*/}
+                          {/*      name="registeration_number"*/}
+                          {/*      value={values.registeration_number}*/}
+                          {/*      onBlur={handleBlur}*/}
+                          {/*      error={Boolean(touched.registeration_number && errors.registeration_number)}*/}
+                          {/*      helperText={touched.registeration_number && errors.registeration_number}*/}
+                          {/*      placeholder={translate("Registeration number")}*/}
+                          {/*      fullWidth*/}
+                          {/*  />*/}
+                          {/*</Box>*/}
+                          {/*}*/}
                         </React.Fragment>
                         }
 
@@ -322,7 +326,7 @@ const SearchAddCandidateModal: React.FC<ICusomModalProps> = ({
                                     disabled={!(dirty && isValid)}
                                     type="submit"
                                     variant="gradient"
-                                    color="success"
+                                    color="primary"
                                     fullWidth
                                 >
                                   {translate("Add to candidates")}
