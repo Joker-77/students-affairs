@@ -1,6 +1,7 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
+import Books from "@material-ui/icons/FileCopy";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
@@ -27,6 +28,13 @@ const dashboardRoutes = [
     name: "Specialities",
     rtlName: "الاختصاصات",
     icon: LibraryBooks,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/courses/courses-list",
+    name: "Courses",
+    rtlName: "المقررات",
+    icon: Books,
     layout: "/students_affairs",
   },
   // {

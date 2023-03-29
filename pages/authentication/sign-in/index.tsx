@@ -27,7 +27,7 @@ import {
 import LoginService from "../../../Services/LoginService";
 import { ApiResponse } from "../../../Models/ApiResponse/ApiResponse";
 import { YearsModel } from "../../../Models/ApiResponse/YearsModel";
-import {useTranslation} from "../../../Utility/Translations/useTranslation";
+import { useTranslation } from "../../../Utility/Translations/useTranslation";
 // Images
 const bg7 = require("./../../../assets/img/curved-images/HIAST.jpg");
 
@@ -89,7 +89,14 @@ function SignIn() {
     //   .required("Email is required"),
     password: Yup.string()
       .required(translate("{0} is required", "Password"))
-      .min(4, translate("Password is too short - should be {0} chars minimum", "4", false)),
+      .min(
+        4,
+        translate(
+          "Password is too short - should be {0} chars minimum",
+          "4",
+          false
+        )
+      ),
   });
   const submitForm = async (values: any, setSubmitting) => {
     console.log("values", values);

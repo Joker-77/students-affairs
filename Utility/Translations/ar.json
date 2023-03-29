@@ -4,7 +4,7 @@
   "Actions": "الأزرار",
   "First Page": "الصفحة الأولى",
   "Previous Page": "الصفخة السابقة",
-  "Next Page":  "الصفحة التالي",
+  "Next Page": "الصفحة التالي",
   "Rows": "أسطر",
   "Rows per page": "سطر بالصفحة",
   "Last Page": "الصفحة الأخيرة",
@@ -18,6 +18,9 @@
   "Add New Speciality": "إضافة اختصاص جديد",
   "Add Candidate": "إضافة مرشح",
   "Update Candidate": "تعديل مرشح",
+
+  "Add New Course": "إضافة مقرر جديد",
+  "Courses List": "قائمة المقررات",
 
   "Private": "خاص",
   "Family": "عائلي",
@@ -48,8 +51,8 @@
   "Military office": "شعبة التجنيد",
   "Father": "الأب",
   "Mother": "الأم",
-  "Processing ...":  "قيد المعالجة ...",
-  "Save":  "حفظ",
+  "Processing ...": "قيد المعالجة ...",
+  "Save": "حفظ",
   "Certificates": "الشهادات",
   "Desires": "الرغبات",
   "Registration Desires": "رغبات التسجيل",
@@ -137,5 +140,12 @@
   "Search": "بحث",
   "Student is not exist": "الطالب غير موجود",
   "Add to candidates": "إضافة إلى المرشحين",
-  "This Candidate Already Exists": "المرشح مضاف مسبقاً"
+  "This Candidate Already Exists": "المرشح مضاف مسبقاً",
+
+  "Filter": "فلتر",
+  "None": "بلا",
+  "Name": "الاسم",
+  "Number of all hours": "عدد الساعات الكلي",
+  "Number of accredited hours": "عدد الساعات المعتمدة",
+  "Sort By": "ترتيب حسب"
 }

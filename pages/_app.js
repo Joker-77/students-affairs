@@ -69,7 +69,7 @@ export default class MyApp extends App {
                   {/*<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>*/}
                 </Head>
                 <Layout>
-                  <ThemeProvider theme={theme}>
+                  <ThemeProvider theme={themeRTL}>
                     <CssBaseline />
                     <CustomToastContainer/>
                     <Component {...pageProps} />

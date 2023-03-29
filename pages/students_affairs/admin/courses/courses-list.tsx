@@ -28,11 +28,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
 
 interface ICandidatesListProps {}
-class React.Component extends Component<ICandidatesListProps> = ({...props}) =>{
-  render() {
-    return <></>
-  }
-}
+
 const CandidatesList: React.FC<ICandidatesListProps> = ({}) => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
