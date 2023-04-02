@@ -13,7 +13,6 @@ import themeRTL from "assets/theme/theme-rtl";
 import "assets/css/nextjs-material-dashboard.css?v=1.1.0";
 import { CssBaseline } from "@material-ui/core";
 import { SessionProvider, useSession, getSession } from "next-auth/react";
-import AuthProvider from "../components/AuthProvider/AuthProvider";
 import CustomToastContainer from "./_toast";
 
 Router.events.on("routeChangeStart", (url) => {
@@ -58,25 +57,22 @@ export default class MyApp extends App {
       <Provider store={store}>
         <SessionProvider session={pageProps.session}>
           {Component.auth ? (
-            <AuthProvider>
-              <React.Fragment>
-                <Head>
-                  <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1, shrink-to-fit=no"
-                  />
-                  <title></title>
-                  {/*<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>*/}
-                </Head>
-                <Layout>
-                  <ThemeProvider theme={themeRTL}>
-                    <CssBaseline />
-                    <CustomToastContainer/>
-                    <Component {...pageProps} />
-                  </ThemeProvider>
-                </Layout>
-              </React.Fragment>
-            </AuthProvider>
+            <React.Fragment>
+              <Head>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1, shrink-to-fit=no"
+                />
+                <title></title>
+              </Head>
+              <Layout>
+                <ThemeProvider theme={themeRTL}>
+                  <CssBaseline />
+                  <CustomToastContainer />
+                  <Component {...pageProps} />
+                </ThemeProvider>
+              </Layout>
+            </React.Fragment>
           ) : (
             <React.Fragment>
               <Head>
@@ -85,12 +81,11 @@ export default class MyApp extends App {
                   content="width=device-width, initial-scale=1, shrink-to-fit=no"
                 />
                 <title></title>
-                {/*<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>*/}
               </Head>
               <Layout>
                 <ThemeProvider theme={theme}>
                   <CssBaseline />
-                  <CustomToastContainer/>
+                  <CustomToastContainer />
                   <Component {...pageProps} />
                 </ThemeProvider>
               </Layout>

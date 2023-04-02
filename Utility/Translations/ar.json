@@ -19,8 +19,17 @@
   "Add Candidate": "إضافة مرشح",
   "Update Candidate": "تعديل مرشح",
 
+  "Course": "المقرر",
   "Add New Course": "إضافة مقرر جديد",
   "Courses List": "قائمة المقررات",
+  "Course Details": "تفاصيل المقرر",
+  "French Name": "الاسم بالفرنسية",
+  "Course Code": "رمز المقرر",
+  "Total Hours": "عدد الساعات الكلية",
+  "Credit Hours": "عدد الساعات المعتمدة",
+  "Add Course Document": "إضافة استمارة مقرر",
+  "Export To Excel": "تصدير إلى إكسل",
+  "Print": "طباعة",
 
   "Private": "خاص",
   "Family": "عائلي",
@@ -187,5 +196,12 @@
   "Canceled": "مستنكف",
   "Waiting": "احتياط",
   "Waiting number": "رقم الاحتياط",
-  "Registration updated.": "تم تحديث بيانات المفاضلة"
+  "Registration updated.": "تم تحديث بيانات المفاضلة",
+
+  "Delete": "حذف",
+  "Filter": "فلتر",
+  "None": "بلا",
+  "Sort By": "ترتيب حسب",
+  "Number of all hours": "عدد الساعات الكلية",
+  "Number of accredited hours": "عدد الساعات المعتمدة"
 }

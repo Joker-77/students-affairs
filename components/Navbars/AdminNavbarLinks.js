@@ -26,8 +26,8 @@ import {
   useAppDispatch,
   useAppSelector,
   setSessionKey,
-} from "../../redux"
-import {Link} from "@material-ui/core";
+} from "../../redux";
+import { signOut, useSession } from "next-auth/react";
 export default function AdminNavbarLinks() {
   const router = useRouter();
   const size = useWindowSize();
@@ -60,15 +60,18 @@ export default function AdminNavbarLinks() {
     setOpenProfile(null);
   };
   const handleChangeLanguage = () => {
-    console.log('current locale: ', router.locale);
-    const newLocale = router.locale === 'ar' ? 'en' : 'ar';
-    router.push('/students_affairs/dashboard', '/students_affairs/dashboard', { locale:  newLocale});
+    console.log("current locale: ", router.locale);
+    const newLocale = router.locale === "ar" ? "en" : "ar";
+    router.push("/students_affairs/dashboard", "/students_affairs/dashboard", {
+      locale: newLocale,
+    });
   };
   const handleSignOut = (e) => {
     localStorage.removeItem("sa_access_token");
     dispatchSessionKey(setSessionKey(""));
     router.push("/authentication/sign-in");
-  }
+    signOut();
+  };
   return (
     <div>
       <div className={classes.searchWrapper}>

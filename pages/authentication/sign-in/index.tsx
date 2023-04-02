@@ -16,7 +16,7 @@ import SuiButton from "../../../components/SuiButton";
 import SuiInput from "../../../components/SuiInput";
 import "../../../assets/css/main.css";
 import { ISignInForm } from "../../../Models/SignInForm";
-import { signIn, useSession } from "next-auth/react";
+import { getProviders, getSession, signIn, useSession } from "next-auth/react";
 import {
   selectSessionKey,
   useAppDispatch,
@@ -36,10 +36,18 @@ function SignIn() {
   const { locale } = useRouter();
 
   const dispatch = useAppDispatch();
-  const sessionKey = useAppSelector(selectSessionKey);
+
   const [rememberMe, setRememberMe] = useState(true);
   const [_currentSessionKey, setCurrentSessionKey] = useState<string>("");
+
   const { data: session } = useSession();
+  const isUser = !!session?.user;
+  const sessionKey = useAppSelector(selectSessionKey);
+
+  useEffect(() => {
+    if (!!sessionKey) router.push("/students_affairs/dashboard");
+  }, [sessionKey]);
+
   const [isLoading, setLoading] = useState(false);
   const [years, setYears] = useState<YearsModel[]>([]);
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -51,6 +59,7 @@ function SignIn() {
   };
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const router = useRouter();
+
   async function fetchApi() {
     let data = (await LoginService.GetYears()) as ApiResponse;
     console.log("years", data);
@@ -61,25 +70,15 @@ function SignIn() {
   };
   useEffect(() => {
     setLoading(true);
-    // const applyFetchApi = async () => {
-    //   const data = (await fetchApi()) as ApiResponse;
-    //   if (data.success) {
-    //     setYears(data.result);
-
-    //     if (data.result != null && Array.isArray(data.result)) {
-    //       data.result.length > 0
-    //         ? setSelectedYear(data.result[0].id.toString())
-    //         : setSelectedYear("");
-    //     }
-    //   } else {
-    //     console.error("Api Error:", data.error);
-    //   }
-    //   setLoading(false);
-    // };
-    // applyFetchApi().catch((ex) => {
-    //   console.error(ex);
-    // });
   }, []);
+
+  const { status, data } = useSession();
+
+  useEffect(() => {
+    console.log("status", status);
+    console.log("data", data);
+    if (status === "authenticated") router.replace("/");
+  }, [status]);
 
   const SignInSchema = Yup.object().shape({
     username: Yup.string().required(translate("{0} is required", "Username")),
@@ -100,16 +99,12 @@ function SignIn() {
   });
   const submitForm = async (values: any, setSubmitting) => {
     console.log("values", values);
-    const resp = await signIn("Hiast", {
-      redirect: false,
-      callbackUrl: `${window.location.origin}`,
-      username: values.username,
+    const resp = await signIn("credentials", {
+      email: values.username,
       password: values.password,
+      redirect: false,
     });
-    console.log(resp);
-    // dispatch(setSessionKey(resp.token));
-    router.push(process.env.SITE_URL + "/student_affairs/dashboard");
-    setSubmitting(false);
+    router.push("/student_affairs/dashboard");
   };
   return (
     <CoverLayout
@@ -265,5 +260,4 @@ function SignIn() {
     </CoverLayout>
   );
 }
-
 export default SignIn;

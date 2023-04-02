@@ -21,8 +21,9 @@ import useWindowSize from "components/Hooks/useWindowSize.js";
 
 import styles from "assets/jss/nextjs-material-dashboard/components/rtlHeaderLinksStyle.js";
 import Divider from "@material-ui/core/Divider";
-import {setSessionKey, useAppDispatch} from "../../redux";
-import {useRouter} from "next/router";
+import { setSessionKey, useAppDispatch } from "../../redux";
+import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 
 export default function RTLNavbarLinks() {
   const router = useRouter();
@@ -60,7 +61,8 @@ export default function RTLNavbarLinks() {
     localStorage.removeItem("sa_access_token");
     dispatchSessionKey(setSessionKey(""));
     router.push("/authentication/sign-in");
-  }
+    signOut();
+  };
 
   return (
     <div>
@@ -115,7 +117,6 @@ export default function RTLNavbarLinks() {
           )}
         </Poppers>
       </div>
-
     </div>
   );
 }
