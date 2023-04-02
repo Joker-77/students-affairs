@@ -164,7 +164,15 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       let actions = [
         {
           icon: () => (
-            <SuiButton style={{ minWidth: 80 }} color={"danger"}>
+            <SuiButton
+              style={{
+                minWidth: 80,
+                color: "#dc3545",
+                backgroundColor: "transparent",
+                border: "1px solid #dc3545",
+              }}
+              color={"danger"}
+            >
               {translate("Delete")}
             </SuiButton>
           ),
@@ -177,7 +185,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
         },
         {
           icon: () => (
-            <SuiButton style={{ minWidth: 140 }} color={"primary"}>
+            <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
               {translate("Course Details")}
             </SuiButton>
           ),
