@@ -14,12 +14,21 @@ import { useTranslation } from "../../../../Utility/Translations/useTranslation"
 import GridItem from "../../../../components/Grid/GridItem";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
+import { connect } from "react-redux";
+import SuiButton from "../../../../components/SuiButton";
+import { ArrowBack, Backspace } from "@material-ui/icons";
 
 interface ICourseDetailProps {
+  show: boolean;
   courseDetail: ICourseModel;
+  setShow(): void;
 }
 
-const CourseDetail: FC<ICourseDetailProps> = ({ courseDetail, ...props }) => {
+const CourseDetail: FC<ICourseDetailProps> = ({
+  courseDetail,
+  setShow,
+  ...props
+}) => {
   const { translate } = useTranslation();
   const [details, setDetails] = useState(courseDetail);
   const initialValues: ICourseDetailProps | any = {};
@@ -52,12 +61,23 @@ const CourseDetail: FC<ICourseDetailProps> = ({ courseDetail, ...props }) => {
     <Grid container md={12} sm={12}>
       <Grid md={12} sm={12} xs={12}>
         <Card style={{ padding: "1em 4em", margin: "5px 0px" }}>
-          <Typography variant="h5" component="div">
-            {translate("Course Name")}: {details?.ar_name ?? "التحليل الرياضي"}
-          </Typography>
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            {translate("Course Details")}
-          </Typography>
+          <Grid container>
+            <GridItem item md={9} xs={12} sm={12}>
+              <Typography variant="h5" component="div">
+                {translate("Course Name")}:{" "}
+                {details?.ar_name ?? "التحليل الرياضي"}
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {translate("Course Details")}
+              </Typography>
+            </GridItem>
+            <GridItem md={3} xs={12} sm={12}>
+              <SuiButton onClick={setShow} color={"warning"}>
+                <ArrowBack />
+                {translate("Back To Previous Page")}
+              </SuiButton>
+            </GridItem>
+          </Grid>
         </Card>
         <Card style={{ padding: "3em 3em", margin: "5px 0px" }}>
           <Formik
@@ -224,5 +244,11 @@ const CourseDetail: FC<ICourseDetailProps> = ({ courseDetail, ...props }) => {
 
 (CourseDetail as any).layout = Admin;
 (CourseDetail as any).auth = false;
+const mapStateToProps = (state) => {
+  console.log("state", state);
+  return {
+    candidate: state.baseReducer.course,
+  };
+};
 
-export default CourseDetail;
+export default connect(mapStateToProps, null)(CourseDetail);

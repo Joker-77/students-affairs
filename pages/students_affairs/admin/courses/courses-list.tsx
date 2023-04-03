@@ -37,6 +37,8 @@ import { useTranslation } from "../../../../Utility/Translations/useTranslation"
 import { ICourseModel } from "../../../../Models/ApiResponse/Courses/CourseModel";
 import CourseService from "../../../../Services/CourseService";
 import SuiButton from "../../../../components/SuiButton";
+import CandidateDetails from "../../affairs_officer/candidates/candidate-details";
+import CourseDetails from "./course-details";
 
 interface ICoursesListProps {}
 const CoursesList: React.FC<ICoursesListProps> = ({}) => {
@@ -44,9 +46,12 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
-
+  const [showCandidateDetail, setshowCandidateDetail] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [searchResult, setSearchResult] = React.useState(null);
+  const setShow = () => {
+    setshowCandidateDetail(!showCandidateDetail);
+  };
   const handleOpen = () => {
     setOpen(true);
   };
@@ -59,13 +64,13 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setLabelWidth(inputLabel.current.offsetWidth);
+    setLabelWidth(inputLabel?.current?.offsetWidth);
   }, []);
 
   const inputSortLabel = React.useRef(null);
   const [sortLabelWidth, setSortLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setSortLabelWidth(inputSortLabel.current.offsetWidth);
+    setSortLabelWidth(inputSortLabel?.current?.offsetWidth);
   }, []);
 
   const filters = [
@@ -190,10 +195,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
             </SuiButton>
           ),
           onClick: (evt, data) => {
-            dispatch(setCandidate(data));
-            router.push(
-              `/${router.locale}/students_affairs/affairs_officer/candidates/${btnPage}`
-            );
+            setshowCandidateDetail(true);
           },
         },
       ];
@@ -210,154 +212,165 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   };
   return (
     <GridContainer>
-      <GridItem md={12}>
-        <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
-          <GridItem md={7}>
-            <Button
-              style={{ margin: "0px 5px" }}
-              disabled={false}
-              variant="contained"
-              className={classes.submitBtn}
-              onClick={handleOpen}
-            >
-              <span style={{ padding: "0px 0px 0px 10px" }}>
-                {translate("Add New Course")}
-              </span>
-              <Add />
-            </Button>
+      {!showCandidateDetail && (
+        <>
+          <GridItem md={12}>
+            <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
+              <GridItem md={7}>
+                <Button
+                  style={{ margin: "0px 5px" }}
+                  disabled={false}
+                  variant="contained"
+                  className={classes.submitBtn}
+                  onClick={handleOpen}
+                >
+                  <span style={{ padding: "0px 0px 0px 10px" }}>
+                    {translate("Add New Course")}
+                  </span>
+                  <Add />
+                </Button>
+              </GridItem>
+              <GridItem>
+                <Button
+                  style={{ margin: "0px 5px" }}
+                  disabled={false}
+                  variant="contained"
+                  className={classes.submitBtn}
+                  onClick={handleOpen}
+                >
+                  <span style={{ padding: "0px 0px 0px 10px" }}>
+                    {translate("Print")}
+                  </span>
+                  <Print />
+                </Button>
+                <Button
+                  style={{ margin: "0px 5px" }}
+                  disabled={false}
+                  variant="contained"
+                  className={classes.submitBtn}
+                  onClick={handleOpen}
+                >
+                  <span style={{ padding: "0px 0px 0px 10px" }}>
+                    {translate("Export to excel")}
+                  </span>
+                  <Description />
+                </Button>
+                <Button
+                  style={{ margin: "0px 5px" }}
+                  disabled={false}
+                  variant="contained"
+                  className={classes.submitBtn}
+                  onClick={handleOpen}
+                >
+                  <span style={{ padding: "0px 0px 0px 10px" }}>
+                    {translate("Add Course Document")}
+                  </span>
+                  <AddBox />
+                </Button>
+              </GridItem>
+            </GridItem>
+            <GridItem style={{ marginBottom: "1em", marginTop: "2em" }}>
+              <FormControl
+                size="small"
+                variant="outlined"
+                style={{ minWidth: 150, margin: "0 0 0 1em" }}
+              >
+                <InputLabel
+                  style={{ display: "flex" }}
+                  shrink
+                  ref={inputLabel}
+                  htmlFor="outlined-filter"
+                >
+                  <span>{translate("Filter")}</span>
+                  <FilterList />
+                </InputLabel>
+                <Select
+                  id="select-filter"
+                  value={filter}
+                  onChange={handleChangeFilter}
+                  label={filters[filter].label}
+                  input={
+                    <OutlinedInput
+                      notched
+                      labelWidth={labelWidth}
+                      name="filter"
+                      id="outlined-filter"
+                    />
+                  }
+                >
+                  {filters.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <TextField
+                  size="small"
+                  id="outlined-basic"
+                  label="بحث"
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                ></TextField>
+              </FormControl>
+              <FormControl
+                size="small"
+                variant="outlined"
+                style={{ minWidth: 150, margin: "0 1em 0 1em" }}
+              >
+                <InputLabel
+                  style={{ display: "flex" }}
+                  shrink
+                  ref={inputSortLabel}
+                  htmlFor="outlined-sort"
+                >
+                  <span>{translate("Sort By")}</span>
+                  <Sort />
+                </InputLabel>
+                <Select
+                  displayEmpty
+                  fullWidth
+                  labelId="autowidth-label"
+                  id="select-sort"
+                  value={sortBy}
+                  onChange={handleSortBy}
+                  autoWidth
+                  input={
+                    <OutlinedInput
+                      notched
+                      labelWidth={sortLabelWidth}
+                      name="sort"
+                      id="outlined-sort"
+                    />
+                  }
+                  label={filters[sortBy].label}
+                >
+                  {filters.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </GridItem>
           </GridItem>
-          <GridItem>
-            <Button
-              style={{ margin: "0px 5px" }}
-              disabled={false}
-              variant="contained"
-              className={classes.submitBtn}
-              onClick={handleOpen}
-            >
-              <span style={{ padding: "0px 0px 0px 10px" }}>
-                {translate("Print")}
-              </span>
-              <Print />
-            </Button>
-            <Button
-              style={{ margin: "0px 5px" }}
-              disabled={false}
-              variant="contained"
-              className={classes.submitBtn}
-              onClick={handleOpen}
-            >
-              <span style={{ padding: "0px 0px 0px 10px" }}>
-                {translate("Export to excel")}
-              </span>
-              <Description />
-            </Button>
-            <Button
-              style={{ margin: "0px 5px" }}
-              disabled={false}
-              variant="contained"
-              className={classes.submitBtn}
-              onClick={handleOpen}
-            >
-              <span style={{ padding: "0px 0px 0px 10px" }}>
-                {translate("Add Course Document")}
-              </span>
-              <AddBox />
-            </Button>
-          </GridItem>
-        </GridItem>
-        <GridItem style={{ marginBottom: "1em", marginTop: "2em" }}>
-          <FormControl
-            size="small"
-            variant="outlined"
-            style={{ minWidth: 150, margin: "0 0 0 1em" }}
-          >
-            <InputLabel
-              style={{ display: "flex" }}
-              shrink
-              ref={inputLabel}
-              htmlFor="outlined-filter"
-            >
-              <span>{translate("Filter")}</span>
-              <FilterList />
-            </InputLabel>
-            <Select
-              id="select-filter"
-              value={filter}
-              onChange={handleChangeFilter}
-              label={filters[filter].label}
-              input={
-                <OutlinedInput
-                  notched
-                  labelWidth={labelWidth}
-                  name="filter"
-                  id="outlined-filter"
-                />
-              }
-            >
-              {filters.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <TextField
-              size="small"
-              id="outlined-basic"
-              label="بحث"
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-            ></TextField>
-          </FormControl>
-          <FormControl
-            size="small"
-            variant="outlined"
-            style={{ minWidth: 150, margin: "0 1em 0 1em" }}
-          >
-            <InputLabel
-              style={{ display: "flex" }}
-              shrink
-              ref={inputSortLabel}
-              htmlFor="outlined-sort"
-            >
-              <span>{translate("Sort By")}</span>
-              <Sort />
-            </InputLabel>
-            <Select
-              displayEmpty
-              fullWidth
-              labelId="autowidth-label"
-              id="select-sort"
-              value={sortBy}
-              onChange={handleSortBy}
-              autoWidth
-              input={
-                <OutlinedInput
-                  notched
-                  labelWidth={sortLabelWidth}
-                  name="sort"
-                  id="outlined-sort"
-                />
-              }
-              label={filters[sortBy].label}
-            >
-              {filters.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </GridItem>
-      </GridItem>
-      <GridItem md={12}>{renderCandidates()}</GridItem>
+          <GridItem md={12}>{renderCandidates()}</GridItem>
+        </>
+      )}
+      {showCandidateDetail && (
+        <CourseDetails
+          setShow={setShow}
+          show={showCandidateDetail}
+          courseDetail={null}
+        />
+      )}
     </GridContainer>
   );
 };
