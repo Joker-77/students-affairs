@@ -9,6 +9,10 @@ export interface ICourseModel {
   current_description: ICourseDescriptionModel;
 }
 
+export interface IEvaluationMethod {
+  name: string;
+  percentage: number;
+}
 export interface ICourseDescriptionModel {
   id: 2;
   course_id: 1;
@@ -17,6 +21,6 @@ export interface ICourseDescriptionModel {
   updated_at: string;
   attachement: any;
   total_hours: number;
-  evaluation_methods: [];
+  evaluation_methods: IEvaluationMethod[];
   hours: [];
 }

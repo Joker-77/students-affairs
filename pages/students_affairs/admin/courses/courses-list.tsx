@@ -46,7 +46,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
-  const [showCandidateDetail, setshowCandidateDetail] = React.useState(false);
+  const [showCandidateDetail, setshowCandidateDetail] = React.useState(true);
   const [open, setOpen] = React.useState(false);
   const [searchResult, setSearchResult] = React.useState(null);
   const setShow = () => {

@@ -1,11 +1,16 @@
-import React, { FC, useState } from "react";
-import { ICourseModel } from "../../../../Models/ApiResponse/Courses/CourseModel";
+import React, { FC, useEffect, useState } from "react";
+import {
+  ICourseModel,
+  IEvaluationMethod,
+} from "../../../../Models/ApiResponse/Courses/CourseModel";
 import Card from "../../../../components/Card/Card";
 import {
+  Box,
   CardActions,
   CardContent,
   Divider,
   Grid,
+  MenuItem,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -13,10 +18,10 @@ import Admin from "../../../../layouts/Admin";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
 import GridItem from "../../../../components/Grid/GridItem";
 import * as yup from "yup";
-import { Form, Formik } from "formik";
+import { Field, FieldArray, Form, Formik, getIn, ErrorMessage } from "formik";
 import { connect } from "react-redux";
 import SuiButton from "../../../../components/SuiButton";
-import { ArrowBack, Backspace } from "@material-ui/icons";
+import { Add, ArrowBack, Backspace } from "@material-ui/icons";
 
 interface ICourseDetailProps {
   show: boolean;
@@ -29,9 +34,23 @@ const CourseDetail: FC<ICourseDetailProps> = ({
   setShow,
   ...props
 }) => {
+  const methodTypes = [
+    {
+      id: "midTerm",
+      name: "مذاكرة",
+    },
+    {
+      id: "exam",
+      name: "امتحان",
+    },
+    {
+      id: "practicalExam",
+      name: "امتحان عملي",
+    },
+  ];
   const { translate } = useTranslation();
   const [details, setDetails] = useState(courseDetail);
-  const initialValues: ICourseDetailProps | any = {};
+  const initialValues: any = {};
   const [submitting, setSubmitting] = useState(false);
   const courseSchema = yup.object({
     en_name: yup
@@ -55,7 +74,46 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       .number("Practical Hours")
       .min(0, translate("Field must be greater than 0"))
       .required(translate("Field is required")),
+    evaluation_methods: yup
+      .array()
+      .of(
+        yup.object().shape({
+          name: yup.string().required("Name is required"),
+          percentage: yup
+            .number()
+            .min(0, translate("Field must be greater than 0"))
+            .max(100, translate("Field must be less than 100"))
+            .transform((value) => (isNaN(value) ? undefined : value))
+            .required("Percentage is required"),
+        })
+      )
+      .min(1, "Need at least a evaluation method")
+      .test((methods: Array<{ percentage: number }>) => {
+        const sum = methods.reduce((acc, curr) => acc + curr.percentage, 0);
+        if (sum != 100) {
+          isNaN(sum)
+            ? setErrorPercentageMsg(
+                translate("Percentage should be 100%, but you have:") + "0%"
+              )
+            : setErrorPercentageMsg(
+                translate("Percentage should be 100%, but you have:") +
+                  sum +
+                  "%"
+              );
+          return new yup.ValidationError(
+            translate(
+              `Percentage should be 100%, but you have ${sum}%`,
+              undefined,
+              translate("Evaluation Methods")
+            )
+          );
+        } else {
+          setErrorPercentageMsg("");
+          return true;
+        }
+      }),
   });
+  const [errorPercentageMsg, setErrorPercentageMsg] = useState("");
   const submitForm = () => {};
   return (
     <Grid container md={12} sm={12}>
@@ -231,6 +289,149 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                       </GridItem>
                     </Grid>
                   </Grid>
+                  <Divider style={{ margin: "2em 0em" }} />
+                  <Box mb={1} ml={0.5}>
+                    <Typography component="label" variant="caption">
+                      {translate("Evalutations Method")}
+                    </Typography>
+                  </Box>
+                  <Box my={1}>
+                    <Typography component="label" variant="caption">
+                      {errorPercentageMsg && (
+                        <label style={{ color: "rgb(234, 6, 6)" }}>
+                          {errorPercentageMsg}
+                        </label>
+                      )}
+                    </Typography>
+                  </Box>
+                  <FieldArray
+                    name={"evaluation_methods"}
+                    render={(arrayHelpers) => (
+                      <div>
+                        {values?.evaluation_methods &&
+                        values?.evaluation_methods.length > 0 ? (
+                          values?.evaluation_methods.map((method, index) => (
+                            <div key={index}>
+                              <Grid container spacing={2}>
+                                <Grid item xs={4}>
+                                  <TextField
+                                    variant="outlined"
+                                    size="small"
+                                    type="select"
+                                    id={`evaluation_methods.${index}.name`}
+                                    name={`evaluation_methods.${index}.name`}
+                                    select={true}
+                                    value={method.name}
+                                    onChange={handleChange(
+                                      `evaluation_methods.${index}.name`
+                                    )}
+                                    onBlur={handleBlur}
+                                    fullWidth
+                                  >
+                                    {methodTypes?.map((type) => (
+                                      <MenuItem key={type.id} value={type.id}>
+                                        {type.name}
+                                      </MenuItem>
+                                    ))}
+                                  </TextField>
+                                </Grid>
+                                <Grid
+                                  item
+                                  xs={4}
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                  }}
+                                >
+                                  <TextField
+                                    onChange={handleChange(
+                                      `evaluation_methods.${index}.percentage`
+                                    )}
+                                    variant="outlined"
+                                    size="small"
+                                    type="number"
+                                    id={`$evaluation_methods.${index}.percentage`}
+                                    name={`evaluation_methods.${index}.percentage`}
+                                    value={method.percentage}
+                                    onBlur={handleBlur}
+                                    error={Boolean(
+                                      errors &&
+                                        errors.evaluation_methods &&
+                                        errors.evaluation_methods[index] &&
+                                        errors.evaluation_methods[index]
+                                          .percentage &&
+                                        touched &&
+                                        touched.evaluation_methods &&
+                                        touched.evaluation_methods[index] &&
+                                        touched.evaluation_methods[index]
+                                          .percentage
+                                    )}
+                                    helperText={
+                                      errors &&
+                                      errors.evaluation_methods &&
+                                      errors.evaluation_methods[index] &&
+                                      errors.evaluation_methods[index]
+                                        .percentage &&
+                                      touched &&
+                                      touched.evaluation_methods &&
+                                      touched.evaluation_methods[index] &&
+                                      touched.evaluation_methods[index]
+                                        .percentage
+                                    }
+                                    placeholder={translate("Percentage")}
+                                    //fullWidth
+                                  />
+                                  <label style={{ color: "rgb(234, 6, 6)" }}>
+                                    <ErrorMessage
+                                      name={`evaluation_methods.${index}.percentage`}
+                                    />
+                                  </label>
+                                </Grid>
+                                <Grid item xs={4}>
+                                  <SuiButton
+                                    style={{ margin: 5 }}
+                                    color="error"
+                                    onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
+                                  >
+                                    -
+                                  </SuiButton>
+                                  <SuiButton
+                                    style={{ margin: 5 }}
+                                    color="primary"
+                                    onClick={() =>
+                                      arrayHelpers.push({
+                                        name: "",
+                                        percentage: 0,
+                                      })
+                                    } // insert an empty string at a position
+                                  >
+                                    +
+                                  </SuiButton>
+                                </Grid>
+                              </Grid>
+                            </div>
+                          ))
+                        ) : (
+                          <React.Fragment>
+                            <SuiButton
+                              variant="gradient"
+                              color="success"
+                              onClick={() =>
+                                arrayHelpers.push({
+                                  name: "",
+                                  percentage: 0,
+                                })
+                              }
+                            >
+                              {/* show this when user has removed all phones from the list */}
+                              {translate("Add an evaluation method")}
+                              <Add />
+                            </SuiButton>
+                          </React.Fragment>
+                        )}
+                      </div>
+                    )}
+                  />
                 </Form>
               );
             }}
