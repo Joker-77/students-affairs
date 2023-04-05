@@ -104,7 +104,11 @@ function SignIn() {
       password: values.password,
       redirect: false,
     });
-    router.push("/student_affairs/dashboard");
+    console.log(resp);
+    if (resp.ok) {
+      router.push("/student_affairs/dashboard");
+    } else {
+    }
   };
   return (
     <CoverLayout

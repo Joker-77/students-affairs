@@ -2,10 +2,11 @@ import React, { FC, useEffect, useState } from "react";
 import {
   ICourseModel,
   IEvaluationMethod,
-} from "../../../../Models/ApiResponse/Courses/CourseModel";
+} from "../../../../Models/Courses/CourseModel";
 import Card from "../../../../components/Card/Card";
 import {
   Box,
+  Button,
   CardActions,
   CardContent,
   Divider,
@@ -21,17 +22,23 @@ import * as yup from "yup";
 import { Field, FieldArray, Form, Formik, getIn, ErrorMessage } from "formik";
 import { connect } from "react-redux";
 import SuiButton from "../../../../components/SuiButton";
-import { Add, ArrowBack, Backspace } from "@material-ui/icons";
+import { Add, ArrowBack, AttachFile, Backspace } from "@material-ui/icons";
+import AddAttachment from "../../../../components/AddAttachment/AddAttachment";
 
 interface ICourseDetailProps {
   show: boolean;
   courseDetail: ICourseModel;
+  isEditable: boolean;
   setShow(): void;
+  activateEdit(): void;
 }
 
 const CourseDetail: FC<ICourseDetailProps> = ({
+  show,
   courseDetail,
+  isEditable,
   setShow,
+  activateEdit,
   ...props
 }) => {
   const methodTypes = [
@@ -51,7 +58,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
   const { translate } = useTranslation();
   const [details, setDetails] = useState(courseDetail);
   const initialValues: any = {};
-  const [submitting, setSubmitting] = useState(false);
+  // const [submitting, setSubmitting] = useState(false);
   const courseSchema = yup.object({
     en_name: yup
       .string(translate("English Name"))
@@ -87,9 +94,9 @@ const CourseDetail: FC<ICourseDetailProps> = ({
             .required("Percentage is required"),
         })
       )
-      .min(1, "Need at least a evaluation method")
+      .min(1, "Need at least one evaluation method")
       .test((methods: Array<{ percentage: number }>) => {
-        const sum = methods.reduce((acc, curr) => acc + curr.percentage, 0);
+        const sum = methods?.reduce((acc, curr) => acc + curr.percentage, 0);
         if (sum != 100) {
           isNaN(sum)
             ? setErrorPercentageMsg(
@@ -112,9 +119,16 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           return true;
         }
       }),
+    file: yup.mixed(),
   });
   const [errorPercentageMsg, setErrorPercentageMsg] = useState("");
   const submitForm = () => {};
+
+  const hiddenInput = React.useRef(null);
+  const handleClick = (event) => {
+    hiddenInput.current?.click();
+  };
+
   return (
     <Grid container md={12} sm={12}>
       <Grid md={12} sm={12} xs={12}>
@@ -156,6 +170,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                 isSubmitting,
                 isValid,
                 dirty,
+                setFieldValue,
               } = formik;
               return (
                 <Form>
@@ -163,6 +178,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
+                          disabled={!isEditable}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -182,6 +198,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
+                          disabled={!isEditable}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -201,6 +218,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
+                          disabled={!isEditable}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -222,6 +240,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
+                          disabled={!isEditable}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -247,6 +266,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
+                          disabled={!isEditable}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -270,6 +290,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
+                          disabled={!isEditable}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -292,7 +313,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                   <Divider style={{ margin: "2em 0em" }} />
                   <Box mb={1} ml={0.5}>
                     <Typography component="label" variant="caption">
-                      {translate("Evalutations Method")}
+                      <h5>{translate("Evaluations Method")}</h5>
                     </Typography>
                   </Box>
                   <Box my={1}>
@@ -315,6 +336,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                               <Grid container spacing={2}>
                                 <Grid item xs={4}>
                                   <TextField
+                                    disabled={!isEditable}
                                     variant="outlined"
                                     size="small"
                                     type="select"
@@ -344,6 +366,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                                   }}
                                 >
                                   <TextField
+                                    disabled={!isEditable}
                                     onChange={handleChange(
                                       `evaluation_methods.${index}.percentage`
                                     )}
@@ -387,7 +410,11 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                                     />
                                   </label>
                                 </Grid>
-                                <Grid item xs={4}>
+                                <Grid
+                                  item
+                                  xs={4}
+                                  style={{ display: isEditable ? "" : "none" }}
+                                >
                                   <SuiButton
                                     style={{ margin: 5 }}
                                     color="error"
@@ -414,8 +441,8 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                         ) : (
                           <React.Fragment>
                             <SuiButton
-                              variant="gradient"
-                              color="success"
+                              style={{ display: isEditable ? "" : "none" }}
+                              color="primary"
                               onClick={() =>
                                 arrayHelpers.push({
                                   name: "",
@@ -432,6 +459,77 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                       </div>
                     )}
                   />
+                  <Divider style={{ margin: "2em 0em" }} />
+                  <Box mb={1} ml={0.5}>
+                    <Typography component="label" variant="caption">
+                      <h5>{translate("Attachments")}</h5>
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <SuiButton
+                      disabled={!isEditable}
+                      color="primary"
+                      onClick={handleClick}
+                    >
+                      {translate("Upload a file")}
+                      <AttachFile />
+                    </SuiButton>
+                    <input
+                      id="file"
+                      name="file"
+                      type="file"
+                      ref={hiddenInput}
+                      style={{ display: "none" }}
+                      onChange={(event) => {
+                        setFieldValue("file", event.currentTarget.files[0]);
+                      }}
+                      className="form-control"
+                    />
+                    <Grid md={6} style={{ marginTop: "1em" }}>
+                      <TextField
+                        variant="outlined"
+                        type="text"
+                        size="small"
+                        disabled
+                        placeholder=""
+                        value={values.file?.name}
+                      />
+                    </Grid>
+                  </Box>
+                  <Box mt={4} mb={1}>
+                    {isEditable ? (
+                      isSubmitting ? (
+                        <SuiButton
+                          disabled={true}
+                          variant="gradient"
+                          color="info"
+                          fullWidth
+                        >
+                          {translate("Processing ...")}
+                        </SuiButton>
+                      ) : (
+                        <SuiButton
+                          // disabled={!(dirty && isValid)}
+                          type="submit"
+                          variant="gradient"
+                          color="info"
+                          fullWidth
+                        >
+                          {translate("Save")}
+                        </SuiButton>
+                      )
+                    ) : (
+                      <SuiButton
+                        onClick={activateEdit}
+                        type="submit"
+                        variant="gradient"
+                        color="info"
+                        fullWidth
+                      >
+                        {translate("Edit Course")}
+                      </SuiButton>
+                    )}
+                  </Box>
                 </Form>
               );
             }}

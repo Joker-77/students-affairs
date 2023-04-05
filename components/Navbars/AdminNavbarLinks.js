@@ -69,7 +69,7 @@ export default function AdminNavbarLinks() {
   const handleSignOut = (e) => {
     localStorage.removeItem("sa_access_token");
     dispatchSessionKey(setSessionKey(""));
-    router.push("/authentication/sign-in");
+    router.push("/");
     signOut();
   };
   return (

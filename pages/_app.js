@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
+import { Navigate } from "react-router-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
@@ -14,6 +15,8 @@ import "assets/css/nextjs-material-dashboard.css?v=1.1.0";
 import { CssBaseline } from "@material-ui/core";
 import { SessionProvider, useSession, getSession } from "next-auth/react";
 import CustomToastContainer from "./_toast";
+import { boolean } from "yup";
+import AuthProvider from "../components/AuthProvider/AuthProvider";
 
 Router.events.on("routeChangeStart", (url) => {
   console.log(`Loading: ${url}`);
@@ -34,18 +37,27 @@ Router.events.on("routeChangeError", () => {
 });
 
 export default class MyApp extends App {
-  componentDidMount() {
+  constructor(params) {
+    super(params);
+    this.state = {
+      backToSignIn: false,
+    };
+  }
+  async componentDidMount() {
     let comment = document.createComment(`Component Did mount`);
     document.insertBefore(comment, document.documentElement);
+    const session = await getSession();
+    console.log("session", session);
   }
+
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {};
     let session = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
       session = useSession();
-      pageProps.session = session;
       console.log("session", session);
+      pageProps.session = session;
     }
     return { pageProps };
   }

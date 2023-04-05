@@ -34,7 +34,7 @@ import Placeholder from "../../../../Utility/Placeholders";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
-import { ICourseModel } from "../../../../Models/ApiResponse/Courses/CourseModel";
+import { ICourseModel } from "../../../../Models/Courses/CourseModel";
 import CourseService from "../../../../Services/CourseService";
 import SuiButton from "../../../../components/SuiButton";
 import CandidateDetails from "../../affairs_officer/candidates/candidate-details";
@@ -51,6 +51,9 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const [searchResult, setSearchResult] = React.useState(null);
   const setShow = () => {
     setshowCandidateDetail(!showCandidateDetail);
+  };
+  const activateEdit = () => {
+    setIsEditable(!isEditable);
   };
   const handleOpen = () => {
     setOpen(true);
@@ -113,7 +116,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   }, []);
   /************************** Finish Data ****************************/
   /************************** Handle edit data ****************************/
-
+  const [isEditable, setIsEditable] = React.useState(false);
   /************************** Finish Handle edit data ****************************/
   const [Courses, setCourses] = React.useState<ICourseModel[]>(null);
   const renderCandidates = () => {
@@ -217,7 +220,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
           <GridItem md={12}>
             <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
               <GridItem md={7}>
-                <Button
+                {/* <Button
                   style={{ margin: "0px 5px" }}
                   disabled={false}
                   variant="contained"
@@ -228,7 +231,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
                     {translate("Add New Course")}
                   </span>
                   <Add />
-                </Button>
+                </Button> */}
               </GridItem>
               <GridItem>
                 <Button
@@ -366,9 +369,11 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       )}
       {showCandidateDetail && (
         <CourseDetails
+          activateEdit={activateEdit}
           setShow={setShow}
           show={showCandidateDetail}
           courseDetail={null}
+          isEditable={isEditable}
         />
       )}
     </GridContainer>

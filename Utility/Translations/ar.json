@@ -34,8 +34,10 @@
   "Theoretical Hours": "عدد ساعات النظري",
   "Practical Hours": "عدد ساعات العملي",
   "Mixed Hours": "عدد ساعات النظري/العملي",
-  "Evalutations Method": "طرائق تقييم",
+  "Evaluations Method": "طرائق تقييم",
   "Add an evaluation method": "إضافة طريقة تقييم",
+  "Edit Course": "تعديل معلومات المقرّر",
+  "Upload a file": "تحميل مرفق",
 
   "Private": "خاص",
   "Family": "عائلي",
