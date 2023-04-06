@@ -119,7 +119,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const [isEditable, setIsEditable] = React.useState(false);
   /************************** Finish Handle edit data ****************************/
   const [Courses, setCourses] = React.useState<ICourseModel[]>(null);
-  const renderCandidates = () => {
+  const renderCourses = () => {
     if (Courses != null && Courses.length > 0) {
       let columns = [
         {
@@ -184,12 +184,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
               {translate("Delete")}
             </SuiButton>
           ),
-          onClick: (evt, data) => {
-            dispatch(setCandidate(data));
-            router.push(
-              `/${router.locale}/students_affairs/affairs_officer/candidates/${btnPage}`
-            );
-          },
+          onClick: (evt, data) => {},
         },
         {
           icon: () => (
@@ -211,7 +206,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
           Actions={actions}
         />
       );
-    } else return <Placeholder />;
+    } else return <Placeholder loading={false} />;
   };
   return (
     <GridContainer>
@@ -364,7 +359,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
               </FormControl>
             </GridItem>
           </GridItem>
-          <GridItem md={12}>{renderCandidates()}</GridItem>
+          <GridItem md={12}>{renderCourses()}</GridItem>
         </>
       )}
       {showCandidateDetail && (
