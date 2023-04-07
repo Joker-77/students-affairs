@@ -34,7 +34,10 @@ import Placeholder from "../../../../Utility/Placeholders";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
-import { ICourseModel } from "../../../../Models/Courses/CourseModel";
+import {
+  ICourseModel,
+  ICourseDescriptionModel,
+} from "../../../../Models/Courses/CourseModel";
 import CourseService from "../../../../Services/CourseService";
 import SuiButton from "../../../../components/SuiButton";
 import CandidateDetails from "../../affairs_officer/candidates/candidate-details";
@@ -46,21 +49,41 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
-  const [showCandidateDetail, setshowCandidateDetail] = React.useState(true);
-  const [open, setOpen] = React.useState(false);
+  const [showCandidateDetail, setShowCandidateDetail] = React.useState(false);
+  const [course, setCourse] = React.useState<ICourseModel>();
   const [searchResult, setSearchResult] = React.useState(null);
   const setShow = () => {
-    setshowCandidateDetail(!showCandidateDetail);
+    setShowCandidateDetail(!showCandidateDetail);
   };
   const activateEdit = () => {
     setIsEditable(!isEditable);
   };
-  const handleOpen = () => {
-    setOpen(true);
+
+  const getCourse = (data: any) => {
+    let _course = Courses.find((item, index) => item.id === data?.id);
+    CourseService.Get(data.id)
+      .then((res) => {
+        let _result = res.result as ICourseDescriptionModel[];
+        _course.current_description = _result[_result.length - 1];
+        console.clear();
+        setCourse(_course);
+        setIsEditable(false);
+        setShowCandidateDetail(true);
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
   };
+
+  const handleOpen = () => {
+    setCourse(null);
+    setIsEditable(true);
+    setShowCandidateDetail(true);
+  };
+
   const handleClose = () => {
     setSearchResult(null);
-    setOpen(false);
+    setShowCandidateDetail(false);
   };
 
   /********************** Filter && Sort *********/
@@ -94,21 +117,113 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       label: translate("Number of accredited hours"),
     },
   ];
+
+  const [Courses, setCourses] = React.useState<ICourseModel[]>(null);
+  const [filteredCourses, setFilteredCourses] =
+    React.useState<ICourseModel[]>(null);
   const [filter, setFilter] = React.useState(0);
+  const [search, setSearch] = React.useState("");
   const handleChangeFilter = (event) => {
     setFilter(event.target.value);
+  };
+  const handleSearch = (event) => {
+    let _value = event?.target?.value;
+    setSearch(_value);
+    let _filteredCourses = Courses;
+    if (filter == 1) {
+      _filteredCourses = Courses.filter((course, index) => {
+        return (
+          course.ar_name.includes(_value) ||
+          course.en_name.includes(_value) ||
+          course.fr_name.includes(_value)
+        );
+      });
+      setFilteredCourses(_filteredCourses);
+    }
+    if (filter == 2) {
+      _filteredCourses = Courses.filter((course, index) => {
+        return course.current_description?.total_hours
+          .toString()
+          .includes(_value);
+      });
+      setFilteredCourses(_filteredCourses);
+    }
+    if (filter == 3) {
+      _filteredCourses = Courses.filter((course, index) => {
+        return course.current_description?.credit.toString().includes(_value);
+      });
+      setFilteredCourses(_filteredCourses);
+    }
   };
 
   const [sortBy, setSortBy] = React.useState(0);
   const handleSortBy = (event) => {
-    setSortBy(event.target.value);
+    let _value = event?.target?.value;
+    setSortBy(_value);
+    let _filteredCourses = Courses;
+    if (sortBy == 1) {
+      _filteredCourses = Courses.sort((a, b) => {
+        if (a.ar_name > b.ar_name) {
+          return 1;
+        } else if (a.ar_name < b.ar_name) {
+          return -1;
+        }
+        if (a.en_name > b.en_name) {
+          return 1;
+        } else if (a.en_name < b.en_name) {
+          return -1;
+        }
+        if (a.fr_name > b.fr_name) {
+          return 1;
+        } else if (a.fr_name < b.fr_name) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      setFilteredCourses(_filteredCourses);
+    }
+    if (sortBy == 2) {
+      _filteredCourses = Courses.sort((a, b) => {
+        if (
+          a.current_description?.total_hours >
+          b.current_description?.total_hours
+        ) {
+          return 1;
+        } else if (
+          a.current_description?.total_hours <
+          b.current_description?.total_hours
+        ) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      setFilteredCourses(_filteredCourses);
+    }
+    if (sortBy == 3) {
+      _filteredCourses = Courses.sort((a, b) => {
+        if (a.current_description?.credit > b.current_description?.credit) {
+          return 1;
+        } else if (
+          a.current_description?.credit < b.current_description?.credit
+        ) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      setFilteredCourses(_filteredCourses);
+    }
   };
   /************************** Data ****************************/
   useEffect(() => {
     CourseService.GetAll()
       .then((res) => {
-        console.log("Courses", res);
-        setCourses(res.result);
+        console.clear();
+        console.log("Courses", res.result);
+        setFilteredCourses(res.result as ICourseModel[]);
+        setCourses(res.result as ICourseModel[]);
       })
       .catch((error) => {
         console.error("error", error);
@@ -118,9 +233,9 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   /************************** Handle edit data ****************************/
   const [isEditable, setIsEditable] = React.useState(false);
   /************************** Finish Handle edit data ****************************/
-  const [Courses, setCourses] = React.useState<ICourseModel[]>(null);
+
   const renderCourses = () => {
-    if (Courses != null && Courses.length > 0) {
+    if (filteredCourses != null && filteredCourses.length > 0) {
       let columns = [
         {
           title: translate("Id"),
@@ -152,7 +267,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
           field: "current_description.credit",
         },
       ];
-      let data = Courses;
+      let data = filteredCourses;
       let options = {
         // exportAllData: true,
         // exportButton: true,
@@ -192,9 +307,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
               {translate("Course Details")}
             </SuiButton>
           ),
-          onClick: (evt, data) => {
-            setshowCandidateDetail(true);
-          },
+          onClick: (evt, data) => getCourse(data),
         },
       ];
       return (
@@ -305,6 +418,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
               </FormControl>
               <FormControl>
                 <TextField
+                  onChange={handleSearch}
                   size="small"
                   id="outlined-basic"
                   label="بحث"
@@ -364,6 +478,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       )}
       {showCandidateDetail && (
         <CourseDetails
+          details={course}
           activateEdit={activateEdit}
           setShow={setShow}
           show={showCandidateDetail}

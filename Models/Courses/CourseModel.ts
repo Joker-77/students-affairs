@@ -14,9 +14,9 @@ export interface IEvaluationMethod {
   percentage: number;
 }
 export interface ICourseDescriptionModel {
-  id: 2;
-  course_id: 1;
-  credit: 9;
+  id: number;
+  course_id: number;
+  credit: number;
   created_at: string;
   updated_at: string;
   attachement: any;

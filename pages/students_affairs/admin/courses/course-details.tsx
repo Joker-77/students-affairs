@@ -27,7 +27,7 @@ import AddAttachment from "../../../../components/AddAttachment/AddAttachment";
 
 interface ICourseDetailProps {
   show: boolean;
-  courseDetail: ICourseModel;
+  details: ICourseModel;
   isEditable: boolean;
   setShow(): void;
   activateEdit(): void;
@@ -35,11 +35,10 @@ interface ICourseDetailProps {
 
 const CourseDetail: FC<ICourseDetailProps> = ({
   show,
-  courseDetail,
+  details,
   isEditable,
   setShow,
   activateEdit,
-  ...props
 }) => {
   const methodTypes = [
     {
@@ -55,9 +54,16 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       name: "امتحان عملي",
     },
   ];
+
   const { translate } = useTranslation();
-  const [details, setDetails] = useState(courseDetail);
-  const initialValues: any = {};
+  const [course, setDetails] = useState<ICourseModel>(details);
+  const initialValues = {
+    en_name: course?.en_name,
+    ar_name: course?.ar_name,
+    fr_name: course?.fr_name,
+    code: course?.code,
+    // theoretical_hours: courseDetail.current_description.th
+  };
   // const [submitting, setSubmitting] = useState(false);
   const courseSchema = yup.object({
     en_name: yup

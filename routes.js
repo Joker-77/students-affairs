@@ -2,6 +2,7 @@ import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import Books from "@material-ui/icons/FileCopy";
+import School from "@material-ui/icons/School";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
@@ -43,6 +44,13 @@ const dashboardRoutes = [
     name: "Courses",
     rtlName: "المقررات",
     icon: Books,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/teachers/teachers-list",
+    name: "Teachers",
+    rtlName: "المدرّسون",
+    icon: School,
     layout: "/students_affairs",
   },
 ];
