@@ -46,18 +46,18 @@ export default class MyApp extends App {
   async componentDidMount() {
     let comment = document.createComment(`Component Did mount`);
     document.insertBefore(comment, document.documentElement);
-    const session = await getSession();
-    console.log("session", session);
   }
 
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {};
-    let session = {};
     if (Component.getInitialProps) {
+      let key = localStorage.getItem("sa_access_token");
+      let profile = JSON.parse(localStorage.getItem("logged_in_profile"));
       pageProps = await Component.getInitialProps(ctx);
-      session = useSession();
-      console.log("session", session);
-      pageProps.session = session;
+      pageProps.sessionKey = key;
+      pageProps.profile = profile;
+      console.clear();
+      console.log(pageProps);
     }
     return { pageProps };
   }

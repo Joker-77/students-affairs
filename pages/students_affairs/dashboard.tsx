@@ -53,20 +53,20 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import SignIn from "../authentication/sign-in";
 
-function Dashboard() {
+function Dashboard(props) {
   const useStyles = makeStyles(styles);
-  const classes = useStyles();
   const sessionKey = useAppSelector(selectSessionKey);
   const { translate } = useTranslation();
-  const session = useSession();
   const router = useRouter();
-  console.clear();
-  console.log(session);
-  React.useEffect(() => {
-    if (session?.status === "unauthenticated")
+  if (typeof window !== "undefined") {
+    // Perform localStorage action
+    let _key = localStorage.getItem("sa_access_token");
+    if (_key == "" || _key === undefined)
       router.push("/authentication/sign-in");
-    localStorage.setItem("sa_access_token", session.data?.user?.token);
-  }, [session]);
+  }
+  React.useEffect(() => {
+    console.log(props);
+  }, [sessionKey]);
   return <h3>{translate("Hello Admin!")}</h3>;
 }
 

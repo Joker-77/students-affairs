@@ -65,7 +65,6 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       .then((res) => {
         let _result = res.result as ICourseDescriptionModel[];
         _course.current_description = _result[_result.length - 1];
-        console.clear();
         setCourse(_course);
         setIsEditable(false);
         setShowCandidateDetail(true);
@@ -220,7 +219,6 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   useEffect(() => {
     CourseService.GetAll()
       .then((res) => {
-        console.clear();
         console.log("Courses", res.result);
         setFilteredCourses(res.result as ICourseModel[]);
         setCourses(res.result as ICourseModel[]);

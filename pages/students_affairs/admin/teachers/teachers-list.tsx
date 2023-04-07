@@ -40,12 +40,7 @@ const TeachersList: FC<ITeachersListProps> = () => {
     setSearchResult(null);
     setOpen(false);
   };
-  // Session
-  React.useEffect(() => {
-    if (session?.status === "unauthenticated")
-      _router.push("/authentication/sign-in");
-    localStorage.setItem("sa_access_token", session.data?.user?.token);
-  }, [session]);
+
   /********************** Filter && Sort *********/
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
@@ -82,7 +77,6 @@ const TeachersList: FC<ITeachersListProps> = () => {
   useEffect(() => {
     TeacherService.GetAll()
       .then((res) => {
-        console.clear();
         console.log("Teachers", res);
         setTeachers(res.result as ITeacherModel[]);
       })

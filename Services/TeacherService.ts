@@ -4,6 +4,7 @@ import { ApiResponse } from "../Models/ApiResponse/ApiResponse";
 export default class TeacherService {
   static async GetAll(): Promise<ApiResponse> {
     const listUrl = process.env.LIST_TEACHER_URL as string;
+    console.clear();
     console.log(listUrl);
     return await apiConnector
       .get(listUrl)

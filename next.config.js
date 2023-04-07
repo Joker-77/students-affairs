@@ -78,5 +78,9 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     GET_COURSE_DESC: "/course/descriptions?course_id=",
     // Teachers
     LIST_TEACHER_URL: "/teacher",
+
+    // Login
+
+    LOGIN_URL: "/login",
   },
 });
