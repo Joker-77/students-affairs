@@ -10,9 +10,13 @@ import SuiButton from "../../../../components/SuiButton";
 import GridItem from "../../../../components/Grid/GridItem";
 import GridContainer from "../../../../components/Grid/GridContainer";
 import TeacherService from "../../../../Services/TeacherService";
+import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
+import { useSession } from "next-auth/react";
 
 interface ITeachersListProps {}
 const TeachersList: FC<ITeachersListProps> = () => {
+  const session = useSession();
+  const _router = useRouter();
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -21,6 +25,7 @@ const TeachersList: FC<ITeachersListProps> = () => {
   const [open, setOpen] = React.useState(false);
   const [searchResult, setSearchResult] = React.useState(null);
   const [isEditable, setIsEditable] = React.useState(false);
+  const [Teachers, setTeachers] = React.useState<ITeacherModel[]>(null);
 
   const setShow = () => {
     setshowTeacherDetail(!showTeacherDetail);
@@ -35,7 +40,12 @@ const TeachersList: FC<ITeachersListProps> = () => {
     setSearchResult(null);
     setOpen(false);
   };
-  //
+  // Session
+  React.useEffect(() => {
+    if (session?.status === "unauthenticated")
+      _router.push("/authentication/sign-in");
+    localStorage.setItem("sa_access_token", session.data?.user?.token);
+  }, [session]);
   /********************** Filter && Sort *********/
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
@@ -72,8 +82,9 @@ const TeachersList: FC<ITeachersListProps> = () => {
   useEffect(() => {
     TeacherService.GetAll()
       .then((res) => {
+        console.clear();
         console.log("Teachers", res);
-        setTeachers(res.result);
+        setTeachers(res.result as ITeacherModel[]);
       })
       .catch((error) => {
         console.error("error", error);
@@ -81,7 +92,6 @@ const TeachersList: FC<ITeachersListProps> = () => {
   }, []);
   /************************** Finish Data ****************************/
   //
-  const [Teachers, setTeachers] = React.useState<ITeacherModel[]>(null);
   const renderTeacher = () => {
     if (Teachers != null && Teachers.length > 0) {
       let columns = [

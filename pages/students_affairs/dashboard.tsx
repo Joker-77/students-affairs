@@ -66,7 +66,7 @@ function Dashboard() {
     if (session?.status === "unauthenticated")
       router.push("/authentication/sign-in");
     localStorage.setItem("sa_access_token", session.data?.user?.token);
-  });
+  }, [session]);
   return <h3>{translate("Hello Admin!")}</h3>;
 }
 
