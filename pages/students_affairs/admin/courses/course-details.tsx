@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import {
   ICourseModel,
+  ICreateCourseModel,
   IEvaluationMethod,
 } from "../../../../Models/Courses/CourseModel";
 import Card from "../../../../components/Card/Card";
@@ -25,8 +26,10 @@ import SuiButton from "../../../../components/SuiButton";
 import { Add, ArrowBack, AttachFile, Backspace } from "@material-ui/icons";
 import AddAttachment from "../../../../components/AddAttachment/AddAttachment";
 import { toast } from "react-toastify";
+import CourseService from "../../../../Services/CourseService";
 
 interface ICourseDetailProps {
+  isCreate: boolean;
   show: boolean;
   details: ICourseModel;
   isEditable: boolean;
@@ -35,6 +38,7 @@ interface ICourseDetailProps {
 }
 
 const CourseDetail: FC<ICourseDetailProps> = ({
+  isCreate,
   show,
   details,
   isEditable,
@@ -62,20 +66,21 @@ const CourseDetail: FC<ICourseDetailProps> = ({
     course?.current_description?.attachement
   );
   const initialValues = {
+    id: course?.id,
     en_name: course?.en_name,
     ar_name: course?.ar_name,
     fr_name: course?.fr_name,
     code: course?.code,
-    theoretical_hours: course.current_description.hours.find(
+    theoretical_hours: course?.current_description?.hours?.find(
       (hour) => hour?.type == "theoretic"
     )?.hours,
-    practical_hours: course.current_description.hours.find(
+    practical_hours: course?.current_description?.hours?.find(
       (hour) => hour?.type == "practical"
     )?.hours,
-    mixed_hours: course.current_description.hours.find(
+    mixed_hours: course?.current_description?.hours?.find(
       (hour) => hour?.type == "mixed"
     )?.hours,
-    evaluation_methods: course.current_description?.evaluation_methods.map(
+    evaluation_methods: course?.current_description?.evaluation_methods?.map(
       (ev, idx) => {
         return {
           id: ev.id,
@@ -156,8 +161,27 @@ const CourseDetail: FC<ICourseDetailProps> = ({
   });
   const [errorPercentageMsg, setErrorPercentageMsg] = useState("");
   const submitForm = (values, setSubmitting) => {
-    console.clear();
-    console.log(values);
+    alert(isCreate);
+    if (isCreate) {
+      const payload: ICreateCourseModel = {
+        en_name: values.en_name,
+        ar_name: values.ar_name,
+        fr_name: values.fr_name,
+        code: values.code,
+        attachement: values.attachement,
+        credit: values.credit,
+        mixed_hours: values.mixed_hours,
+        evaluation_methods: values.evaluation_methods,
+        practical_hours: values.practical_hours,
+        theoretic_hours: values.theoretic_hours,
+      };
+      console.clear();
+      console.log(payload);
+    }
+
+    // CourseService.Add(payload)
+    //   .then(() => {})
+    //   .catch((e) => console.error(e));
   };
 
   const hiddenInput = React.useRef(null);

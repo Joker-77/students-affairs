@@ -75,6 +75,7 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     // Courses
     LIST_COURSE_URL: "/course",
     EDIT_COURSE_URL: "/course/edit",
+    CREATE_COURSE_URL: "/course/add",
     // Teachers
     LIST_TEACHER_URL: "/teacher",
 

@@ -8,6 +8,18 @@ export interface ICourseModel {
   updated_at: string;
   current_description: ICourseDescriptionModel;
 }
+export interface ICreateCourseModel {
+  en_name: string;
+  fr_name: string;
+  ar_name: string;
+  code: string;
+  credit: number;
+  theoretic_hours: number;
+  practical_hours: number;
+  mixed_hours: number;
+  evaluation_methods: IEvaluationMethod[];
+  attachement: string;
+}
 
 export interface IEvaluationMethod {
   id: number;

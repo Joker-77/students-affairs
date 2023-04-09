@@ -64,9 +64,8 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     CourseService.Get(data.id)
       .then((res) => {
         let _course = res.result as ICourseModel;
+        setIsCreate(false);
         setCourse(_course);
-        console.clear();
-        console.log(_course);
         setIsEditable(false);
         setshowCourseDetail(true);
       })
@@ -75,8 +74,11 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       });
   };
 
-  const handleOpen = () => {
+  const [isCreate, setIsCreate] = useState<boolean>(true);
+
+  const handleCreate = () => {
     setCourse(null);
+    setIsCreate(isCreate);
     setIsEditable(true);
     setshowCourseDetail(true);
   };
@@ -332,7 +334,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
                   disabled={false}
                   variant="contained"
                   className={classes.submitBtn}
-                  onClick={handleOpen}
+                  onClick={handleCreate}
                 >
                   <span style={{ padding: "0px 0px 0px 10px" }}>
                     {translate("Add New Course")}
@@ -368,7 +370,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
                   disabled={false}
                   variant="contained"
                   className={classes.submitBtn}
-                  onClick={handleOpen}
+                  onClick={handleCreate}
                 >
                   <span style={{ padding: "0px 0px 0px 10px" }}>
                     {translate("Add Course Document")}
@@ -475,6 +477,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       )}
       {showCourseDetail && (
         <CourseDetails
+          isCreate={isCreate}
           details={course}
           activateEdit={activateEdit}
           setShow={setShow}
