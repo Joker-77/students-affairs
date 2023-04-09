@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import {
   ICourseModel,
   ICreateCourseModel,
+  IEditCourseBasicInfo,
   IEvaluationMethod,
 } from "../../../../Models/Courses/CourseModel";
 import Admin from "../../../../layouts/Admin";
@@ -12,7 +13,13 @@ import SuiButton from "../../../../components/SuiButton";
 import { toast } from "react-toastify";
 import CourseService from "../../../../Services/CourseService";
 import { useRouter } from "next/router";
-import { Add, ArrowBack, AttachFile } from "@material-ui/icons";
+import {
+  Add,
+  ArrowBack,
+  AttachFile,
+  CloudDownload,
+  FontDownload,
+} from "@material-ui/icons";
 import Card from "../../../../components/Card/Card";
 import {
   Box,
@@ -93,7 +100,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         ar_name: course.ar_name,
         fr_name: course.fr_name,
         code: course.code,
-        attachment: course.current_description?.attachement,
+        attachement: course?.current_description?.attachement,
       };
   // const [submitting, setSubmitting] = useState(false);
   const courseSchema = isCreate
@@ -165,7 +172,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           }),
         attachement: yup
           .mixed()
-          .required(translate("Need an attachment for this course")),
+          .required(translate("Need an attachement for this course")),
       })
     : yup.object({
         en_name: yup
@@ -182,7 +189,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           .required(translate("Field is required")),
         attachement: yup
           .mixed()
-          .required(translate("Need an attachment for this course")),
+          .required(translate("Need an attachement for this course")),
       });
   const [errorPercentageMsg, setErrorPercentageMsg] = useState("");
   const submitForm = (values, setSubmitting) => {
@@ -213,6 +220,17 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           toast.error(error.message);
           throw new Error(error);
         });
+    } else {
+      const payload: IEditCourseBasicInfo = {
+        id: course.id,
+        en_name: values.en_name,
+        ar_name: values.ar_name,
+        fr_name: values.fr_name,
+        code: values.code,
+        attachement: values.attachement,
+      };
+      console.clear();
+      console.log(payload);
     }
     // CourseService.Add(payload)
     //   .then(() => {})
@@ -223,6 +241,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
   const handleClick = (event) => {
     hiddenInput.current?.click();
   };
+  const [changed, setChanged] = useState(false);
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -239,6 +258,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
 
   const handleFile = async (e, setFieldValue) => {
     const file = e.target.files[0];
+    setChanged(true);
     //check the size of image
     if (file?.size / 1024 / 1024 < 2) {
       const base64 = await convertToBase64(file);
@@ -374,80 +394,84 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                       </GridItem>
                     </Grid>
                   </Grid>
-                  <Grid container md={12} xs={12}>
-                    <Grid item xs={3} md={3}>
-                      <GridItem>
-                        <TextField
-                          disabled={!isEditable}
-                          onChange={handleChange}
-                          variant="outlined"
-                          size="small"
-                          type="number"
-                          id="theoretical_hours"
-                          name="theoretical_hours"
-                          value={values.theoretical_hours}
-                          onBlur={handleBlur}
-                          error={Boolean(
-                            touched.theoretical_hours &&
+                  {isCreate && (
+                    <Grid container md={12} xs={12}>
+                      <Grid item xs={3} md={3}>
+                        <GridItem>
+                          <TextField
+                            disabled={!isEditable}
+                            onChange={handleChange}
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            id="theoretical_hours"
+                            name="theoretical_hours"
+                            value={values.theoretical_hours}
+                            onBlur={handleBlur}
+                            error={Boolean(
+                              touched.theoretical_hours &&
+                                errors.theoretical_hours
+                            )}
+                            helperText={
+                              touched.theoretical_hours &&
                               errors.theoretical_hours
-                          )}
-                          helperText={
-                            touched.theoretical_hours &&
-                            errors.theoretical_hours
-                          }
-                          placeholder={translate("Theoretical Hours")}
-                          label={translate("Theoretical Hours")}
-                          fullWidth
-                        />
-                      </GridItem>
+                            }
+                            placeholder={translate("Theoretical Hours")}
+                            label={translate("Theoretical Hours")}
+                            fullWidth
+                          />
+                        </GridItem>
+                      </Grid>
+                      <Grid item xs={3} md={3}>
+                        <GridItem>
+                          <TextField
+                            disabled={!isEditable}
+                            onChange={handleChange}
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            id="practical_hours"
+                            name="practical_hours"
+                            value={values.practical_hours}
+                            onBlur={handleBlur}
+                            error={Boolean(
+                              touched.practical_hours && errors.practical_hours
+                            )}
+                            helperText={
+                              touched.practical_hours && errors.practical_hours
+                            }
+                            placeholder={translate("Practical Hours")}
+                            label={translate("Practical Hours")}
+                            fullWidth
+                          />
+                        </GridItem>
+                      </Grid>
+                      <Grid item xs={3} md={3}>
+                        <GridItem>
+                          <TextField
+                            disabled={!isEditable}
+                            onChange={handleChange}
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            id="mixed_hours"
+                            name="mixed_hours"
+                            value={values.mixed_hours}
+                            onBlur={handleBlur}
+                            error={Boolean(
+                              touched.mixed_hours && errors.mixed_hours
+                            )}
+                            helperText={
+                              touched.mixed_hours && errors.mixed_hours
+                            }
+                            placeholder={translate("Mixed Hours")}
+                            label={translate("Mixed Hours")}
+                            fullWidth
+                          />
+                        </GridItem>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={3} md={3}>
-                      <GridItem>
-                        <TextField
-                          disabled={!isEditable}
-                          onChange={handleChange}
-                          variant="outlined"
-                          size="small"
-                          type="number"
-                          id="practical_hours"
-                          name="practical_hours"
-                          value={values.practical_hours}
-                          onBlur={handleBlur}
-                          error={Boolean(
-                            touched.practical_hours && errors.practical_hours
-                          )}
-                          helperText={
-                            touched.practical_hours && errors.practical_hours
-                          }
-                          placeholder={translate("Practical Hours")}
-                          label={translate("Practical Hours")}
-                          fullWidth
-                        />
-                      </GridItem>
-                    </Grid>
-                    <Grid item xs={3} md={3}>
-                      <GridItem>
-                        <TextField
-                          disabled={!isEditable}
-                          onChange={handleChange}
-                          variant="outlined"
-                          size="small"
-                          type="number"
-                          id="mixed_hours"
-                          name="mixed_hours"
-                          value={values.mixed_hours}
-                          onBlur={handleBlur}
-                          error={Boolean(
-                            touched.mixed_hours && errors.mixed_hours
-                          )}
-                          helperText={touched.mixed_hours && errors.mixed_hours}
-                          placeholder={translate("Mixed Hours")}
-                          label={translate("Mixed Hours")}
-                          fullWidth
-                        />
-                      </GridItem>
-                    </Grid>
-                  </Grid>
+                  )}
                   <Grid container md={12} xs={12} style={{ margin: "1em 0em" }}>
                     <Grid item xs={3} md={3}>
                       <GridItem>
@@ -471,158 +495,177 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     </Grid>
                   </Grid>
                   <Divider style={{ margin: "2em 0em" }} />
-                  <Box mb={1} ml={0.5}>
-                    <Typography component="label" variant="caption">
-                      <h5>{translate("Evaluations Method")}</h5>
-                    </Typography>
-                  </Box>
-                  <Box my={1}>
-                    <Typography component="label" variant="caption">
-                      {errorPercentageMsg && (
-                        <label style={{ color: "rgb(234, 6, 6)" }}>
-                          {errorPercentageMsg}
-                        </label>
-                      )}
-                    </Typography>
-                  </Box>
-                  <FieldArray
-                    name={"evaluation_methods"}
-                    render={(arrayHelpers) => (
-                      <div>
-                        {values?.evaluation_methods &&
-                        values?.evaluation_methods.length > 0 ? (
-                          values?.evaluation_methods.map((method, index) => (
-                            <div key={index}>
-                              <Grid container spacing={2}>
-                                <Grid item xs={4}>
-                                  <TextField
-                                    disabled={!isEditable}
-                                    variant="outlined"
-                                    size="small"
-                                    type="select"
-                                    id={`evaluation_methods.${index}.id`}
-                                    name={`evaluation_methods.${index}.id`}
-                                    select={true}
-                                    value={method.id}
-                                    onChange={handleChange(
-                                      `evaluation_methods.${index}.id`
-                                    )}
-                                    onBlur={handleBlur}
-                                    fullWidth
-                                  >
-                                    {methodTypes?.map((type) => (
-                                      <MenuItem key={type.id} value={type.id}>
-                                        {type.name}
-                                      </MenuItem>
-                                    ))}
-                                  </TextField>
-                                </Grid>
-                                <Grid
-                                  item
-                                  xs={4}
-                                  style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                  }}
-                                >
-                                  <TextField
-                                    disabled={!isEditable}
-                                    onChange={handleChange(
-                                      `evaluation_methods.${index}.percentage`
-                                    )}
-                                    variant="outlined"
-                                    size="small"
-                                    type="number"
-                                    id={`$evaluation_methods.${index}.percentage`}
-                                    name={`evaluation_methods.${index}.percentage`}
-                                    value={method.percentage}
-                                    onBlur={handleBlur}
-                                    error={Boolean(
-                                      errors &&
-                                        errors.evaluation_methods &&
-                                        errors.evaluation_methods[index] &&
-                                        errors.evaluation_methods[index]
-                                          .percentage &&
-                                        touched &&
-                                        touched.evaluation_methods &&
-                                        touched.evaluation_methods[index] &&
-                                        touched.evaluation_methods[index]
-                                          .percentage
-                                    )}
-                                    helperText={
-                                      errors &&
-                                      errors.evaluation_methods &&
-                                      errors.evaluation_methods[index] &&
-                                      errors.evaluation_methods[index]
-                                        .percentage &&
-                                      touched &&
-                                      touched.evaluation_methods &&
-                                      touched.evaluation_methods[index] &&
-                                      touched.evaluation_methods[index]
-                                        .percentage
-                                    }
-                                    placeholder={translate("Percentage")}
-                                    //fullWidth
-                                  />
-                                  <label style={{ color: "rgb(234, 6, 6)" }}>
-                                    <ErrorMessage
-                                      name={`evaluation_methods.${index}.percentage`}
-                                    />
-                                  </label>
-                                </Grid>
-                                <Grid
-                                  item
-                                  xs={4}
+                  {isCreate && (
+                    <>
+                      <Box mb={1} ml={0.5}>
+                        <Typography component="label" variant="caption">
+                          <h5>{translate("Evaluations Method")}</h5>
+                        </Typography>
+                      </Box>
+                      <Box my={1}>
+                        <Typography component="label" variant="caption">
+                          {errorPercentageMsg && (
+                            <label style={{ color: "rgb(234, 6, 6)" }}>
+                              {errorPercentageMsg}
+                            </label>
+                          )}
+                        </Typography>
+                      </Box>
+                      <FieldArray
+                        name={"evaluation_methods"}
+                        render={(arrayHelpers) => (
+                          <div>
+                            {values?.evaluation_methods &&
+                            values?.evaluation_methods.length > 0 ? (
+                              values?.evaluation_methods.map(
+                                (method, index) => (
+                                  <div key={index}>
+                                    <Grid container spacing={2}>
+                                      <Grid item xs={4}>
+                                        <TextField
+                                          disabled={!isEditable}
+                                          variant="outlined"
+                                          size="small"
+                                          type="select"
+                                          id={`evaluation_methods.${index}.id`}
+                                          name={`evaluation_methods.${index}.id`}
+                                          select={true}
+                                          value={method.id}
+                                          onChange={handleChange(
+                                            `evaluation_methods.${index}.id`
+                                          )}
+                                          onBlur={handleBlur}
+                                          fullWidth
+                                        >
+                                          {methodTypes?.map((type) => (
+                                            <MenuItem
+                                              key={type.id}
+                                              value={type.id}
+                                            >
+                                              {type.name}
+                                            </MenuItem>
+                                          ))}
+                                        </TextField>
+                                      </Grid>
+                                      <Grid
+                                        item
+                                        xs={4}
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                        }}
+                                      >
+                                        <TextField
+                                          disabled={!isEditable}
+                                          onChange={handleChange(
+                                            `evaluation_methods.${index}.percentage`
+                                          )}
+                                          variant="outlined"
+                                          size="small"
+                                          type="number"
+                                          id={`$evaluation_methods.${index}.percentage`}
+                                          name={`evaluation_methods.${index}.percentage`}
+                                          value={method.percentage}
+                                          onBlur={handleBlur}
+                                          error={Boolean(
+                                            errors &&
+                                              errors.evaluation_methods &&
+                                              errors.evaluation_methods[
+                                                index
+                                              ] &&
+                                              errors.evaluation_methods[index]
+                                                .percentage &&
+                                              touched &&
+                                              touched.evaluation_methods &&
+                                              touched.evaluation_methods[
+                                                index
+                                              ] &&
+                                              touched.evaluation_methods[index]
+                                                .percentage
+                                          )}
+                                          helperText={
+                                            errors &&
+                                            errors.evaluation_methods &&
+                                            errors.evaluation_methods[index] &&
+                                            errors.evaluation_methods[index]
+                                              .percentage &&
+                                            touched &&
+                                            touched.evaluation_methods &&
+                                            touched.evaluation_methods[index] &&
+                                            touched.evaluation_methods[index]
+                                              .percentage
+                                          }
+                                          placeholder={translate("Percentage")}
+                                          //fullWidth
+                                        />
+                                        <label
+                                          style={{ color: "rgb(234, 6, 6)" }}
+                                        >
+                                          <ErrorMessage
+                                            name={`evaluation_methods.${index}.percentage`}
+                                          />
+                                        </label>
+                                      </Grid>
+                                      <Grid
+                                        item
+                                        xs={4}
+                                        style={{
+                                          display: isEditable ? "" : "none",
+                                        }}
+                                      >
+                                        <SuiButton
+                                          style={{ margin: 5 }}
+                                          color="error"
+                                          onClick={() =>
+                                            arrayHelpers.remove(index)
+                                          } // remove a friend from the list
+                                        >
+                                          -
+                                        </SuiButton>
+                                        <SuiButton
+                                          style={{ margin: 5 }}
+                                          color="primary"
+                                          onClick={() =>
+                                            arrayHelpers.push({
+                                              name: "",
+                                              percentage: 0,
+                                            })
+                                          } // insert an empty string at a position
+                                        >
+                                          +
+                                        </SuiButton>
+                                      </Grid>
+                                    </Grid>
+                                  </div>
+                                )
+                              )
+                            ) : (
+                              <React.Fragment>
+                                <SuiButton
                                   style={{ display: isEditable ? "" : "none" }}
+                                  color="primary"
+                                  onClick={() =>
+                                    arrayHelpers.push({
+                                      name: "",
+                                      percentage: 0,
+                                    })
+                                  }
                                 >
-                                  <SuiButton
-                                    style={{ margin: 5 }}
-                                    color="error"
-                                    onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
-                                  >
-                                    -
-                                  </SuiButton>
-                                  <SuiButton
-                                    style={{ margin: 5 }}
-                                    color="primary"
-                                    onClick={() =>
-                                      arrayHelpers.push({
-                                        name: "",
-                                        percentage: 0,
-                                      })
-                                    } // insert an empty string at a position
-                                  >
-                                    +
-                                  </SuiButton>
-                                </Grid>
-                              </Grid>
-                            </div>
-                          ))
-                        ) : (
-                          <React.Fragment>
-                            <SuiButton
-                              style={{ display: isEditable ? "" : "none" }}
-                              color="primary"
-                              onClick={() =>
-                                arrayHelpers.push({
-                                  name: "",
-                                  percentage: 0,
-                                })
-                              }
-                            >
-                              {/* show this when user has removed all phones from the list */}
-                              {translate("Add an evaluation method")}
-                              <Add />
-                            </SuiButton>
-                          </React.Fragment>
+                                  {/* show this when user has removed all phones from the list */}
+                                  {translate("Add an evaluation method")}
+                                  <Add />
+                                </SuiButton>
+                              </React.Fragment>
+                            )}
+                          </div>
                         )}
-                      </div>
-                    )}
-                  />
-                  <Divider style={{ margin: "2em 0em" }} />
+                      />
+                      <Divider style={{ margin: "2em 0em" }} />
+                    </>
+                  )}
                   <Box mb={1} ml={0.5}>
                     <Typography component="label" variant="caption">
-                      <h5>{translate("Attachments")}</h5>
+                      <h5>{translate("attachements")}</h5>
                     </Typography>
                   </Box>
                   <Box>
@@ -647,6 +690,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     />
                     <Grid md={6} style={{ marginTop: "1em" }}>
                       <TextField
+                        fullWidth
                         helperText={touched?.attachement && errors?.attachement}
                         error={Boolean(
                           errors?.attachement && touched?.attachement
@@ -659,6 +703,26 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                         value={fileName}
                       />
                     </Grid>
+                    {values.attachement != "" && !changed && (
+                      <Grid md={6} style={{ marginTop: "1em" }}>
+                        <a
+                          href={process.env.BASE_URL + "/" + values.attachement}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <SuiButton
+                            type="button"
+                            disabled={true}
+                            variant="gradient"
+                            color="warning"
+                            fullWidth
+                          >
+                            <CloudDownload style={{ margin: "0em .3em" }} />
+                            {translate("Download")}
+                          </SuiButton>
+                        </a>
+                      </Grid>
+                    )}
                   </Box>
                   <Box mt={4} mb={1}>
                     {isEditable ? (

@@ -21,6 +21,15 @@ export interface ICreateCourseModel {
   attachement: string;
 }
 
+export interface IEditCourseBasicInfo {
+  id: number;
+  en_name: string;
+  fr_name: string;
+  ar_name: string;
+  code: string;
+  attachement: string;
+}
+
 export interface IEvaluationMethod {
   id: number;
   name: string;

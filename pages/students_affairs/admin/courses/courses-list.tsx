@@ -63,11 +63,13 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
 
   const getCourse = (data: any) => {
     let _course = Courses.find((item, index) => item.id === data?.id);
+    setIsCreate(false);
     CourseService.Get(data.id)
       .then((res) => {
         let _course = res.result as ICourseModel;
         setIsCreate(false);
         setCourse(_course);
+        console.log(_course);
         setIsEditable(false);
         setshowCourseDetail(true);
       })
@@ -80,7 +82,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
 
   const handleCreate = () => {
     setCourse(null);
-    setIsCreate(isCreate);
+    setIsCreate(true);
     setIsEditable(true);
     setshowCourseDetail(true);
   };
