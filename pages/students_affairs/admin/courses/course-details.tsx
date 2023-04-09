@@ -1,5 +1,6 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import {
+  IAddDescriptionModel,
   ICourseModel,
   ICreateCourseModel,
   IEditCourseBasicInfo,
@@ -69,42 +70,8 @@ const CourseDetail: FC<ICourseDetailProps> = ({
   const [fileName, setFileName] = useState<string>(
     course?.current_description?.attachement
   );
-  const initialValues = isCreate
-    ? {
-        en_name: course?.en_name,
-        ar_name: course?.ar_name,
-        fr_name: course?.fr_name,
-        code: course?.code,
-        credit: course?.current_description?.credit,
-        theoretical_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "theoretic"
-        )?.hours,
-        practical_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "practical"
-        )?.hours,
-        mixed_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "mixed"
-        )?.hours,
-        evaluation_methods:
-          course?.current_description?.evaluation_methods?.map((ev, idx) => {
-            return {
-              id: ev.id,
-              name: ev.name,
-              percentage: ev.percentage * 100,
-            };
-          }),
-        attachement: course?.current_description?.attachement,
-      }
-    : {
-        id: course.id,
-        en_name: course.en_name,
-        ar_name: course.ar_name,
-        fr_name: course.fr_name,
-        code: course.code,
-        attachement: course?.current_description?.attachement,
-      };
-  // const [submitting, setSubmitting] = useState(false);
-  const courseSchema = isCreate
+  const [addDescription, setAddDescription] = useState(isCreate);
+  let courseSchema = isCreate
     ? yup.object({
         en_name: yup
           .string(translate("English Name"))
@@ -192,6 +159,189 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           .mixed()
           .required(translate("Need an attachement for this course")),
       });
+
+  let initialValues = isCreate
+    ? {
+        en_name: course?.en_name,
+        ar_name: course?.ar_name,
+        fr_name: course?.fr_name,
+        code: course?.code,
+        credit: course?.current_description?.credit,
+        theoretical_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "theoretic"
+        )?.hours,
+        practical_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "practical"
+        )?.hours,
+        mixed_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "mixed"
+        )?.hours,
+        evaluation_methods:
+          course?.current_description?.evaluation_methods?.map((ev, idx) => {
+            return {
+              id: ev.id,
+              name: ev.name,
+              percentage: ev.percentage * 100,
+            };
+          }),
+        attachement: course?.current_description?.attachement,
+      }
+    : {
+        id: course.id,
+        en_name: course.en_name,
+        ar_name: course.ar_name,
+        fr_name: course.fr_name,
+        code: course.code,
+        attachement: course?.current_description?.attachement,
+      };
+
+  /************************* Handle Edit Course ************/
+
+  const handleEditCourse = (event) => {
+    event.preventDefault();
+    activateEdit();
+  };
+  /************************* Handle Add Description ************/
+  const validationSchema = useMemo(() => {
+    if (addDescription) {
+      courseSchema = yup.object({
+        en_name: yup
+          .string(translate("English Name"))
+          .required(translate("Field is required")),
+        ar_name: yup
+          .string(translate("Arabic Name"))
+          .required(translate("Field is required")),
+        fr_name: yup
+          .string(translate("French Name"))
+          .required(translate("Field is required")),
+        code: yup
+          .string(translate("Course Code"))
+          .required(translate("Field is required")),
+        theoretical_hours: yup
+          .number("Theoretical Hours")
+          .min(0, translate("Field must be greater than 0"))
+          .required(translate("Field is required")),
+        practical_hours: yup
+          .number("Practical Hours")
+          .min(0, translate("Field must be greater than 0"))
+          .required(translate("Field is required")),
+        mixed_hours: yup
+          .number("Practical Hours")
+          .min(0, translate("Field must be greater than 0"))
+          .required(translate("Field is required")),
+        credit: yup
+          .number("Credit Hours")
+          .min(0, translate("Field must be greater than 0"))
+          .required(translate("Field is required")),
+        evaluation_methods: yup
+          .array()
+          .of(
+            yup.object().shape({
+              name: yup.string(),
+              percentage: yup
+                .number()
+                .min(0, translate("Field must be greater than 0"))
+                .max(100, translate("Field must be less than 100"))
+                .transform((value) => (isNaN(value) ? undefined : value))
+                .required("Percentage is required"),
+            })
+          )
+          .min(1, translate("Need at least one evaluation method"))
+          .test((methods: Array<{ percentage: number }>) => {
+            const sum = methods?.reduce(
+              (acc, curr) => acc + curr.percentage,
+              0
+            );
+            if (sum != 100) {
+              isNaN(sum)
+                ? setErrorPercentageMsg(
+                    translate("Percentage should be 100%, but you have:") + "0%"
+                  )
+                : setErrorPercentageMsg(
+                    translate("Percentage should be 100%, but you have:") +
+                      sum +
+                      "%"
+                  );
+              return new yup.ValidationError(
+                translate(
+                  `Percentage should be 100%, but you have ${sum}%`,
+                  undefined,
+                  translate("Evaluation Methods")
+                )
+              );
+            } else {
+              setErrorPercentageMsg("");
+              return true;
+            }
+          }),
+        attachement: yup
+          .mixed()
+          .required(translate("Need an attachement for this course")),
+      });
+    } else {
+      courseSchema = yup.object({
+        en_name: yup
+          .string(translate("English Name"))
+          .required(translate("Field is required")),
+        ar_name: yup
+          .string(translate("Arabic Name"))
+          .required(translate("Field is required")),
+        fr_name: yup
+          .string(translate("French Name"))
+          .required(translate("Field is required")),
+        code: yup
+          .string(translate("Course Code"))
+          .required(translate("Field is required")),
+        attachement: yup
+          .mixed()
+          .required(translate("Need an attachement for this course")),
+      });
+    }
+    return courseSchema;
+  }, [addDescription]);
+
+  const handleActivateAddDesc = (event) => {
+    event.preventDefault();
+    setAddDescription(!addDescription);
+    if (addDescription) {
+      initialValues = {
+        en_name: course?.en_name,
+        ar_name: course?.ar_name,
+        fr_name: course?.fr_name,
+        code: course?.code,
+        credit: course?.current_description?.credit,
+        theoretical_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "theoretic"
+        )?.hours,
+        practical_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "practical"
+        )?.hours,
+        mixed_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "mixed"
+        )?.hours,
+        evaluation_methods:
+          course?.current_description?.evaluation_methods?.map((ev, idx) => {
+            return {
+              id: ev.id,
+              name: ev.name,
+              percentage: ev.percentage * 100,
+            };
+          }),
+        attachement: course?.current_description?.attachement,
+      };
+    } else {
+      initialValues = {
+        id: course.id,
+        en_name: course.en_name,
+        ar_name: course.ar_name,
+        fr_name: course.fr_name,
+        code: course.code,
+        attachement: course?.current_description?.attachement,
+      };
+    }
+  };
+  /*************** Handle End Add Description For Course ******/
+
   const [errorPercentageMsg, setErrorPercentageMsg] = useState("");
   const submitForm = (values, setSubmitting) => {
     if (isCreate) {
@@ -205,9 +355,10 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         practical_hours: values.practical_hours,
         mixed_hours: values.mixed_hours,
         evaluation_methods: values.evaluation_methods,
-        attachement: values.attachement,
       };
       console.clear();
+      const isFile = hiddenInput.current.value != "";
+      if (isFile) payload.attachement = values.attachement;
       console.log(payload);
       CourseService.Add(payload)
         .then((response) => {
@@ -223,6 +374,20 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           toast.error(error.message);
           throw new Error(error);
         });
+    } else if (addDescription) {
+      console.clear();
+      console.log("add desc info");
+      const payload: IAddDescriptionModel = {
+        course_id: course.id,
+        credit: values.credit,
+        theoretic_hours: values.theoretical_hours,
+        practical_hours: values.practical_hours,
+        mixed_hours: values.mixed_hours,
+        evaluation_methods: values.evaluation_methods,
+      };
+      const isFile = hiddenInput.current.value != "";
+      if (isFile) payload.attachement = values.attachement;
+      console.log(payload);
     } else {
       const payload: IEditCourseBasicInfo = {
         id: course.id,
@@ -230,9 +395,9 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         ar_name: values.ar_name,
         fr_name: values.fr_name,
         code: values.code,
-        attachement: values.attachement,
       };
-      console.clear();
+      const isFile = hiddenInput.current.value != "";
+      if (isFile) payload.attachement = values.attachement;
       console.log(payload);
     }
     setSubmitting(false);
@@ -295,8 +460,9 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         </Card>
         <Card style={{ padding: "3em 3em", margin: "5px 0px" }}>
           <Formik
+            enableReinitialize
             initialValues={initialValues}
-            validationSchema={courseSchema}
+            validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
               submitForm(values, setSubmitting);
               // console.clear();
@@ -334,13 +500,13 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                       }}
                     >
                       <Grid item xs={3} md={3} style={{ color: "red" }}>
-                        {/* {JSON.stringify(errors)} */}
+                        {JSON.stringify(errors)}
                       </Grid>
                     </Grid>
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
-                          disabled={!isEditable}
+                          disabled={!isEditable || addDescription}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -360,7 +526,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
-                          disabled={!isEditable}
+                          disabled={!isEditable || addDescription}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -380,7 +546,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
-                          disabled={!isEditable}
+                          disabled={!isEditable || addDescription}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -397,8 +563,28 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                         />
                       </GridItem>
                     </Grid>
+                    <Grid item xs={3} md={3}>
+                      <GridItem>
+                        <TextField
+                          disabled={!isEditable || addDescription}
+                          onChange={handleChange}
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="code"
+                          name="code"
+                          value={values.code}
+                          onBlur={handleBlur}
+                          error={Boolean(touched.code && errors.code)}
+                          helperText={touched.code && errors.code}
+                          placeholder={translate("Course Code")}
+                          label={translate("Course Code")}
+                          fullWidth
+                        />
+                      </GridItem>
+                    </Grid>
                   </Grid>
-                  {isCreate && (
+                  {(isCreate || addDescription) && (
                     <Grid container md={12} xs={12}>
                       <Grid item xs={3} md={3}>
                         <GridItem>
@@ -474,30 +660,6 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                           />
                         </GridItem>
                       </Grid>
-                    </Grid>
-                  )}
-                  <Grid container md={12} xs={12} style={{ margin: "1em 0em" }}>
-                    <Grid item xs={3} md={3}>
-                      <GridItem>
-                        <TextField
-                          disabled={!isEditable}
-                          onChange={handleChange}
-                          variant="outlined"
-                          size="small"
-                          type="text"
-                          id="code"
-                          name="code"
-                          value={values.code}
-                          onBlur={handleBlur}
-                          error={Boolean(touched.code && errors.code)}
-                          helperText={touched.code && errors.code}
-                          placeholder={translate("Course Code")}
-                          label={translate("Course Code")}
-                          fullWidth
-                        />
-                      </GridItem>
-                    </Grid>
-                    {isCreate && (
                       <Grid item xs={3} md={3}>
                         <GridItem>
                           <TextField
@@ -520,10 +682,13 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                           />
                         </GridItem>
                       </Grid>
-                    )}
+                    </Grid>
+                  )}
+                  <Grid container md={12} xs={12} style={{ margin: "1em 0em" }}>
+                    <Grid item xs={3} md={3}></Grid>
                   </Grid>
                   <Divider style={{ margin: "2em 0em" }} />
-                  {isCreate && (
+                  {(isCreate || addDescription) && (
                     <>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">
@@ -731,28 +896,36 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                         value={fileName}
                       />
                     </Grid>
-                    {values.attachement != "" && !changed && (
-                      <Grid md={6} style={{ marginTop: "1em" }}>
-                        <a
-                          href={process.env.BASE_URL + "/" + values.attachement}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <SuiButton
-                            type="button"
-                            disabled={true}
-                            variant="gradient"
-                            color="warning"
-                            fullWidth
+                    {values.attachement != null &&
+                      values.attachement != "" &&
+                      !changed && (
+                        <Grid md={6} style={{ marginTop: "1em" }}>
+                          <a
+                            href={
+                              process.env.BASE_URL + "/" + values.attachement
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
-                            <CloudDownload style={{ margin: "0em .3em" }} />
-                            {translate("Download")}
-                          </SuiButton>
-                        </a>
-                      </Grid>
-                    )}
+                            <SuiButton
+                              type="button"
+                              disabled={true}
+                              variant="gradient"
+                              color="warning"
+                              fullWidth
+                            >
+                              <CloudDownload style={{ margin: "0em .3em" }} />
+                              {translate("Download")}
+                            </SuiButton>
+                          </a>
+                        </Grid>
+                      )}
                   </Box>
-                  <Box mt={4} mb={1}>
+                  <Box
+                    mt={4}
+                    mb={1}
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
                     {isEditable ? (
                       isSubmitting ? (
                         <SuiButton
@@ -760,7 +933,6 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                           disabled={true}
                           variant="gradient"
                           color="info"
-                          fullWidth
                         >
                           {translate("Processing ...")}
                         </SuiButton>
@@ -769,7 +941,6 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                           style={{
                             color: "rgb(255, 255, 255)",
                             background: "rgb(23, 193, 232)",
-                            width: "100%",
                           }}
                           disabled={!isValid && isSubmitting}
                           type="submit"
@@ -779,13 +950,24 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                       )
                     ) : (
                       <SuiButton
-                        onClick={activateEdit}
+                        onClick={handleEditCourse}
                         type="button"
                         variant="gradient"
                         color="info"
-                        fullWidth
                       >
                         {translate("Edit Course")}
+                      </SuiButton>
+                    )}
+                    {isEditable && (
+                      <SuiButton
+                        onClick={handleActivateAddDesc}
+                        type="button"
+                        variant="gradient"
+                        color="primary"
+                      >
+                        {!addDescription
+                          ? translate("Edit description")
+                          : translate("Back to edit basic info")}
                       </SuiButton>
                     )}
                   </Box>

@@ -40,6 +40,8 @@
   "Upload a file": "رفع مرفق",
   "Need at least one evaluation method": "يجب إضافة طريقة تقييم واحدة على الأقل",
   "Need an attachement for this course": "يجب رفع مرفق خاص بهذا المقرر",
+  "Edit description": "تعديل معلومات الاستمارة",
+  "Back to edit basic info": "عودة إلى معلومات المقرر الرئيسية",
 
   "Private": "خاص",
   "Family": "عائلي",

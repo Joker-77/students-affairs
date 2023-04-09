@@ -18,7 +18,7 @@ export interface ICreateCourseModel {
   practical_hours: number;
   mixed_hours: number;
   evaluation_methods: IEvaluationMethod[];
-  attachement: string;
+  attachement?: string;
 }
 
 export interface IEditCourseBasicInfo {
@@ -27,9 +27,18 @@ export interface IEditCourseBasicInfo {
   fr_name: string;
   ar_name: string;
   code: string;
-  attachement: string;
+  attachement?: string;
 }
 
+export interface IAddDescriptionModel {
+  course_id: number;
+  credit: number;
+  theoretic_hours: number;
+  practical_hours: number;
+  mixed_hours: number;
+  evaluation_methods: IEvaluationMethod[];
+  attachement?: string;
+}
 export interface IEvaluationMethod {
   id: number;
   name: string;
