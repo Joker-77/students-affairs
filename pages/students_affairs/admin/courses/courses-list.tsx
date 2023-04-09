@@ -10,6 +10,11 @@ import {
   TextField,
   InputAdornment,
   OutlinedInput,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@material-ui/core";
 import {
   FilterList,
@@ -315,6 +320,44 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     );
   };
   /************************** Finish Handle Export Data ****************************/
+  const [confirm, setConfirm] = React.useState(false);
+  const [deleteCourse, setDeleteCourse] = React.useState(false);
+  const handleConfirmOpen = () => {
+    setConfirm(true);
+  };
+
+  const handleConfirmClose = () => {
+    setConfirm(false);
+  };
+  const handleDeleteCourse = () => {};
+
+  const ConfirmDialog = () => (
+    <div>
+      <Dialog
+        open={confirm}
+        onClose={handleConfirmClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {translate("Delete a course")}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {translate("Are you sure you want to delete this course")}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCourse}>{translate("Yes")}</Button>
+          <Button onClick={handleConfirmClose} autoFocus>
+            {translate("No")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+
+  /************************** Handle Delete Course ****************************/
   const tableRef = useRef();
   const generatePDF = useReactToPrint({
     content: () => tableRef.current,
@@ -543,6 +586,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
           isEditable={isEditable}
         />
       )}
+      <ConfirmDialog />
     </GridContainer>
   );
 };
