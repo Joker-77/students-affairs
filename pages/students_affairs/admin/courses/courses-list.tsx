@@ -49,11 +49,11 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
-  const [showCandidateDetail, setShowCandidateDetail] = React.useState(false);
+  const [showCourseDetail, setshowCourseDetail] = React.useState(false);
   const [course, setCourse] = React.useState<ICourseModel>();
   const [searchResult, setSearchResult] = React.useState(null);
   const setShow = () => {
-    setShowCandidateDetail(!showCandidateDetail);
+    setshowCourseDetail(!showCourseDetail);
   };
   const activateEdit = () => {
     setIsEditable(!isEditable);
@@ -63,11 +63,12 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     let _course = Courses.find((item, index) => item.id === data?.id);
     CourseService.Get(data.id)
       .then((res) => {
-        let _result = res.result as ICourseDescriptionModel[];
-        _course.current_description = _result[_result.length - 1];
+        let _course = res.result as ICourseModel;
         setCourse(_course);
+        console.clear();
+        console.log(_course);
         setIsEditable(false);
-        setShowCandidateDetail(true);
+        setshowCourseDetail(true);
       })
       .catch((error) => {
         console.error("error", error);
@@ -77,12 +78,12 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const handleOpen = () => {
     setCourse(null);
     setIsEditable(true);
-    setShowCandidateDetail(true);
+    setshowCourseDetail(true);
   };
 
   const handleClose = () => {
     setSearchResult(null);
-    setShowCandidateDetail(false);
+    setshowCourseDetail(false);
   };
 
   /********************** Filter && Sort *********/
@@ -321,7 +322,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   };
   return (
     <GridContainer>
-      {!showCandidateDetail && (
+      {!showCourseDetail && (
         <>
           <GridItem md={12}>
             <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
@@ -345,7 +346,6 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
                   disabled={false}
                   variant="contained"
                   className={classes.submitBtn}
-                  onClick={handleOpen}
                 >
                   <span style={{ padding: "0px 0px 0px 10px" }}>
                     {translate("Print")}
@@ -357,7 +357,6 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
                   disabled={false}
                   variant="contained"
                   className={classes.submitBtn}
-                  onClick={handleOpen}
                 >
                   <span style={{ padding: "0px 0px 0px 10px" }}>
                     {translate("Export to excel")}
@@ -474,13 +473,12 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
           <GridItem md={12}>{renderCourses()}</GridItem>
         </>
       )}
-      {showCandidateDetail && (
+      {showCourseDetail && (
         <CourseDetails
           details={course}
           activateEdit={activateEdit}
           setShow={setShow}
-          show={showCandidateDetail}
-          courseDetail={null}
+          show={showCourseDetail}
           isEditable={isEditable}
         />
       )}

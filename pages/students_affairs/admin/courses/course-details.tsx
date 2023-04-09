@@ -24,6 +24,7 @@ import { connect } from "react-redux";
 import SuiButton from "../../../../components/SuiButton";
 import { Add, ArrowBack, AttachFile, Backspace } from "@material-ui/icons";
 import AddAttachment from "../../../../components/AddAttachment/AddAttachment";
+import { toast } from "react-toastify";
 
 interface ICourseDetailProps {
   show: boolean;
@@ -42,27 +43,48 @@ const CourseDetail: FC<ICourseDetailProps> = ({
 }) => {
   const methodTypes = [
     {
-      id: "midTerm",
+      id: 1,
       name: "مذاكرة",
     },
     {
-      id: "exam",
-      name: "امتحان",
+      id: 2,
+      name: "عملي",
     },
     {
-      id: "practicalExam",
-      name: "امتحان عملي",
+      id: 3,
+      name: "امتحان",
     },
   ];
 
   const { translate } = useTranslation();
   const [course, setDetails] = useState<ICourseModel>(details);
+  const [fileName, setFileName] = useState<string>(
+    course?.current_description?.attachement
+  );
   const initialValues = {
     en_name: course?.en_name,
     ar_name: course?.ar_name,
     fr_name: course?.fr_name,
     code: course?.code,
-    // theoretical_hours: courseDetail.current_description.th
+    theoretical_hours: course.current_description.hours.find(
+      (hour) => hour?.type == "theoretic"
+    )?.hours,
+    practical_hours: course.current_description.hours.find(
+      (hour) => hour?.type == "practical"
+    )?.hours,
+    mixed_hours: course.current_description.hours.find(
+      (hour) => hour?.type == "mixed"
+    )?.hours,
+    evaluation_methods: course.current_description?.evaluation_methods.map(
+      (ev, idx) => {
+        return {
+          id: ev.id,
+          name: ev.name,
+          percentage: ev.percentage * 100,
+        };
+      }
+    ),
+    attachement: course?.current_description?.attachement,
   };
   // const [submitting, setSubmitting] = useState(false);
   const courseSchema = yup.object({
@@ -74,6 +96,9 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       .required(translate("Field is required")),
     fr_name: yup
       .string(translate("French Name"))
+      .required(translate("Field is required")),
+    code: yup
+      .string(translate("Course Code"))
       .required(translate("Field is required")),
     theoretical_hours: yup
       .number("Theoretical Hours")
@@ -91,7 +116,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       .array()
       .of(
         yup.object().shape({
-          name: yup.string().required("Name is required"),
+          name: yup.string(),
           percentage: yup
             .number()
             .min(0, translate("Field must be greater than 0"))
@@ -100,7 +125,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
             .required("Percentage is required"),
         })
       )
-      .min(1, "Need at least one evaluation method")
+      .min(1, translate("Need at least one evaluation method"))
       .test((methods: Array<{ percentage: number }>) => {
         const sum = methods?.reduce((acc, curr) => acc + curr.percentage, 0);
         if (sum != 100) {
@@ -125,16 +150,44 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           return true;
         }
       }),
-    file: yup.mixed(),
+    attachement: yup
+      .mixed()
+      .required(translate("Need an attachment for this course")),
   });
   const [errorPercentageMsg, setErrorPercentageMsg] = useState("");
-  const submitForm = () => {};
+  const submitForm = (values, setSubmitting) => {
+    console.clear();
+    console.log(values);
+  };
 
   const hiddenInput = React.useRef(null);
   const handleClick = (event) => {
     hiddenInput.current?.click();
   };
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      setFileName(file?.name);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
 
+  const handleFile = async (e, setFieldValue) => {
+    const file = e.target.files[0];
+    //check the size of image
+    if (file?.size / 1024 / 1024 < 2) {
+      const base64 = await convertToBase64(file);
+      setFieldValue("attachement", base64);
+    } else {
+      toast.error("File size must be of 5MB or less");
+    }
+  };
   return (
     <Grid container md={12} sm={12}>
       <Grid md={12} sm={12} xs={12}>
@@ -163,6 +216,8 @@ const CourseDetail: FC<ICourseDetailProps> = ({
             validationSchema={courseSchema}
             onSubmit={(values, { setSubmitting }) => {
               submitForm(values, setSubmitting);
+              // console.clear();
+              // console.log(values);
             }}
           >
             {(formik) => {
@@ -179,8 +234,26 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                 setFieldValue,
               } = formik;
               return (
-                <Form>
+                <Form onSubmit={handleSubmit}>
                   <Grid container md={12} xs={12} style={{ margin: "1em 0em" }}>
+                    <Grid
+                      container
+                      md={12}
+                      style={{
+                        margin: "1em 0em",
+                        color: "red",
+                        display:
+                          errors && // 👈 null and undefined check
+                          Object.keys(errors).length === 0 &&
+                          Object.getPrototypeOf(errors) === Object.prototype
+                            ? "none"
+                            : "block",
+                      }}
+                    >
+                      <Grid item xs={3} md={3} style={{ color: "red" }}>
+                        {JSON.stringify(errors)}
+                      </Grid>
+                    </Grid>
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
@@ -316,6 +389,28 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                       </GridItem>
                     </Grid>
                   </Grid>
+                  <Grid container md={12} xs={12} style={{ margin: "1em 0em" }}>
+                    <Grid item xs={3} md={3}>
+                      <GridItem>
+                        <TextField
+                          disabled={!isEditable}
+                          onChange={handleChange}
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="code"
+                          name="code"
+                          value={values.code}
+                          onBlur={handleBlur}
+                          error={Boolean(touched.code && errors.code)}
+                          helperText={touched.code && errors.code}
+                          placeholder={translate("Course Code")}
+                          label={translate("Course Code")}
+                          fullWidth
+                        />
+                      </GridItem>
+                    </Grid>
+                  </Grid>
                   <Divider style={{ margin: "2em 0em" }} />
                   <Box mb={1} ml={0.5}>
                     <Typography component="label" variant="caption">
@@ -346,12 +441,12 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                                     variant="outlined"
                                     size="small"
                                     type="select"
-                                    id={`evaluation_methods.${index}.name`}
-                                    name={`evaluation_methods.${index}.name`}
+                                    id={`evaluation_methods.${index}.id`}
+                                    name={`evaluation_methods.${index}.id`}
                                     select={true}
-                                    value={method.name}
+                                    value={method.id}
                                     onChange={handleChange(
-                                      `evaluation_methods.${index}.name`
+                                      `evaluation_methods.${index}.id`
                                     )}
                                     onBlur={handleBlur}
                                     fullWidth
@@ -481,24 +576,28 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                       <AttachFile />
                     </SuiButton>
                     <input
-                      id="file"
-                      name="file"
+                      id="attachement"
+                      name="attachement"
                       type="file"
                       ref={hiddenInput}
                       style={{ display: "none" }}
                       onChange={(event) => {
-                        setFieldValue("file", event.currentTarget.files[0]);
+                        handleFile(event, setFieldValue);
                       }}
                       className="form-control"
                     />
                     <Grid md={6} style={{ marginTop: "1em" }}>
                       <TextField
+                        helperText={touched?.attachement && errors?.attachement}
+                        error={Boolean(
+                          errors?.attachement && touched?.attachement
+                        )}
                         variant="outlined"
                         type="text"
                         size="small"
                         disabled
                         placeholder=""
-                        value={values.file?.name}
+                        value={fileName}
                       />
                     </Grid>
                   </Box>
@@ -506,6 +605,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     {isEditable ? (
                       isSubmitting ? (
                         <SuiButton
+                          type="button"
                           disabled={true}
                           variant="gradient"
                           color="info"
@@ -515,11 +615,13 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                         </SuiButton>
                       ) : (
                         <SuiButton
-                          // disabled={!(dirty && isValid)}
+                          style={{
+                            color: "rgb(255, 255, 255)",
+                            background: "rgb(23, 193, 232)",
+                            width: "100%",
+                          }}
+                          disabled={!isValid && isSubmitting}
                           type="submit"
-                          variant="gradient"
-                          color="info"
-                          fullWidth
                         >
                           {translate("Save")}
                         </SuiButton>
@@ -527,7 +629,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     ) : (
                       <SuiButton
                         onClick={activateEdit}
-                        type="submit"
+                        type="button"
                         variant="gradient"
                         color="info"
                         fullWidth
@@ -549,11 +651,5 @@ const CourseDetail: FC<ICourseDetailProps> = ({
 
 (CourseDetail as any).layout = Admin;
 (CourseDetail as any).auth = false;
-const mapStateToProps = (state) => {
-  console.log("state", state);
-  return {
-    candidate: state.baseReducer.course,
-  };
-};
 
-export default connect(mapStateToProps, null)(CourseDetail);
+export default CourseDetail;

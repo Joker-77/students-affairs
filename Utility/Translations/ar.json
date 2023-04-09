@@ -38,6 +38,8 @@
   "Add an evaluation method": "إضافة طريقة تقييم",
   "Edit Course": "تعديل معلومات المقرّر",
   "Upload a file": "تحميل مرفق",
+  "Need at least one evaluation method": "يجب إضافة طريقة تقييم واحدة على الأقل",
+  "Need an attachment for this course": "يجب تحميل مرفق خاص بهذا المقرر",
 
   "Private": "خاص",
   "Family": "عائلي",

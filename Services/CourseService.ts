@@ -34,7 +34,7 @@ export default class CourseService {
   }
 
   static async Get(id: string): Promise<ApiResponse> {
-    const detailUrl = (process.env.GET_COURSE_DESC as string) + `${id}`;
+    const detailUrl = (process.env.LIST_COURSE_URL as string) + `/${id}`;
     return await apiConnector
       .get(detailUrl)
       .then((response) => {

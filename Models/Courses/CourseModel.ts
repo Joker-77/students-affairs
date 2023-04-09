@@ -10,6 +10,7 @@ export interface ICourseModel {
 }
 
 export interface IEvaluationMethod {
+  id: number;
   name: string;
   percentage: number;
 }
@@ -22,5 +23,15 @@ export interface ICourseDescriptionModel {
   attachement: any;
   total_hours: number;
   evaluation_methods: IEvaluationMethod[];
-  hours: [];
+  hours: IHourModel[];
+}
+
+export interface IHourModel {
+  id: number;
+  course_desc_id: number;
+  direct_or_personal: string;
+  type: string;
+  hours: number;
+  created_at: string;
+  updated_at: string;
 }
