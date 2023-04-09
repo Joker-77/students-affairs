@@ -274,9 +274,8 @@ const CourseDetail: FC<ICourseDetailProps> = ({
               return true;
             }
           }),
-        attachement: yup
-          .mixed()
-          .required(translate("Need an attachement for this course")),
+        attachement: yup.mixed(),
+        // .required(translate("Need an attachement for this course")),
       });
     } else {
       courseSchema = yup.object({
@@ -292,9 +291,8 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         code: yup
           .string(translate("Course Code"))
           .required(translate("Field is required")),
-        attachement: yup
-          .mixed()
-          .required(translate("Need an attachement for this course")),
+        attachement: yup.mixed(),
+        // .required(translate("Need an attachement for this course")),
       });
     }
     return courseSchema;
@@ -363,7 +361,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       CourseService.Add(payload)
         .then((response) => {
           if (response.success) {
-            router.push("/students_affairs/courses/courses-list");
+            toast.success("Course Added Successfully");
           } else {
             console.log(response.error);
             toast.error(response.error.message);
@@ -388,6 +386,20 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       const isFile = hiddenInput.current.value != "";
       if (isFile) payload.attachement = values.attachement;
       console.log(payload);
+      CourseService.AddDesc(payload)
+        .then((response) => {
+          if (response.success) {
+            toast.success("Description Added Successfully");
+          } else {
+            console.log(response.error);
+            toast.error(response.error.message);
+          }
+        })
+        .catch((error) => {
+          console.log(error.message);
+          toast.error(error.message);
+          throw new Error(error);
+        });
     } else {
       const payload: IEditCourseBasicInfo = {
         id: course.id,
@@ -399,6 +411,20 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       const isFile = hiddenInput.current.value != "";
       if (isFile) payload.attachement = values.attachement;
       console.log(payload);
+      CourseService.Edit(payload)
+        .then((response) => {
+          if (response.success) {
+            toast.success("Courses Edited Successfully");
+          } else {
+            console.log(response.error);
+            toast.error(response.error.message);
+          }
+        })
+        .catch((error) => {
+          console.log(error.message);
+          toast.error(error.message);
+          throw new Error(error);
+        });
     }
     setSubmitting(false);
     // CourseService.Add(payload)
