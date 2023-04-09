@@ -75,6 +75,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         ar_name: course?.ar_name,
         fr_name: course?.fr_name,
         code: course?.code,
+        credit: course?.current_description?.credit,
         theoretical_hours: course?.current_description?.hours?.find(
           (hour) => hour?.type == "theoretic"
         )?.hours,
@@ -196,15 +197,15 @@ const CourseDetail: FC<ICourseDetailProps> = ({
     if (isCreate) {
       const payload: ICreateCourseModel = {
         en_name: values.en_name,
-        ar_name: values.ar_name,
         fr_name: values.fr_name,
+        ar_name: values.ar_name,
         code: values.code,
-        attachement: values.attachement,
         credit: values.credit,
+        theoretic_hours: values.theoretical_hours,
+        practical_hours: values.practical_hours,
         mixed_hours: values.mixed_hours,
         evaluation_methods: values.evaluation_methods,
-        practical_hours: values.practical_hours,
-        theoretic_hours: values.theoretic_hours,
+        attachement: values.attachement,
       };
       console.clear();
       console.log(payload);
@@ -213,10 +214,12 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           if (response.success) {
             router.push("/students_affairs/courses/courses-list");
           } else {
+            console.log(response.error);
             toast.error(response.error.message);
           }
         })
         .catch((error) => {
+          console.log(error.message);
           toast.error(error.message);
           throw new Error(error);
         });
@@ -232,6 +235,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       console.clear();
       console.log(payload);
     }
+    setSubmitting(false);
     // CourseService.Add(payload)
     //   .then(() => {})
     //   .catch((e) => console.error(e));
@@ -330,7 +334,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                       }}
                     >
                       <Grid item xs={3} md={3} style={{ color: "red" }}>
-                        {JSON.stringify(errors)}
+                        {/* {JSON.stringify(errors)} */}
                       </Grid>
                     </Grid>
                     <Grid item xs={3} md={3}>
@@ -493,6 +497,30 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                         />
                       </GridItem>
                     </Grid>
+                    {isCreate && (
+                      <Grid item xs={3} md={3}>
+                        <GridItem>
+                          <TextField
+                            disabled={!isEditable}
+                            onChange={handleChange}
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            id="credit"
+                            name="credit"
+                            value={values.credit}
+                            onBlur={handleBlur}
+                            error={Boolean(touched.credit && errors.credit)}
+                            helperText={touched.credit && errors.credit}
+                            placeholder={translate(
+                              "Number of accredited hours"
+                            )}
+                            label={translate("Number of accredited hours")}
+                            fullWidth
+                          />
+                        </GridItem>
+                      </Grid>
+                    )}
                   </Grid>
                   <Divider style={{ margin: "2em 0em" }} />
                   {isCreate && (
@@ -527,12 +555,12 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                                           variant="outlined"
                                           size="small"
                                           type="select"
-                                          id={`evaluation_methods.${index}.id`}
-                                          name={`evaluation_methods.${index}.id`}
+                                          id={`evaluation_methods.${index}.name`}
+                                          name={`evaluation_methods.${index}.name`}
                                           select={true}
                                           value={method.id}
                                           onChange={handleChange(
-                                            `evaluation_methods.${index}.id`
+                                            `evaluation_methods.${index}.name`
                                           )}
                                           onBlur={handleBlur}
                                           fullWidth
@@ -540,7 +568,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                                           {methodTypes?.map((type) => (
                                             <MenuItem
                                               key={type.id}
-                                              value={type.id}
+                                              value={type.name}
                                             >
                                               {type.name}
                                             </MenuItem>
@@ -665,7 +693,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                   )}
                   <Box mb={1} ml={0.5}>
                     <Typography component="label" variant="caption">
-                      <h5>{translate("attachements")}</h5>
+                      <h5>{translate("Attachements")}</h5>
                     </Typography>
                   </Box>
                   <Box>
