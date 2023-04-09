@@ -4,29 +4,26 @@ import {
   ICreateCourseModel,
   IEvaluationMethod,
 } from "../../../../Models/Courses/CourseModel";
+import Admin from "../../../../layouts/Admin";
+import { useTranslation } from "../../../../Utility/Translations/useTranslation";
+import * as yup from "yup";
+import { Field, FieldArray, Form, Formik, getIn, ErrorMessage } from "formik";
+import SuiButton from "../../../../components/SuiButton";
+import { toast } from "react-toastify";
+import CourseService from "../../../../Services/CourseService";
+import { useRouter } from "next/router";
+import { Add, ArrowBack, AttachFile } from "@material-ui/icons";
 import Card from "../../../../components/Card/Card";
 import {
   Box,
-  Button,
   CardActions,
-  CardContent,
   Divider,
   Grid,
   MenuItem,
   TextField,
   Typography,
 } from "@material-ui/core";
-import Admin from "../../../../layouts/Admin";
-import { useTranslation } from "../../../../Utility/Translations/useTranslation";
 import GridItem from "../../../../components/Grid/GridItem";
-import * as yup from "yup";
-import { Field, FieldArray, Form, Formik, getIn, ErrorMessage } from "formik";
-import { connect } from "react-redux";
-import SuiButton from "../../../../components/SuiButton";
-import { Add, ArrowBack, AttachFile, Backspace } from "@material-ui/icons";
-import AddAttachment from "../../../../components/AddAttachment/AddAttachment";
-import { toast } from "react-toastify";
-import CourseService from "../../../../Services/CourseService";
 
 interface ICourseDetailProps {
   isCreate: boolean;
@@ -59,109 +56,136 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       name: "امتحان",
     },
   ];
-
+  const router = useRouter();
   const { translate } = useTranslation();
   const [course, setDetails] = useState<ICourseModel>(details);
   const [fileName, setFileName] = useState<string>(
     course?.current_description?.attachement
   );
-  const initialValues = {
-    id: course?.id,
-    en_name: course?.en_name,
-    ar_name: course?.ar_name,
-    fr_name: course?.fr_name,
-    code: course?.code,
-    theoretical_hours: course?.current_description?.hours?.find(
-      (hour) => hour?.type == "theoretic"
-    )?.hours,
-    practical_hours: course?.current_description?.hours?.find(
-      (hour) => hour?.type == "practical"
-    )?.hours,
-    mixed_hours: course?.current_description?.hours?.find(
-      (hour) => hour?.type == "mixed"
-    )?.hours,
-    evaluation_methods: course?.current_description?.evaluation_methods?.map(
-      (ev, idx) => {
-        return {
-          id: ev.id,
-          name: ev.name,
-          percentage: ev.percentage * 100,
-        };
+  const initialValues = isCreate
+    ? {
+        en_name: course?.en_name,
+        ar_name: course?.ar_name,
+        fr_name: course?.fr_name,
+        code: course?.code,
+        theoretical_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "theoretic"
+        )?.hours,
+        practical_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "practical"
+        )?.hours,
+        mixed_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "mixed"
+        )?.hours,
+        evaluation_methods:
+          course?.current_description?.evaluation_methods?.map((ev, idx) => {
+            return {
+              id: ev.id,
+              name: ev.name,
+              percentage: ev.percentage * 100,
+            };
+          }),
+        attachement: course?.current_description?.attachement,
       }
-    ),
-    attachement: course?.current_description?.attachement,
-  };
+    : {
+        id: course.id,
+        en_name: course.en_name,
+        ar_name: course.ar_name,
+        fr_name: course.fr_name,
+        code: course.code,
+        attachment: course.current_description?.attachement,
+      };
   // const [submitting, setSubmitting] = useState(false);
-  const courseSchema = yup.object({
-    en_name: yup
-      .string(translate("English Name"))
-      .required(translate("Field is required")),
-    ar_name: yup
-      .string(translate("Arabic Name"))
-      .required(translate("Field is required")),
-    fr_name: yup
-      .string(translate("French Name"))
-      .required(translate("Field is required")),
-    code: yup
-      .string(translate("Course Code"))
-      .required(translate("Field is required")),
-    theoretical_hours: yup
-      .number("Theoretical Hours")
-      .min(0, translate("Field must be greater than 0"))
-      .required(translate("Field is required")),
-    practical_hours: yup
-      .number("Practical Hours")
-      .min(0, translate("Field must be greater than 0"))
-      .required(translate("Field is required")),
-    mixed_hours: yup
-      .number("Practical Hours")
-      .min(0, translate("Field must be greater than 0"))
-      .required(translate("Field is required")),
-    evaluation_methods: yup
-      .array()
-      .of(
-        yup.object().shape({
-          name: yup.string(),
-          percentage: yup
-            .number()
-            .min(0, translate("Field must be greater than 0"))
-            .max(100, translate("Field must be less than 100"))
-            .transform((value) => (isNaN(value) ? undefined : value))
-            .required("Percentage is required"),
-        })
-      )
-      .min(1, translate("Need at least one evaluation method"))
-      .test((methods: Array<{ percentage: number }>) => {
-        const sum = methods?.reduce((acc, curr) => acc + curr.percentage, 0);
-        if (sum != 100) {
-          isNaN(sum)
-            ? setErrorPercentageMsg(
-                translate("Percentage should be 100%, but you have:") + "0%"
-              )
-            : setErrorPercentageMsg(
-                translate("Percentage should be 100%, but you have:") +
-                  sum +
-                  "%"
+  const courseSchema = isCreate
+    ? yup.object({
+        en_name: yup
+          .string(translate("English Name"))
+          .required(translate("Field is required")),
+        ar_name: yup
+          .string(translate("Arabic Name"))
+          .required(translate("Field is required")),
+        fr_name: yup
+          .string(translate("French Name"))
+          .required(translate("Field is required")),
+        code: yup
+          .string(translate("Course Code"))
+          .required(translate("Field is required")),
+        theoretical_hours: yup
+          .number("Theoretical Hours")
+          .min(0, translate("Field must be greater than 0"))
+          .required(translate("Field is required")),
+        practical_hours: yup
+          .number("Practical Hours")
+          .min(0, translate("Field must be greater than 0"))
+          .required(translate("Field is required")),
+        mixed_hours: yup
+          .number("Practical Hours")
+          .min(0, translate("Field must be greater than 0"))
+          .required(translate("Field is required")),
+        evaluation_methods: yup
+          .array()
+          .of(
+            yup.object().shape({
+              name: yup.string(),
+              percentage: yup
+                .number()
+                .min(0, translate("Field must be greater than 0"))
+                .max(100, translate("Field must be less than 100"))
+                .transform((value) => (isNaN(value) ? undefined : value))
+                .required("Percentage is required"),
+            })
+          )
+          .min(1, translate("Need at least one evaluation method"))
+          .test((methods: Array<{ percentage: number }>) => {
+            const sum = methods?.reduce(
+              (acc, curr) => acc + curr.percentage,
+              0
+            );
+            if (sum != 100) {
+              isNaN(sum)
+                ? setErrorPercentageMsg(
+                    translate("Percentage should be 100%, but you have:") + "0%"
+                  )
+                : setErrorPercentageMsg(
+                    translate("Percentage should be 100%, but you have:") +
+                      sum +
+                      "%"
+                  );
+              return new yup.ValidationError(
+                translate(
+                  `Percentage should be 100%, but you have ${sum}%`,
+                  undefined,
+                  translate("Evaluation Methods")
+                )
               );
-          return new yup.ValidationError(
-            translate(
-              `Percentage should be 100%, but you have ${sum}%`,
-              undefined,
-              translate("Evaluation Methods")
-            )
-          );
-        } else {
-          setErrorPercentageMsg("");
-          return true;
-        }
-      }),
-    attachement: yup
-      .mixed()
-      .required(translate("Need an attachment for this course")),
-  });
+            } else {
+              setErrorPercentageMsg("");
+              return true;
+            }
+          }),
+        attachement: yup
+          .mixed()
+          .required(translate("Need an attachment for this course")),
+      })
+    : yup.object({
+        en_name: yup
+          .string(translate("English Name"))
+          .required(translate("Field is required")),
+        ar_name: yup
+          .string(translate("Arabic Name"))
+          .required(translate("Field is required")),
+        fr_name: yup
+          .string(translate("French Name"))
+          .required(translate("Field is required")),
+        code: yup
+          .string(translate("Course Code"))
+          .required(translate("Field is required")),
+        attachement: yup
+          .mixed()
+          .required(translate("Need an attachment for this course")),
+      });
   const [errorPercentageMsg, setErrorPercentageMsg] = useState("");
   const submitForm = (values, setSubmitting) => {
-    alert(isCreate);
     if (isCreate) {
       const payload: ICreateCourseModel = {
         en_name: values.en_name,
@@ -177,8 +201,19 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       };
       console.clear();
       console.log(payload);
+      CourseService.Add(payload)
+        .then((response) => {
+          if (response.success) {
+            router.push("/students_affairs/courses/courses-list");
+          } else {
+            toast.error(response.error.message);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+          throw new Error(error);
+        });
     }
-
     // CourseService.Add(payload)
     //   .then(() => {})
     //   .catch((e) => console.error(e));

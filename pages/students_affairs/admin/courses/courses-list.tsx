@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Select,
@@ -42,6 +42,8 @@ import CourseService from "../../../../Services/CourseService";
 import SuiButton from "../../../../components/SuiButton";
 import CandidateDetails from "../../affairs_officer/candidates/candidate-details";
 import CourseDetails from "./course-details";
+import { ExportToCsv } from "export-to-csv";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
 
 interface ICoursesListProps {}
 const CoursesList: React.FC<ICoursesListProps> = ({}) => {
@@ -125,13 +127,22 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     React.useState<ICourseModel[]>(null);
   const [filter, setFilter] = React.useState(0);
   const [search, setSearch] = React.useState("");
-  const handleChangeFilter = (event) => {
-    setFilter(event.target.value);
-  };
-  const handleSearch = (event) => {
-    let _value = event?.target?.value;
-    setSearch(_value);
+
+  const filterData = () => {
     let _filteredCourses = Courses;
+    let _value = search;
+    if (filter == 0) {
+      _filteredCourses = Courses.filter((course, index) => {
+        return (
+          course.ar_name.includes(_value) ||
+          course.en_name.includes(_value) ||
+          course.fr_name.includes(_value) ||
+          course.current_description?.total_hours.toString().includes(_value) ||
+          course.current_description?.credit.toString().includes(_value)
+        );
+      });
+      setFilteredCourses(_filteredCourses);
+    }
     if (filter == 1) {
       _filteredCourses = Courses.filter((course, index) => {
         return (
@@ -156,6 +167,15 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       });
       setFilteredCourses(_filteredCourses);
     }
+  };
+  const handleChangeFilter = (event) => {
+    setFilter(event.target.value);
+    filterData();
+  };
+  const handleSearch = (event) => {
+    let _value = event?.target?.value;
+    setSearch(_value);
+    filterData();
   };
 
   const [sortBy, setSortBy] = React.useState(0);
@@ -235,39 +255,71 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const [isEditable, setIsEditable] = React.useState(false);
   /************************** Finish Handle edit data ****************************/
 
+  /**************************  Handle Export data ****************************/
+  let columns = [
+    {
+      title: translate("Id"),
+      field: "id",
+      hidden: true,
+    },
+    {
+      title: translate("English Name"),
+      field: "en_name",
+    },
+    {
+      title: translate("Arabic Name"),
+      field: "ar_name",
+    },
+    {
+      title: translate("French Name"),
+      field: "fr_name",
+    },
+    {
+      title: translate("Course Code"),
+      field: "code",
+    },
+    {
+      title: translate("Total Hours"),
+      field: "current_description.total_hours",
+    },
+    {
+      title: translate("Credit Hours"),
+      field: "current_description.credit",
+    },
+  ];
+  const csvOptions = {
+    fieldSeparator: ",",
+    quoteStrings: '"',
+    decimalSeparator: ".",
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: columns.map((c) => c.title),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+  const handleExportData = () => {
+    csvExporter.generateCsv(
+      filteredCourses.map((course, idx) => {
+        return {
+          id: course.id,
+          en_name: course.en_name,
+          ar_name: course.ar_name,
+          fr_name: course.fr_name,
+          code: course.code,
+          total_hours: course?.current_description?.total_hours,
+          credit: course?.current_description?.credit,
+        };
+      })
+    );
+  };
+  /************************** Finish Handle Export Data ****************************/
+  const tableRef = useRef();
+  const generatePDF = useReactToPrint({
+    content: () => tableRef.current,
+    documentTitle: translate("Courses"),
+  });
   const renderCourses = () => {
     if (filteredCourses != null && filteredCourses.length > 0) {
-      let columns = [
-        {
-          title: translate("Id"),
-          field: "id",
-          hidden: true,
-        },
-        {
-          title: translate("English Name"),
-          field: "en_name",
-        },
-        {
-          title: translate("Arabic Name"),
-          field: "ar_name",
-        },
-        {
-          title: translate("French Name"),
-          field: "fr_name",
-        },
-        {
-          title: translate("Course Code"),
-          field: "code",
-        },
-        {
-          title: translate("Total Hours"),
-          field: "current_description.total_hours",
-        },
-        {
-          title: translate("Credit Hours"),
-          field: "current_description.credit",
-        },
-      ];
       let data = filteredCourses;
       let options = {
         // exportAllData: true,
@@ -312,13 +364,15 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
         },
       ];
       return (
-        <ActionTable
-          Title={translate("Courses List")}
-          Columns={columns}
-          Data={data}
-          Options={options}
-          Actions={actions}
-        />
+        <div ref={tableRef}>
+          <ActionTable
+            Title={translate("Courses List")}
+            Columns={columns}
+            Data={data}
+            Options={options}
+            Actions={actions}
+          />
+        </div>
       );
     } else return <Placeholder loading={false} />;
   };
@@ -348,6 +402,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
                   disabled={false}
                   variant="contained"
                   className={classes.submitBtn}
+                  onClick={generatePDF}
                 >
                   <span style={{ padding: "0px 0px 0px 10px" }}>
                     {translate("Print")}
@@ -359,6 +414,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
                   disabled={false}
                   variant="contained"
                   className={classes.submitBtn}
+                  onClick={handleExportData}
                 >
                   <span style={{ padding: "0px 0px 0px 10px" }}>
                     {translate("Export to excel")}
@@ -417,7 +473,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
               </FormControl>
               <FormControl>
                 <TextField
-                  onChange={handleSearch}
+                  onKeyUp={handleSearch}
                   size="small"
                   id="outlined-basic"
                   label="بحث"
