@@ -35,7 +35,6 @@ import GridItem from "../../../../components/Grid/GridItem";
 
 interface ICourseDetailProps {
   isCreate: boolean;
-  show: boolean;
   details: ICourseModel;
   isEditable: boolean;
   setShow(): void;
@@ -44,7 +43,6 @@ interface ICourseDetailProps {
 
 const CourseDetail: FC<ICourseDetailProps> = ({
   isCreate,
-  show,
   details,
   isEditable,
   setShow,
@@ -194,9 +192,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         code: course.code,
         attachement: course?.current_description?.attachement,
       };
-
   /************************* Handle Edit Course ************/
-
   const handleEditCourse = (event) => {
     event.preventDefault();
     activateEdit();
@@ -532,7 +528,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
-                          disabled={!isEditable || addDescription}
+                          disabled={!(isEditable || addDescription)}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -552,7 +548,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
-                          disabled={!isEditable || addDescription}
+                          disabled={!(isEditable || addDescription)}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -572,7 +568,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
-                          disabled={!isEditable || addDescription}
+                          disabled={!(isEditable || addDescription)}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -592,7 +588,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
-                          disabled={!isEditable || addDescription}
+                          disabled={!(isEditable || addDescription)}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -984,7 +980,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                         {translate("Edit Course")}
                       </SuiButton>
                     )}
-                    {isEditable && (
+                    {isEditable && !(addDescription && isEditable) && (
                       <SuiButton
                         onClick={handleActivateAddDesc}
                         type="button"

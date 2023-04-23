@@ -15,6 +15,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Accordion,
+  Typography,
+  AccordionSummary,
+  AccordionDetails,
 } from "@material-ui/core";
 import {
   FilterList,
@@ -28,6 +32,7 @@ import {
   Folder,
   PostAdd,
   Description,
+  ExpandMore,
 } from "@material-ui/icons";
 import Admin from "../../../../layouts/Admin";
 import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
@@ -49,6 +54,7 @@ import CandidateDetails from "../../affairs_officer/candidates/candidate-details
 import CourseDetails from "./course-details";
 import { ExportToCsv } from "export-to-csv";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
+import _ from "lodash";
 
 interface ICoursesListProps {}
 const CoursesList: React.FC<ICoursesListProps> = ({}) => {
@@ -68,13 +74,12 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
 
   const getCourse = (data: any) => {
     let _course = Courses.find((item, index) => item.id === data?.id);
-    setIsCreate(false);
     CourseService.Get(data.id)
       .then((res) => {
         let _course = res.result as ICourseModel;
-        setIsCreate(false);
         setCourse(_course);
         console.log(_course);
+        setIsCreate(false);
         setIsEditable(false);
         setshowCourseDetail(true);
       })
@@ -263,6 +268,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   /************************** Finish Handle edit data ****************************/
 
   /**************************  Handle Export data ****************************/
+  const [showExportColumns, setShowExportColumns] = React.useState(false);
   let columns = [
     {
       title: translate("Id"),
@@ -270,16 +276,18 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       hidden: true,
     },
     {
-      title: translate("English Name"),
-      field: "en_name",
-    },
-    {
       title: translate("Arabic Name"),
       field: "ar_name",
     },
     {
+      title: translate("English Name"),
+      field: "en_name",
+      hidden: true,
+    },
+    {
       title: translate("French Name"),
       field: "fr_name",
+      hidden: true,
     },
     {
       title: translate("Course Code"),
@@ -293,7 +301,35 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       title: translate("Credit Hours"),
       field: "current_description.credit",
     },
+    {
+      title: translate("Theoretical Hours"),
+      field: "current_description.hours[0].hours",
+    },
+    {
+      title: translate("Practical Hours"),
+      field: "current_description.hours[1].hours",
+    },
+    {
+      title: translate("Mixed Hours"),
+      field: "current_description.hours[2].hours",
+    },
   ];
+  const [checked, setChecked] = useState([]);
+  const [selectedColumns, setSelectedColumns] = useState([]);
+  const handleCheck = (event) => {
+    var updatedList = [...checked];
+    if (event.target.checked) {
+      updatedList = [...checked, event.target.value];
+    } else {
+      updatedList.splice(checked.indexOf(event.target.value), 1);
+    }
+    setChecked(updatedList);
+    setSelectedColumns(
+      columns.filter((item) => {
+        return updatedList.includes(item.field);
+      })
+    );
+  };
   const csvOptions = {
     fieldSeparator: ",",
     quoteStrings: '"',
@@ -301,21 +337,21 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     showLabels: true,
     useBom: true,
     useKeysAsHeaders: false,
-    headers: columns.map((c) => c.title),
+    headers: selectedColumns.map((c) => c.title),
   };
   const csvExporter = new ExportToCsv(csvOptions);
   const handleExportData = () => {
+    setShowExportColumns(!showExportColumns);
+  };
+  const generateExcel = () => {
     csvExporter.generateCsv(
       filteredCourses.map((course, idx) => {
-        return {
-          id: course.id,
-          en_name: course.en_name,
-          ar_name: course.ar_name,
-          fr_name: course.fr_name,
-          code: course.code,
-          total_hours: course?.current_description?.total_hours,
-          credit: course?.current_description?.credit,
-        };
+        let object = {};
+        selectedColumns.forEach((item, index) => {
+          _.set(object, `col ${index}`, _.get(course, item.field) ?? "");
+        });
+        console.log(object);
+        return object;
       })
     );
   };
@@ -480,6 +516,71 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
                 </Button>
               </GridItem>
             </GridItem>
+            {showExportColumns && (
+              <GridItem>
+                <Accordion>
+                  <AccordionDetails>
+                    <GridItem container>
+                      <GridItem
+                        md={12}
+                        style={{ display: "flex", justifyContent: "center" }}
+                      >
+                        <Typography
+                          style={{
+                            backgroundColor: "lightgray",
+                            boxShadow:
+                              "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)",
+                            padding: "0em 1.2em",
+                            margin: "0em 0em .5em 0em",
+                          }}
+                        >
+                          {translate("Select Columns")}
+                        </Typography>
+                      </GridItem>
+                      <GridItem md={12}>
+                        <GridItem
+                          className="list-container"
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          {columns
+                            // .filter((item) => !item.hidden)
+                            .map((item, index) => (
+                              <GridItem key={index}>
+                                <input
+                                  value={item.field}
+                                  type="checkbox"
+                                  onChange={handleCheck}
+                                />
+                                <span>{item.title}</span>
+                              </GridItem>
+                            ))}
+                        </GridItem>
+                        <GridItem
+                          md={12}
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Button
+                            style={{ margin: "0px 5px" }}
+                            disabled={false}
+                            variant="contained"
+                            className={classes.successText}
+                            onClick={generateExcel}
+                          >
+                            <span style={{ padding: "0px 0px 0px 10px" }}>
+                              {translate("Export")}
+                            </span>
+                            <Description />
+                          </Button>
+                        </GridItem>
+                      </GridItem>
+                    </GridItem>
+                  </AccordionDetails>
+                </Accordion>
+              </GridItem>
+            )}
             <GridItem style={{ marginBottom: "1em", marginTop: "2em" }}>
               <FormControl
                 size="small"
