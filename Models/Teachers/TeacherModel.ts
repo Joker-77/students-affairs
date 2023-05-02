@@ -8,5 +8,6 @@ export interface ITeacherModel {
   person_id: string;
   created_at: string;
   updated_at: string;
+  internal_phone: string;
   person: IPersonModel;
 }

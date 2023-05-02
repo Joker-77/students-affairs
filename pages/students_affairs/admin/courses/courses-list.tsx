@@ -33,6 +33,7 @@ import {
   PostAdd,
   Description,
   ExpandMore,
+  FileCopy,
 } from "@material-ui/icons";
 import Admin from "../../../../layouts/Admin";
 import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
@@ -345,7 +346,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   };
   const generateExcel = () => {
     csvExporter.generateCsv(
-      filteredCourses.map((course, idx) => {
+      filteredCourses.map((course) => {
         let object = {};
         selectedColumns.forEach((item, index) => {
           _.set(object, `col ${index}`, _.get(course, item.field) ?? "");
@@ -419,26 +420,27 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
         tableLayout: "auto",
       };
       let actions = [
-        {
-          icon: () => (
-            <SuiButton
-              style={{
-                minWidth: 80,
-                color: "#dc3545",
-                backgroundColor: "transparent",
-                border: "1px solid #dc3545",
-              }}
-              color={"danger"}
-            >
-              {translate("Delete")}
-            </SuiButton>
-          ),
-          onClick: (evt, data) => {},
-        },
+        // {
+        //   icon: () => (
+        //     <SuiButton
+        //       style={{
+        //         minWidth: 80,
+        //         color: "#dc3545",
+        //         backgroundColor: "transparent",
+        //         border: "1px solid #dc3545",
+        //       }}
+        //       color={"danger"}
+        //     >
+        //       {translate("Delete")}
+        //     </SuiButton>
+        //   ),
+        //   onClick: (evt, data) => {},
+        // },
         {
           icon: () => (
             <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
               {translate("Course Details")}
+              <FileCopy />
             </SuiButton>
           ),
           onClick: (evt, data) => getCourse(data),
