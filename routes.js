@@ -37,6 +37,13 @@ const dashboardRoutes = [
     icon: LibraryBooks,
     layout: "/students_affairs",
   },
+  {
+    path: "/admin/teachers/teachers-list",
+    name: "Teachers",
+    rtlName: "المدرسون",
+    icon: People,
+    layout: "/students_affairs",
+  },
   // {
   //   path: "/table-list",
   //   name: "Table List",

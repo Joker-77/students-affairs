@@ -114,3 +114,94 @@ export const yesNo = (translate) => [
         label: translate('No'),
     },
 ];
+
+export const name_prefixes = (translate) => [
+    {
+      id: "د.",
+      value: translate("Dr."),
+    },
+    {
+      id: "ما.",
+      value: translate("Ma."),
+    },
+    {
+      id: "م.",
+      value: translate("Eng."),
+    },
+    {
+      id: "أ.",
+      value: translate("Mr."),
+    },
+  ];
+
+export const work_fields = (translate) => [
+    {
+      id: "معهد عالي",
+      value: translate("HIAST"),
+      activitiesLabel: translate("Activity in HIAST"),
+      activities: [
+        {
+          id: "قسم المعلوميات",
+          value: translate("Informatics department"),
+        },
+        {
+          id: "قسم الاتصالات",
+          value: translate("Telecommunications department"),
+        },
+        {
+            id: "مديرية الخدمات المعلوماتية والتطوير البرمجي",
+            value: translate("Informatics Services and Software Development Directorate"),
+          },
+      ],
+    },
+    {
+      id: "مركز",
+      value: translate("Center"),
+      activitiesLabel: translate("Activity in Center"),
+      activities: [
+        {
+          id: "معهد 1000",
+          value: translate("Institute 1000"),
+        },
+        {
+          id: "معهد 2000",
+          value: translate("Institute 2000"),
+        },
+      ],
+    },
+    {
+      id: "خارج الملاك",
+      value: translate("Outsider"),
+      activitiesLabel: "",
+      activities: [],
+    },
+  ];
+
+export const genders = (translate) => [
+    {
+      id: "male",
+      value: translate("Male"),
+    },
+    {
+      id: "female",
+      value: translate("Female"),
+    },
+  ];
+
+export const degrees = (translate) => [
+    {
+      id: "دكتوراه",
+      value: translate("Phd"),
+    },
+    {
+      id: "ماجستير",
+      value: translate("Master"),
+    },
+  ];
+
+export const statuses = (translate) => [
+    {
+      id: "فعال",
+      value: translate("Active"),
+    },
+  ];
