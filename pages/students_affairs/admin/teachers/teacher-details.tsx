@@ -39,6 +39,8 @@ import {
 } from "@material-ui/core";
 import GridItem from "../../../../components/Grid/GridItem";
 import {name_prefixes, work_fields, genders, degrees, statuses} from "../../../../Static/resources";
+/* الهيئة */
+//import {name_prefixes, work_fields, genders, degrees, statuses, commissions} from "../../../../Static/resources";
 
 interface ITeacherDetailProps {
   isCreate: boolean;
@@ -48,107 +50,21 @@ interface ITeacherDetailProps {
   activateEdit(): void;
 }
 
-const TeacherDetail: FC<ITeacherDetailProps> = ({
+const TeacherDetail: FC<ITeacherDetailProps> = React.forwardRef(({
   isCreate,
   details,
   isEditable,
   setShow,
   activateEdit,
-}) => {
+}, ref) => {
   const { translate } = useTranslation();
   const router = useRouter();
 
-  /*const name_prefixes = [
-    {
-      id: "Dr.",
-      value: translate("Dr."),
-    },
-    {
-      id: "Ma.",
-      value: translate("Ma."),
-    },
-    {
-      id: "Eng.",
-      value: translate("Eng."),
-    },
-    {
-      id: "Mr.",
-      value: translate("Mr."),
-    },
-  ];
-  const work_fields = [
-    {
-      id: "HIAST",
-      value: translate("HIAST"),
-      activitiesLabel: translate("Activity in HIAST"),
-      activities: [
-        {
-          id: "Informatics department",
-          value: translate("Informatics department"),
-        },
-        {
-          id: "Telecommunications department",
-          value: translate("Telecommunications department"),
-        },
-      ],
-    },
-    {
-      id: "Center",
-      value: translate("Center"),
-      activitiesLabel: translate("Activity in Center"),
-      activities: [
-        {
-          id: "Institute 1000",
-          value: translate("Institute 1000"),
-        },
-        {
-          id: "Institute 2000",
-          value: translate("Institute 2000"),
-        },
-      ],
-    },
-    {
-      id: "Outsider",
-      value: translate("Outsider"),
-      activitiesLabel: "",
-      activities: [],
-    },
-  ];
-
-  const genders = [
-    {
-      id: "male",
-      value: translate("Male"),
-    },
-    {
-      id: "female",
-      value: translate("Female"),
-    },
-  ];
-
-  const degrees = [
-    {
-      id: "phd",
-      value: translate("Phd"),
-    },
-    {
-      id: "master",
-      value: translate("Master"),
-    },
-  ];
-
-  const statuses = [
-    {
-      id: "active",
-      value: translate("Active"),
-    },
-  ];*/
-
   const [teacher, setDetails] = useState<ITeacherModel>(details);
   const [fileName, setFileName] = useState<string>(
-    teacher?.attachements[0].name
+    teacher?.attachements[0]?.name
   );
-  //const [addDescription, setAddDescription] = useState(isCreate);
+  
   let teacherSchema = 
   //isCreate ?
    yup.object({
@@ -165,11 +81,15 @@ const TeacherDetail: FC<ITeacherDetailProps> = ({
           .number(translate("National number"))
           .required(translate("Field is required")),
         number: yup
-          .number(translate("ID Number"))
-          .required(translate("Field is required")),
+          .number(translate("ID Number")),
+          //.required(translate("Field is required")),
         gender: yup
           .string(translate("Gender"))
           .required(translate("Field is required")),
+        /* الهيئة */
+        /*commission: yup
+          .string(translate("Functional Body"))
+          .required(translate("Field is required")),*/
         /*work_field: yup
           .string(translate("Work Field"))
           .required(translate("Field is required")),*/
@@ -231,6 +151,8 @@ const TeacherDetail: FC<ITeacherDetailProps> = ({
         national_number: teacher?.person?.national_number,
         number: teacher?.number,
         gender: teacher?.person?.sex,
+        /* الهيئة */
+        //commission: teacher?.commission,
         work_field: teacher && teacher.work_field ? teacher.work_field : work_fields(translate)[0].id,
         activity: teacher?.activity,
         prefix_name: teacher && teacher.prefix_name ? teacher.prefix_name : name_prefixes(translate)[0].id,
@@ -396,6 +318,8 @@ const TeacherDetail: FC<ITeacherDetailProps> = ({
         national_number: values.national_number,
         number: values.number,
         gender: values.gender,
+        /* الهيئة */
+        //commission: values.commission,
         work_field: values.work_field,
         activity: values.activity,
         degree: values.degree,
@@ -469,6 +393,8 @@ const TeacherDetail: FC<ITeacherDetailProps> = ({
         national_number: values.national_number,
         number: values.number,
         gender: values.gender,
+        /* الهيئة */
+        //commission: values.commission,
         work_field: values.work_field,
         activity: values.activity,
         degree: values.degree,
@@ -548,6 +474,7 @@ const TeacherDetail: FC<ITeacherDetailProps> = ({
   };
 
   return (
+    <div ref={ref}>
     <Grid container md={12} sm={12}>
       <Grid md={12} sm={12} xs={12}>
         <Card style={{ padding: "1em 4em", margin: "5px 0px" }}>
@@ -835,7 +762,36 @@ const TeacherDetail: FC<ITeacherDetailProps> = ({
                       </Grid>
 
                       <Grid item xs={4} md={4}>
-                        {/*Intentionally empty*/}
+                        {/* الهيئة */}
+                        {/*
+                        <TextField
+                            disabled={!isEditable}
+                            onChange={handleChange}
+                            variant="outlined"
+                            size="small"
+                            type="select"
+                            id="commission"
+                            name="commission"
+                            select={true}
+                            value={values.commission}
+                            onBlur={handleBlur}
+                            error={Boolean(
+                              touched.commission && errors.commission
+                            )}
+                            helperText={
+                              touched.commission && errors.commission
+                            }
+                            placeholder={translate("Functional Body")}
+                            label={translate("Functional Body")}
+                            fullWidth
+                          >
+                            {commissions(translate).map((commission) => (
+                              <MenuItem key={commission.id} value={commission.id}>
+                                {commission.value}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        */}
                       </Grid>
 
                       <Grid item xs={4} md={4}>
@@ -1198,8 +1154,9 @@ const TeacherDetail: FC<ITeacherDetailProps> = ({
         <CardActions></CardActions>
       </Grid>
     </Grid>
+    </div>
   );
-};
+});
 
 (TeacherDetail as any).layout = Admin;
 (TeacherDetail as any).auth = false;

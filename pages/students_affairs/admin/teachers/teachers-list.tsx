@@ -55,6 +55,7 @@ import TeacherDetails from "./teacher-details";
 import { ExportToCsv } from "export-to-csv";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import _ from "lodash";
+import TeacherDetailsPrint from "../../../../components/TeacherDetailsPrint/TeacherDetailsPrint";
 
 interface ITeachersListProps {}
 const TeachersList: React.FC<ITeachersListProps> = ({}) => {
@@ -128,6 +129,10 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
       value: "2",
       label: translate("ID Number"),
     },
+    {
+      value: "3",
+      label: translate("Work Field"),
+    },
   ];
 
   const [Teachers, setTeachers] = React.useState<ITeacherModel[]>(null);
@@ -153,7 +158,8 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
       _filteredTeachers = Teachers.filter((teacher, index) => {
         return (
           teacher.person.first_name.includes(_value) ||
-          teacher.person.last_name.includes(_value)
+          teacher.person.last_name.includes(_value) ||
+          teacher.work_field.includes(_value) || teacher.activity.includes(_value)
         );
       });
       setFilteredTeachers(_filteredTeachers);
@@ -164,12 +170,12 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
       });
       setFilteredTeachers(_filteredTeachers);
     }
-    /*if (filter == 3) {
+    if (filter == 3) {
       _filteredTeachers = Teachers.filter((teacher, index) => {
-        return teacher.current_description?.credit.toString().includes(_value);
+        return teacher.work_field.includes(_value) || teacher.activity.includes(_value)
       });
       setFilteredTeachers(_filteredTeachers);
-    }*/
+    }
   };
   const handleChangeFilter = (event) => {
     setFilter(event.target.value);
@@ -228,12 +234,16 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     }
   };
   /************************** Data ****************************/
+
+  //const [teachersRefs, setTeachersRefs] = React.useState([]);
+  
   useEffect(() => {
     TeacherService.GetAll()
       .then((res) => {
         console.log("Teachers", res.result);
         setFilteredTeachers(res.result as ITeacherModel[]);
         setTeachers(res.result as ITeacherModel[]);
+        //setTeachersRefs(Teachers.map(teacher => {return {id: teacher.id, ref: useRef()};}));
       })
       .catch((error) => {
         console.error("error", error);
@@ -263,10 +273,12 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     {
       title: translate("Functional Body"),
       field: "degree",
+      /* الهيئة */
+      //field: "commission",
     },
     {
       title: translate("Work Field"),
-      field: "activity",
+      field: "work_field",
     },
     {
       title: translate("Office Phone"),
@@ -363,11 +375,26 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     content: () => tableRef.current,
     documentTitle: translate("Teachers"),
   });
-  /*const teacherDetailsRef = useRef();
+
+  /*const getTeacherToPrint = (data: any) => {
+    let _teacher = Teachers.find((item, index) => item.id === data?.id);
+    TeacherService.Get(data.id)
+      .then((res) => {
+        let _teacher = res.result as ITeacherModel;
+        setTeacher(_teacher);
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
+  };*/
+
+  const teacherDetailsRef = useRef();
   const generateTeacherPDF = useReactToPrint({
     content: () => teacherDetailsRef.current,
     documentTitle: "",
-  });*/
+    //onAfterPrint: () => {setTeacher(null)},
+  });
+
   const renderTeachers = () => {
     if (filteredTeachers != null && filteredTeachers.length > 0) {
       let data = filteredTeachers;
@@ -407,7 +434,15 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
               </SuiButton>
           ),
           onClick: (evt, data) => {
-            //generateTeacherPDF();
+            TeacherService.Get(data.id)
+              .then((res) => {
+                let _teacher = res.result as ITeacherModel;
+                setTeacher(_teacher);
+                generateTeacherPDF();
+              })
+              .catch((error) => {
+                console.error("error", error);
+              });
           },
         },
         {
@@ -655,7 +690,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
           <GridItem md={12}>{renderTeachers()}</GridItem>
         </>
       )}
-      {showTeacherDetail && (
+      {showTeacherDetail ? ( 
         //<div ref={teacherDetailsRef}>
         <TeacherDetails
           isCreate={isCreate}
@@ -665,9 +700,30 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
           show={showTeacherDetail}
           //isEditable={isEditable}
           isEditable={true}
+          //ref={teacherDetailsRef}
         />
-        //</div>
-      )}
+       //</div>
+      ) :
+        
+        <div style={{display: 'none'}}>
+          {/*
+          <TeacherDetails
+            isCreate={isCreate}
+            details={teacher}
+            activateEdit={activateEdit}
+            setShow={setShow}
+            show={showTeacherDetail}
+            //isEditable={isEditable}
+            isEditable={true}
+            //ref={teachersRefs.find(item => item.id == teacher.id)[0].ref}
+            ref={teacherDetailsRef}
+          />
+        */}
+        <div ref={teacherDetailsRef}> 
+          <TeacherDetailsPrint teacher={teacher} />
+        </div>
+        </div>
+      }
       <ConfirmDialog />
     </GridContainer>
   );
