@@ -399,7 +399,7 @@ export const statuses = (translate) => [
   ];
 
   /* الهيئة */
-/*export const commissions = (translate) => [
+export const authorities = (translate) => [
   {
     id: "هيئة بحث",
     value: translate("Research"),
@@ -416,4 +416,4 @@ export const statuses = (translate) => [
     id: "قانون عاملين",
     value: translate("Workers"),
   },
-];*/
+];

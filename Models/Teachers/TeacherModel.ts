@@ -10,7 +10,7 @@ export interface ITeacherModel {
   //national_number: string;
   //gender: string;
   work_field: string;
-  //commission: string;
+  authority: string;
   activity: string;
   number: string;
   degree: string;
@@ -42,7 +42,7 @@ export interface ICreateTeacherModel {
   father_name: string;
   national_number: string;
   gender: string;
-  //commission: string;
+  authority: string;
   work_field: string;
   activity: string;
   number: string;
@@ -70,7 +70,7 @@ export interface IEditTeacherModel {
   father_name: string;
   national_number: string;
   gender: string;
-  //commission: string;
+  authority: string;
   work_field: string;
   activity: string;
   number: string;

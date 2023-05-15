@@ -133,6 +133,10 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
       value: "3",
       label: translate("Work Field"),
     },
+    {
+      value: "4",
+      label: translate("Functional Body"),
+    },
   ];
 
   const [Teachers, setTeachers] = React.useState<ITeacherModel[]>(null);
@@ -149,7 +153,10 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
         return (
           teacher.person.first_name.includes(_value) ||
           teacher.person.last_name.includes(_value) ||
-          teacher.number.toString().includes(_value)
+          teacher.father_name.includes(_value) ||
+          teacher.number.toString().includes(_value) ||
+          teacher.work_field.includes(_value) || teacher.activity.includes(_value) ||
+          teacher.authority.includes(_value)
         );
       });
       setFilteredTeachers(_filteredTeachers);
@@ -159,7 +166,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
         return (
           teacher.person.first_name.includes(_value) ||
           teacher.person.last_name.includes(_value) ||
-          teacher.work_field.includes(_value) || teacher.activity.includes(_value)
+          teacher.father_name.includes(_value)
         );
       });
       setFilteredTeachers(_filteredTeachers);
@@ -173,6 +180,12 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     if (filter == 3) {
       _filteredTeachers = Teachers.filter((teacher, index) => {
         return teacher.work_field.includes(_value) || teacher.activity.includes(_value)
+      });
+      setFilteredTeachers(_filteredTeachers);
+    }
+    if (filter == 4) {
+      _filteredTeachers = Teachers.filter((teacher, index) => {
+        return teacher.authority.includes(_value)
       });
       setFilteredTeachers(_filteredTeachers);
     }
@@ -232,6 +245,26 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
       });
       setFilteredTeachers(_filteredTeachers);
     }
+    if (sortBy == 3) {
+      _filteredTeachers = Teachers.sort((a, b) => {
+        if (a.work_field > b.work_field)
+          return 1;
+        if (a.work_field < b.work_field)
+          return -1;
+        return 0;
+      });
+      setFilteredTeachers(_filteredTeachers);
+    }
+    if (sortBy == 4) {
+      _filteredTeachers = Teachers.sort((a, b) => {
+        if (a.authority > b.authority)
+          return 1;
+        if (a.authority < b.authority)
+          return -1;
+        return 0;
+      });
+      setFilteredTeachers(_filteredTeachers);
+    }
   };
   /************************** Data ****************************/
 
@@ -249,6 +282,21 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
         console.error("error", error);
       });
   }, []);
+
+  useEffect(() => {
+    if (!showTeacherDetail) {
+      TeacherService.GetAll()
+        .then((res) => {
+          console.log("Teachers", res.result);
+          setFilteredTeachers(res.result as ITeacherModel[]);
+          setTeachers(res.result as ITeacherModel[]);
+          //setTeachersRefs(Teachers.map(teacher => {return {id: teacher.id, ref: useRef()};}));
+        })
+        .catch((error) => {
+          console.error("error", error);
+        });
+    }
+  }, [showTeacherDetail]);
   /************************** Finish Data ****************************/
   /************************** Handle edit data ****************************/
   const [isEditable, setIsEditable] = React.useState(true);
@@ -273,8 +321,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     {
       title: translate("Functional Body"),
       field: "degree",
-      /* الهيئة */
-      //field: "commission",
+      field: "authority",
     },
     {
       title: translate("Work Field"),

@@ -38,9 +38,7 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import GridItem from "../../../../components/Grid/GridItem";
-import {name_prefixes, work_fields, genders, degrees, statuses} from "../../../../Static/resources";
-/* الهيئة */
-//import {name_prefixes, work_fields, genders, degrees, statuses, commissions} from "../../../../Static/resources";
+import {name_prefixes, work_fields, genders, degrees, statuses, authorities} from "../../../../Static/resources";
 
 interface ITeacherDetailProps {
   isCreate: boolean;
@@ -86,10 +84,8 @@ const TeacherDetail: FC<ITeacherDetailProps> = React.forwardRef(({
         gender: yup
           .string(translate("Gender"))
           .required(translate("Field is required")),
-        /* الهيئة */
-        /*commission: yup
-          .string(translate("Functional Body"))
-          .required(translate("Field is required")),*/
+        authority: yup
+          .string(translate("Functional Body")),
         /*work_field: yup
           .string(translate("Work Field"))
           .required(translate("Field is required")),*/
@@ -151,8 +147,7 @@ const TeacherDetail: FC<ITeacherDetailProps> = React.forwardRef(({
         national_number: teacher?.person?.national_number,
         number: teacher?.number,
         gender: teacher?.person?.sex,
-        /* الهيئة */
-        //commission: teacher?.commission,
+        authority: teacher?.authority,
         work_field: teacher && teacher.work_field ? teacher.work_field : work_fields(translate)[0].id,
         activity: teacher?.activity,
         prefix_name: teacher && teacher.prefix_name ? teacher.prefix_name : name_prefixes(translate)[0].id,
@@ -318,8 +313,7 @@ const TeacherDetail: FC<ITeacherDetailProps> = React.forwardRef(({
         national_number: values.national_number,
         number: values.number,
         gender: values.gender,
-        /* الهيئة */
-        //commission: values.commission,
+        authority: values.authority,
         work_field: values.work_field,
         activity: values.activity,
         degree: values.degree,
@@ -393,8 +387,7 @@ const TeacherDetail: FC<ITeacherDetailProps> = React.forwardRef(({
         national_number: values.national_number,
         number: values.number,
         gender: values.gender,
-        /* الهيئة */
-        //commission: values.commission,
+        authority: values.authority,
         work_field: values.work_field,
         activity: values.activity,
         degree: values.degree,
@@ -762,36 +755,33 @@ const TeacherDetail: FC<ITeacherDetailProps> = React.forwardRef(({
                       </Grid>
 
                       <Grid item xs={4} md={4}>
-                        {/* الهيئة */}
-                        {/*
                         <TextField
                             disabled={!isEditable}
                             onChange={handleChange}
                             variant="outlined"
                             size="small"
                             type="select"
-                            id="commission"
-                            name="commission"
+                            id="authority"
+                            name="authority"
                             select={true}
-                            value={values.commission}
+                            value={values.authority}
                             onBlur={handleBlur}
                             error={Boolean(
-                              touched.commission && errors.commission
+                              touched.authority && errors.authority
                             )}
                             helperText={
-                              touched.commission && errors.commission
+                              touched.authority && errors.authority
                             }
                             placeholder={translate("Functional Body")}
                             label={translate("Functional Body")}
                             fullWidth
                           >
-                            {commissions(translate).map((commission) => (
-                              <MenuItem key={commission.id} value={commission.id}>
-                                {commission.value}
+                            {authorities(translate).map((authority) => (
+                              <MenuItem key={authority.id} value={authority.id}>
+                                {authority.value}
                               </MenuItem>
                             ))}
                           </TextField>
-                        */}
                       </Grid>
 
                       <Grid item xs={4} md={4}>
