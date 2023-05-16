@@ -1,12 +1,14 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
+import Books from "@material-ui/icons/FileCopy";
+import School from "@material-ui/icons/School";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
-import {People} from "@material-ui/icons";
+import { People } from "@material-ui/icons";
 
 const dashboardRoutes = [
   {
@@ -37,55 +39,20 @@ const dashboardRoutes = [
     icon: LibraryBooks,
     layout: "/students_affairs",
   },
-  // {
-  //   path: "/table-list",
-  //   name: "Table List",
-  //   rtlName: "قائمة الجدول",
-  //   icon: "content_paste",
-  //   layout: "/students_affairs",
-  // },
-  // {
-  //   path: "/typography",
-  //   name: "Typography",
-  //   rtlName: "طباعة",
-  //   icon: LibraryBooks,
-  //   layout: "/students_affairs",
-  // },
-  // {
-  //   path: "/icons",
-  //   name: "Icons",
-  //   rtlName: "الرموز",
-  //   icon: BubbleChart,
-  //   layout: "/students_affairs",
-  // },
-  // {
-  //   path: "/maps",
-  //   name: "Maps",
-  //   rtlName: "خرائط",
-  //   icon: LocationOn,
-  //   layout: "/students_affairs",
-  // },
-  // {
-  //   path: "/notifications",
-  //   name: "Notifications",
-  //   rtlName: "إخطارات",
-  //   icon: Notifications,
-  //   layout: "/students_affairs",
-  // },
-  // {
-  //   path: "/rtl-page",
-  //   name: "RTL Support",
-  //   rtlName: "پشتیبانی از راست به چپ",
-  //   icon: Language,
-  //   layout: "/rtl",
-  // },
-  // {
-  //   path: "/upgrade-to-pro",
-  //   name: "Upgrade To PRO",
-  //   rtlName: "التطور للاحترافية",
-  //   icon: Unarchive,
-  //   layout: "/students_affairs",
-  // },
+  {
+    path: "/admin/courses/courses-list",
+    name: "Courses",
+    rtlName: "المقررات",
+    icon: Books,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/teachers/teachers-list",
+    name: "Teachers",
+    rtlName: "المدرّسون",
+    icon: School,
+    layout: "/students_affairs",
+  },
 ];
 
 export default dashboardRoutes;

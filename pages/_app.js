@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
+import { Navigate } from "react-router-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
@@ -13,8 +14,9 @@ import themeRTL from "assets/theme/theme-rtl";
 import "assets/css/nextjs-material-dashboard.css?v=1.1.0";
 import { CssBaseline } from "@material-ui/core";
 import { SessionProvider, useSession, getSession } from "next-auth/react";
-import AuthProvider from "../components/AuthProvider/AuthProvider";
 import CustomToastContainer from "./_toast";
+import { boolean } from "yup";
+import AuthProvider from "../components/AuthProvider/AuthProvider";
 
 Router.events.on("routeChangeStart", (url) => {
   console.log(`Loading: ${url}`);
@@ -35,18 +37,27 @@ Router.events.on("routeChangeError", () => {
 });
 
 export default class MyApp extends App {
-  componentDidMount() {
+  constructor(params) {
+    super(params);
+    this.state = {
+      backToSignIn: false,
+    };
+  }
+  async componentDidMount() {
     let comment = document.createComment(`Component Did mount`);
     document.insertBefore(comment, document.documentElement);
   }
+
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {};
-    let session = {};
     if (Component.getInitialProps) {
+      let key = localStorage.getItem("sa_access_token");
+      let profile = JSON.parse(localStorage.getItem("logged_in_profile"));
       pageProps = await Component.getInitialProps(ctx);
-      session = useSession();
-      pageProps.session = session;
-      console.log("session", session);
+      pageProps.sessionKey = key;
+      pageProps.profile = profile;
+      console.clear();
+      console.log(pageProps);
     }
     return { pageProps };
   }
@@ -58,25 +69,22 @@ export default class MyApp extends App {
       <Provider store={store}>
         <SessionProvider session={pageProps.session}>
           {Component.auth ? (
-            <AuthProvider>
-              <React.Fragment>
-                <Head>
-                  <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1, shrink-to-fit=no"
-                  />
-                  <title></title>
-                  {/*<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>*/}
-                </Head>
-                <Layout>
-                  <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <CustomToastContainer/>
-                    <Component {...pageProps} />
-                  </ThemeProvider>
-                </Layout>
-              </React.Fragment>
-            </AuthProvider>
+            <React.Fragment>
+              <Head>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1, shrink-to-fit=no"
+                />
+                <title></title>
+              </Head>
+              <Layout>
+                <ThemeProvider theme={themeRTL}>
+                  <CssBaseline />
+                  <CustomToastContainer />
+                  <Component {...pageProps} />
+                </ThemeProvider>
+              </Layout>
+            </React.Fragment>
           ) : (
             <React.Fragment>
               <Head>
@@ -85,12 +93,11 @@ export default class MyApp extends App {
                   content="width=device-width, initial-scale=1, shrink-to-fit=no"
                 />
                 <title></title>
-                {/*<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>*/}
               </Head>
               <Layout>
                 <ThemeProvider theme={theme}>
                   <CssBaseline />
-                  <CustomToastContainer/>
+                  <CustomToastContainer />
                   <Component {...pageProps} />
                 </ThemeProvider>
               </Layout>
