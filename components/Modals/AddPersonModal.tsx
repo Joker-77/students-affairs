@@ -148,7 +148,6 @@ const AddPersonModal: React.FC<ICusomModalProps> = ({
                           First Name
                         </Typography>
                       </Box>
-                      <
                       <TextField
                         disabled={disabled}
                         onChange={handleChange}
