@@ -25,8 +25,8 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     return config;
   },
   env: {
-    // SITE_URL: "http://teststudent.hiast.edu.sy:3000",
-    SITE_URL: "http://localhost:3000",
+    SITE_URL: "http://teststudent.hiast.edu.sy:3000",
+    // SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
     // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public",
     // BASE_URL: "http://student.hiast.edu.sy/backend/public",
