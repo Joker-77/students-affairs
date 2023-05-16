@@ -18,28 +18,45 @@ import {makeStyles} from "@material-ui/core/styles";
 import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle";
 import CandidateService from "../../../../Services/CandidateService";
 import {examPlaces, registerationClasses, registerationMethods, studyPlaces, yesNo} from "../../../../Static/resources";
+import {
+  useAppDispatch,
+  setCandidate,
+} from "../../../../redux";
 
 interface ICandidatePersonalInfoProps {
   initValues: any;
+  forAdd: boolean;
+  handleClose();
 }
 const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                                                                         initValues,
+                                                                        forAdd = false,
+                                                                        handleClose,
                                                                       }) => {
-  const {locale} = useRouter();
   const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const [disabled, setDisabled] = React.useState<boolean>(false);
+
+  const submitFunction = forAdd ? CandidateService.Add : CandidateService.Edit;
 
   const submitForm = async (values: any, setSubmitting) => {
     console.log("values", values);
 
       setSubmitting(true);
-      CandidateService.Edit(values)
+      submitFunction(values)
           .then((res) => {
               console.log("res", res);
-          })
+              if(forAdd) {
+                handleClose && handleClose();
+                dispatch(setCandidate({...res.result, certificates: [], person: values?.person}));
+                router.push(`/${router.locale}/students_affairs/affairs_officer/candidates/candidate-details`)
+              }
+            })
           .catch((error) => {
               console.error("error", error);
           })

@@ -120,7 +120,16 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
         CandidateService.GetAll()
             .then((res) => {
                 console.log("Candidates", res);
-                const list = forRegistrations ? res.result?.filter(item => item.registerations?.length > 0) : res.result;
+                var list = forRegistrations ? res.result?.filter(item => item.registerations?.length > 0) : res.result;
+                // if(forRegistrations) {
+                //     list = list.map(item => {
+                //         return {
+                //             ...item,
+                //             class_id: registerations[0].status,//registerations[0].status
+                //             status_id: registerations[0].status,
+                //         }
+                //     });
+                // }
                 setCandidates(list);
             })
             .catch((error) => {
@@ -140,26 +149,33 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                     title: translate("Id"),
                     field: "id",
                     hidden: true,
+                    filtering: false,
                 },
                 {
                     title: translate("Name"),
                     field: "full_name",
+                    filtering: false,
                 },
                 {
                     title: translate("Registeration number"),
                     field: "registeration_number",
+                    filtering: false,
+                    type: "string",
                 },
                 {
                     title: translate("Subscription number"),
                     field: "certificates[0].subscription_number",
+                    filtering: false,
                 },
                 {
                     title: translate("City"),
                     field: "certificates[0].city",
+                    filtering: false,
                 },
                 {
                     title: translate("Round"),
                     field: "certificates[0].round",
+                    filtering: false,
                 },
                 // {
                 //     title: translate("Result"),
@@ -176,7 +192,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                     color: "#FFF",
                     fontWeight: "bold",
                 },
-                filtering: false,
+                filtering: true,
                 paging: true,
                 pageSize: 10,
                 maxBodyHeight: "500px",
@@ -259,7 +275,6 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                 // title={translate("Add acceptance test results")}
                 open={openOutsideCandidate}
                 handleClose={handleCloseOutsideCandidate}
-                submitForm={() => handleCloseOutsideCandidate()}
             ></AddCandidateOutSideMinistryModal>
         </GridContainer>
     );

@@ -47,9 +47,9 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
         <div>
             <div style={{position: 'fixed', width: 200}}>
                 <UserCard
-                    name={candidate ? `${candidate?.person.first_name} ${candidate?.person.last_name}` : null}
-                    id={candidate?.certificates[0]?.subscription_number}
-                    year={candidate?.certificates[0]?.year}
+                    name={candidate ? `${candidate?.person?.first_name} ${candidate?.person?.last_name}` : null}
+                    id={candidate?.certificates.length > 0 ? candidate?.certificates[0]?.subscription_number : ''}
+                    year={candidate?.certificates.length > 0 ? candidate?.certificates[0]?.year : ''}
                 />
                 <div style={spacer}/>
                 <TabsMenu tabs={tabs}/>
