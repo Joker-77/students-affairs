@@ -136,6 +136,15 @@
   "Lab": "مخبرية",
   "Workers": "قانون عاملين",
 
+  "Excluded": "مستثنى من المراقبة",
+  "Observers List": "قائمة المراقبين",
+  "Add New Observer": "إضافة مراقب جديد",
+  "Mobile": "رقم الموبايل",
+  "Observer Added Successfully": "تم إضافة مراقب جديد",
+  "Observer Edited Successfully": "تم تعديل بيانات المراقب بنجاح",
+  "Observer Name": "اسم المراقب",
+  "Observer Details": "تفاصيل المراقب",
+
   "Private": "خاص",
   "Family": "عائلي",
   "Male": "ذكر",

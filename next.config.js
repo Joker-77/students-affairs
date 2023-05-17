@@ -85,10 +85,14 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
       "/teacher",
     LIST_TEACHER_URL:
       "/teacher",
-    ADD_TEACHER_URL:
-      "/teacher/add",
-    EDIT_TEACHER_URL:
-      "/teacher/edit",
+    ADD_OBSERVER_URL:
+      "/observer/add",
+    EDIT_OBSERVER_URL:
+      "/observer/edit",
+    DETAILS_OBSERVER_URL:
+      "/observer",
+    LIST_OBSERVER_URL:
+      "/observer",
     ADD_SPECIALITY_URL:
       "/speciality/add",
     EDIT_SPECIALITY_URL:

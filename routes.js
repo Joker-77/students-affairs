@@ -6,7 +6,7 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
-import {People, School} from "@material-ui/icons";
+import {People, School, SupervisorAccount} from "@material-ui/icons";
 
 const dashboardRoutes = [
   {
@@ -42,6 +42,13 @@ const dashboardRoutes = [
     name: "Teachers",
     rtlName: "المدرسون",
     icon: School,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/observers/observers-list",
+    name: "Observers",
+    rtlName: "المراقبون",
+    icon: SupervisorAccount,
     layout: "/students_affairs",
   },
   // {
