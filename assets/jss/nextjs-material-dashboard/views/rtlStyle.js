@@ -103,11 +103,20 @@ const rtlStyle = {
     color: "rgb(255, 255, 255)",
     marginBottom: "1em",
     marginTop: "1em",
-    background:
-      `linear-gradient(310deg, ${colors.gradients.primary.main}, ${colors.gradients.info.state})`,
+    background: `linear-gradient(310deg, ${colors.gradients.primary.main}, ${colors.gradients.info.state})`,
     "&:hover": {},
   },
-  select:{
+  closeBtn: {
+    color: "rgb(255, 255, 255)",
+    marginBottom: "1em",
+    marginTop: "1em",
+    background: `${colors.gradients.error.main}`,
+    "&:hover": {
+      color: "rgb(255, 255, 255)",
+      background: `${colors.gradients.error.main}`,
+    },
+  },
+  select: {
     marginBottom: "1em",
   },
   userMngSubmitBtnGrid: {

@@ -54,22 +54,14 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     EDIT_CERTIFICATE_URL: "/certificate/edit",
     DETAILS_CERTIFICATE_URL: "/certificate/details",
     LIST_CERTIFICATE_URL: "/certificate/list",
-    ADD_TEACHER_URL:
-      "/teacher/add",
-    EDIT_TEACHER_URL:
-      "/teacher/edit",
-    DETAILS_TEACHER_URL:
-      "/teacher",
-    LIST_TEACHER_URL:
-      "/teacher",
-    ADD_OBSERVER_URL:
-      "/observer/add",
-    EDIT_OBSERVER_URL:
-      "/observer/edit",
-    DETAILS_OBSERVER_URL:
-      "/observer",
-    LIST_OBSERVER_URL:
-      "/observer",
+    ADD_TEACHER_URL: "/teacher/add",
+    EDIT_TEACHER_URL: "/teacher/edit",
+    DETAILS_TEACHER_URL: "/teacher",
+    LIST_TEACHER_URL: "/teacher",
+    ADD_OBSERVER_URL: "/observer/add",
+    EDIT_OBSERVER_URL: "/observer/edit",
+    DETAILS_OBSERVER_URL: "/observer",
+    LIST_OBSERVER_URL: "/observer",
     ADD_SPECIALITY_URL: "/speciality/add",
     EDIT_SPECIALITY_URL: "/speciality/edit",
     DETAILS_SPECIALITY_URL: "/speciality/details",
@@ -95,6 +87,8 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     // Teachers
     LIST_TEACHER_URL: "/teacher",
 
+    // Years
+    LIST_YEARS_URL: "/year",
     // Login
 
     LOGIN_URL: "/login",

@@ -26,6 +26,13 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
+    path: "/affairs_officer/initialize-year/initialize",
+    name: "Specialities",
+    rtlName: "تهيئة عام دراسي",
+    icon: LibraryBooks,
+    layout: "/students_affairs",
+  },
+  {
     path: "/admin/specialities/specialities-list",
     name: "Specialities",
     rtlName: "الاختصاصات",

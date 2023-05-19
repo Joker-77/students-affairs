@@ -314,7 +314,18 @@
   "Waiting number": "رقم الاحتياط",
   "Registration updated.": "تم تحديث بيانات المفاضلة",
 
+  "You're in the year": "أنت الآن في العام الدراسي",
+  "Open new educational year": "فتح عام دراسي جديد",
+  "do you want to": "هل تريد",
+  "import educational plan from previous year": "استيراد الخطة الدرسية من العام السابق",
+  "import educational plan and assign teachers": "استيراد الخطة الدرسية وتكليف المدرسين من العام السابق",
+  "no import": "بدون استيراد",
+  "Specify Courses": "تحديد المقرّرات",
+  "Assign Teachers": "تكليف المدرّسين",
+
+  "Confirm": "تأكيد",
   "Delete": "حذف",
+  "Cancel": "إلغاء",
   "Filter": "فلتر",
   "None": "بلا",
   "Sort By": "ترتيب حسب",

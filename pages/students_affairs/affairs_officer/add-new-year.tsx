@@ -9,7 +9,7 @@ import styles from "../../../assets/jss/nextjs-material-dashboard/views/rtlStyle
 import { makeStyles } from "@material-ui/core/styles";
 import GridContainer from "../../../components/Grid/GridContainer.js";
 import GridItem from "../../../components/Grid/GridItem.js";
-interface IInitNewYearProps {
+interface IAddNewYearProps {
   layout: any;
   auth: boolean;
   children?: React.ReactNode;
@@ -18,7 +18,7 @@ interface IInitNewYearProps {
   value: number;
 }
 
-const InitNewYear: React.FC<IInitNewYearProps> = ({
+const AddNewYear: React.FC<IAddNewYearProps> = ({
   layout,
   auth,
   children,
@@ -149,6 +149,6 @@ const InitNewYear: React.FC<IInitNewYearProps> = ({
   );
 };
 
-(InitNewYear as any).layout = Admin;
-(InitNewYear as any).auth = false;
-export default InitNewYear;
+(AddNewYear as any).layout = Admin;
+(AddNewYear as any).auth = false;
+export default AddNewYear;
