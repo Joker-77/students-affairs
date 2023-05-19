@@ -1,14 +1,7 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
-import Books from "@material-ui/icons/FileCopy";
-import School from "@material-ui/icons/School";
-import BubbleChart from "@material-ui/icons/BubbleChart";
-import LocationOn from "@material-ui/icons/LocationOn";
-import Notifications from "@material-ui/icons/Notifications";
-import Unarchive from "@material-ui/icons/Unarchive";
-import Language from "@material-ui/icons/Language";
-import {People, School, SupervisorAccount} from "@material-ui/icons";
+import { People, School, SupervisorAccount } from "@material-ui/icons";
 
 const dashboardRoutes = [
   {
@@ -43,6 +36,13 @@ const dashboardRoutes = [
     path: "/admin/teachers/teachers-list",
     name: "Teachers",
     rtlName: "المدرسون",
+    icon: School,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/courses/courses-list",
+    name: "Courses",
+    rtlName: "المقرّرات",
     icon: School,
     layout: "/students_affairs",
   },
