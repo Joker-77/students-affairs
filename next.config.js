@@ -29,7 +29,6 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     // SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
     // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public",
-    // BASE_URL: "http://student.hiast.edu.sy/backend/public",
     BASE_URL: "http://teststudent.hiast.edu.sy/backend/public",
     LIST_ROLES_URL: "/roles",
     ADD_ROLE_URL: "/roles/add",
@@ -55,6 +54,22 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     EDIT_CERTIFICATE_URL: "/certificate/edit",
     DETAILS_CERTIFICATE_URL: "/certificate/details",
     LIST_CERTIFICATE_URL: "/certificate/list",
+    ADD_TEACHER_URL:
+      "/teacher/add",
+    EDIT_TEACHER_URL:
+      "/teacher/edit",
+    DETAILS_TEACHER_URL:
+      "/teacher",
+    LIST_TEACHER_URL:
+      "/teacher",
+    ADD_OBSERVER_URL:
+      "/observer/add",
+    EDIT_OBSERVER_URL:
+      "/observer/edit",
+    DETAILS_OBSERVER_URL:
+      "/observer",
+    LIST_OBSERVER_URL:
+      "/observer",
     ADD_SPECIALITY_URL: "/speciality/add",
     EDIT_SPECIALITY_URL: "/speciality/edit",
     DETAILS_SPECIALITY_URL: "/speciality/details",
