@@ -26,7 +26,7 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
-    path: "/affairs_officer/initialize-year/initialize",
+    path: "/affairs_officer/initialize-year",
     name: "Specialities",
     rtlName: "تهيئة عام دراسي",
     icon: LibraryBooks,

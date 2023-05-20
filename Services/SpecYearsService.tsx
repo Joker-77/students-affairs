@@ -1,7 +1,7 @@
 import apiConnector from "./TokenizedApiClient";
 import { ApiResponse } from "../Models/ApiResponse/ApiResponse";
 
-export default class YearsService {
+export default class SpecYearsService {
   static async GetWhereSpeciality(specId: string): Promise<ApiResponse> {
     const listUrl = process.env.LIST_YEARS_URL as string;
     return await apiConnector

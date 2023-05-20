@@ -22,7 +22,8 @@ import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlSt
 import { ISpecialityModel } from "../../../../Models/ApiResponse/SpecialityModel";
 import { Close } from "@material-ui/icons";
 import { IStudentYear } from "../../../../Models/StudentsYear/IStudentYear";
-import YearsService from "../../../../Services/YearsService";
+import YearsService from "../../../../Services/SpecYearsService";
+import Router from "next/router";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -117,6 +118,12 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
     alert(year);
   };
 
+  const handleSpecifyCourses = (e) => {
+    e.preventDefault();
+    Router.push(
+      "/students_affairs/affairs_officer/initialize-year/specify-courses"
+    );
+  };
   const ConfirmDialog = ({
     show,
     handleConfirmDialog,
@@ -246,7 +253,7 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
                 style={{ margin: "2em 5px", width: "20%" }}
                 variant="contained"
                 className={classes.submitBtn}
-                onClick={handleConfirm}
+                onClick={handleSpecifyCourses}
               >
                 <span style={{ padding: "0px 0px 0px 10px" }}>
                   {translate("Specify Courses")}

@@ -12,7 +12,7 @@ import InitPlanTabs from "./tabbedView";
 import SpecialityService from "../../../../Services/SpecialityService";
 import { ISpecialityModel } from "../../../../Models/ApiResponse/SpecialityModel";
 import { IStudentYear } from "../../../../Models/StudentsYear/IStudentYear";
-import YearsService from "../../../../Services/YearsService";
+import YearsService from "../../../../Services/SpecYearsService";
 import { error } from "console";
 
 const InitializeYear: React.FC = () => {
