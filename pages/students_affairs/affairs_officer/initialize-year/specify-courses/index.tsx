@@ -134,7 +134,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = ({}) => {
       </GridItem>
       <GridContainer md={12}>
         <GridItem md={2}>
-          <FormControl fullWidth variant="filled">
+          <FormControl fullWidth variant="filled" size="small" size="small">
             <InputLabel id="demo-simple-select-label">المقرّر</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -152,7 +152,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = ({}) => {
           </FormControl>
         </GridItem>
         <GridItem md={2}>
-          <FormControl fullWidth variant="filled">
+          <FormControl fullWidth variant="filled" size="small">
             <InputLabel id="demo-simple-select-label">الاختصاص</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -170,7 +170,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = ({}) => {
           </FormControl>
         </GridItem>
         <GridItem md={2}>
-          <FormControl fullWidth variant="filled">
+          <FormControl fullWidth variant="filled" size="small">
             <InputLabel id="demo-simple-select-label">الفصل</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -188,7 +188,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = ({}) => {
           </FormControl>
         </GridItem>
         <GridItem md={2}>
-          <FormControl fullWidth variant="filled">
+          <FormControl fullWidth variant="filled" size="small">
             <InputLabel id="demo-simple-select-label">السنة</InputLabel>
             <Select
               disabled={loadSpecYear}

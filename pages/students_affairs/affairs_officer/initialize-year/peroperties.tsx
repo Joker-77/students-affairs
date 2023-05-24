@@ -86,11 +86,11 @@ const Properties: React.FC<IPropertiesProps> = ({
               <Grid item>
                 <Formik
                   initialValues={{
-                    picked: "0",
+                    picked: "1",
                   }}
                   onSubmit={(values) => {
                     switch (values.picked) {
-                      case "0":
+                      case "1":
                         handleConfirm(
                           values.picked,
                           `${translate("do you want to")} ${translate(
@@ -101,7 +101,7 @@ const Properties: React.FC<IPropertiesProps> = ({
                            )}`
                         );
                         break;
-                      case "1":
+                      case "2":
                         handleConfirm(
                           values.picked,
                           `${translate("do you want to")} ${translate(
@@ -112,7 +112,7 @@ const Properties: React.FC<IPropertiesProps> = ({
                            )}`
                         );
                         break;
-                      case "2":
+                      case "3":
                         handleConfirm(
                           values.picked,
                           `${translate("do you want to")} ${translate(
@@ -148,11 +148,11 @@ const Properties: React.FC<IPropertiesProps> = ({
                           <FormControlLabel
                             control={
                               <Radio
-                                checked={values.picked == "0"}
+                                checked={values.picked == "1"}
                                 onChange={handleChange}
                                 style={{ color: "#01579b" }}
                                 defaultValue={values.picked}
-                                value="0"
+                                value="1"
                               />
                             }
                             label={translate(
@@ -164,10 +164,10 @@ const Properties: React.FC<IPropertiesProps> = ({
                             value="male"
                             control={
                               <Radio
-                                checked={values.picked == "1"}
+                                checked={values.picked == "2"}
                                 onChange={handleChange}
                                 style={{ color: "#01579b" }}
-                                value="1"
+                                value="2"
                               />
                             }
                             label={translate(
@@ -178,10 +178,10 @@ const Properties: React.FC<IPropertiesProps> = ({
                             name="picked"
                             control={
                               <Radio
-                                checked={values.picked == "2"}
+                                checked={values.picked == "3"}
                                 onChange={handleChange}
                                 style={{ color: "#01579b" }}
-                                value="2"
+                                value="3"
                               />
                             }
                             label={translate("no import")}

@@ -124,6 +124,12 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
       "/students_affairs/affairs_officer/initialize-year/specify-courses"
     );
   };
+  const handleAssignTeachers = (e) => {
+    e.preventDefault();
+    Router.push(
+      "/students_affairs/affairs_officer/initialize-year/assign-teachers"
+    );
+  };
   const ConfirmDialog = ({
     show,
     handleConfirmDialog,
@@ -264,7 +270,7 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
                 style={{ margin: "2em 5px", width: "20%" }}
                 variant="contained"
                 className={classes.submitBtn}
-                onClick={handleConfirm}
+                onClick={handleAssignTeachers}
               >
                 <span style={{ padding: "0px 0px 0px 10px" }}>
                   {translate("Assign Teachers")}

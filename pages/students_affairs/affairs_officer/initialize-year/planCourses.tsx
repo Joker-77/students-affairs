@@ -45,19 +45,14 @@ import Placeholder from "../../../../Utility/Placeholders";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
-import {
-  ICourseModel,
-  ICourseDescriptionModel,
-} from "../../../../Models/Courses/CourseModel";
+import { ICourseModel } from "../../../../Models/Courses/CourseModel";
 import CourseService from "../../../../Services/CourseService";
 import SuiButton from "../../../../components/SuiButton";
 import CandidateDetails from "../candidates/candidate-details";
-import CourseDetails from "../../admin/courses/course-details";
 import { ExportToCsv } from "export-to-csv";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import _ from "lodash";
 import { ISpecialityModel } from "../../../../Models/ApiResponse/SpecialityModel";
-
 interface IPlanCoursesProps {}
 const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
   const { translate } = useTranslation();
@@ -70,39 +65,8 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
   const setShow = () => {
     setshowCourseDetail(!showCourseDetail);
   };
-  const activateEdit = () => {
-    setIsEditable(!isEditable);
-  };
-
-  const getCourse = (data: any) => {
-    let _course = Courses.find((item, index) => item.id === data?.id);
-    CourseService.Get(data.id)
-      .then((res) => {
-        let _course = res.result as ICourseModel;
-        setCourse(_course);
-        console.log(_course);
-        setIsCreate(false);
-        setIsEditable(false);
-        setshowCourseDetail(true);
-      })
-      .catch((error) => {
-        console.error("error", error);
-      });
-  };
 
   const [isCreate, setIsCreate] = useState<boolean>(true);
-
-  const handleCreate = () => {
-    setCourse(null);
-    setIsCreate(true);
-    setIsEditable(true);
-    setshowCourseDetail(true);
-  };
-
-  const handleClose = () => {
-    setSearchResult(null);
-    setshowCourseDetail(false);
-  };
 
   /********************** Filter && Sort *********/
   const inputLabel = React.useRef(null);
@@ -128,11 +92,19 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
     },
     {
       value: "2",
-      label: translate("Number of all hours"),
+      label: translate("Course Code"),
     },
     {
       value: "3",
-      label: translate("Number of accredited hours"),
+      label: translate("Year"),
+    },
+    {
+      value: "4",
+      label: translate("Speciality"),
+    },
+    {
+      value: "5",
+      label: translate("Semester"),
     },
   ];
 
@@ -145,9 +117,11 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
 
   const [filteredCourses, setFilteredCourses] =
     React.useState<ICourseModel[]>(null);
+
   const [filter, setFilter] = React.useState(0);
   const [search, setSearch] = React.useState("");
 
+  // ---- Handle File --------------------------------
   const filterData = () => {
     let _filteredCourses = Courses;
     let _value = search;
@@ -197,7 +171,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
     setSearch(_value);
     filterData();
   };
-
+  // ---- Handle Sort --------------------------------
   const [sortBy, setSortBy] = React.useState(0);
   const handleSortBy = (event) => {
     let _value = event?.target?.value;
@@ -271,13 +245,9 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
     //   });
   }, []);
   /************************** Finish Data ****************************/
-  /************************** Handle edit data ****************************/
-  const [isEditable, setIsEditable] = React.useState(false);
-  /************************** Finish Handle edit data ****************************/
 
   /**************************  Handle Export data ****************************/
   const [showExportColumns, setShowExportColumns] = React.useState(false);
-
   const [checked, setChecked] = useState([]);
   const [selectedColumns, setSelectedColumns] = useState([]);
   const handleCheck = (event) => {
@@ -322,10 +292,26 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
   /************************** Finish Handle Export Data ****************************/
   const [confirm, setConfirm] = React.useState(false);
   const [deleteCourse, setDeleteCourse] = React.useState(false);
+
+  // -------- Handle Table Actions --------
+  const getCourse = (data: any) => {
+    let _course = Courses.find((item, index) => item.id === data?.id);
+    CourseService.Get(data.id)
+      .then((res) => {
+        let _course = res.result as ICourseModel;
+        setCourse(_course);
+        console.log(_course);
+        setIsCreate(false);
+        setIsEditable(false);
+        setshowCourseDetail(true);
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
+  };
   const handleConfirmOpen = () => {
     setConfirm(true);
   };
-
   const handleConfirmClose = () => {
     setConfirm(false);
   };
@@ -416,22 +402,22 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
         tableLayout: "auto",
       };
       let actions = [
-        // {
-        //   icon: () => (
-        //     <SuiButton
-        //       style={{
-        //         minWidth: 80,
-        //         color: "#dc3545",
-        //         backgroundColor: "transparent",
-        //         border: "1px solid #dc3545",
-        //       }}
-        //       color={"danger"}
-        //     >
-        //       {translate("Delete")}
-        //     </SuiButton>
-        //   ),
-        //   onClick: (evt, data) => {},
-        // },
+        {
+          icon: () => (
+            <SuiButton
+              style={{
+                minWidth: 80,
+                color: "#dc3545",
+                backgroundColor: "transparent",
+                border: "1px solid #dc3545",
+              }}
+              color={"danger"}
+            >
+              {translate("Delete")}
+            </SuiButton>
+          ),
+          onClick: (evt, data) => deleteCourse(data),
+        },
         {
           icon: () => (
             <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
@@ -457,210 +443,196 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
   };
   return (
     <GridContainer>
-      {!showCourseDetail && (
-        <>
-          <GridItem md={12}>
-            <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
-              <GridItem md={7}></GridItem>
-              <GridItem></GridItem>
-            </GridItem>
-            <GridItem style={{ marginBottom: "1em", marginTop: "2em" }}>
-              <FormControl
-                size="small"
-                variant="outlined"
-                style={{ minWidth: 150, margin: "0 0 0 1em" }}
-              >
-                <InputLabel
-                  style={{ display: "flex" }}
-                  shrink
-                  ref={inputLabel}
-                  htmlFor="outlined-filter"
-                >
-                  <span>{translate("Filter")}</span>
-                  <FilterList />
-                </InputLabel>
-                <Select
-                  id="select-filter"
-                  value={filter}
-                  onChange={handleChangeFilter}
-                  label={filters[filter].label}
-                  input={
-                    <OutlinedInput
-                      notched
-                      labelWidth={labelWidth}
-                      name="filter"
-                      id="outlined-filter"
-                    />
-                  }
-                >
-                  {filters.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl>
-                <TextField
-                  onKeyUp={handleSearch}
-                  size="small"
-                  id="outlined-basic"
-                  label="بحث"
-                  variant="outlined"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search />
-                      </InputAdornment>
-                    ),
-                  }}
-                ></TextField>
-              </FormControl>
-              <FormControl
-                size="small"
-                variant="outlined"
-                style={{ minWidth: 150, margin: "0 1em 0 1em" }}
-              >
-                <InputLabel
-                  style={{ display: "flex" }}
-                  shrink
-                  ref={inputSortLabel}
-                  htmlFor="outlined-sort"
-                >
-                  <span>{translate("Sort By")}</span>
-                  <Sort />
-                </InputLabel>
-                <Select
-                  displayEmpty
-                  fullWidth
-                  labelId="autowidth-label"
-                  id="select-sort"
-                  value={sortBy}
-                  onChange={handleSortBy}
-                  autoWidth
-                  input={
-                    <OutlinedInput
-                      notched
-                      labelWidth={sortLabelWidth}
-                      name="sort"
-                      id="outlined-sort"
-                    />
-                  }
-                  label={filters[sortBy].label}
-                >
-                  {filters.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <Button
-                style={{ margin: "0px 5px" }}
-                disabled={false}
-                variant="contained"
-                className={classes.submitBtn}
-                onClick={generatePDF}
-              >
-                <span style={{ padding: "0px 0px 0px 10px" }}>
-                  {translate("Print")}
-                </span>
-                <Print />
-              </Button>
-              <Button
-                style={{ margin: "0px 5px" }}
-                disabled={false}
-                variant="contained"
-                className={classes.submitBtn}
-                onClick={handleExportData}
-              >
-                <span style={{ padding: "0px 0px 0px 10px" }}>
-                  {translate("Export to excel")}
-                </span>
-                <Description />
-              </Button>
-            </GridItem>
-            {showExportColumns && (
-              <GridItem>
-                <Accordion>
-                  <AccordionDetails>
-                    <GridItem container>
-                      <GridItem
-                        md={12}
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Typography
-                          style={{
-                            backgroundColor: "lightgray",
-                            boxShadow:
-                              "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)",
-                            padding: "0em 1.2em",
-                            margin: "0em 0em .5em 0em",
-                          }}
-                        >
-                          {translate("Select Columns")}
-                        </Typography>
-                      </GridItem>
-                      <GridItem md={12}>
-                        <GridItem
-                          className="list-container"
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          {columns
-                            // .filter((item) => !item.hidden)
-                            .map((item, index) => (
-                              <GridItem key={index}>
-                                <input
-                                  value={item.field}
-                                  type="checkbox"
-                                  onChange={handleCheck}
-                                />
-                                <span>{item.title}</span>
-                              </GridItem>
-                            ))}
-                        </GridItem>
-                        <GridItem
-                          md={12}
-                          style={{ display: "flex", justifyContent: "center" }}
-                        >
-                          <Button
-                            style={{ margin: "0px 5px" }}
-                            disabled={false}
-                            variant="contained"
-                            className={classes.successText}
-                            onClick={generateExcel}
-                          >
-                            <span style={{ padding: "0px 0px 0px 10px" }}>
-                              {translate("Export")}
-                            </span>
-                            <Description />
-                          </Button>
-                        </GridItem>
-                      </GridItem>
+      <GridItem md={12}>
+        <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
+          <GridItem md={7}></GridItem>
+          <GridItem></GridItem>
+        </GridItem>
+        <GridItem style={{ marginBottom: "1em", marginTop: "2em" }}>
+          <FormControl
+            size="small"
+            variant="outlined"
+            style={{ minWidth: 150, margin: "0 0 0 1em" }}
+          >
+            <InputLabel
+              style={{ display: "flex" }}
+              shrink
+              ref={inputLabel}
+              htmlFor="outlined-filter"
+            >
+              <span>{translate("Filter")}</span>
+              <FilterList />
+            </InputLabel>
+            <Select
+              id="select-filter"
+              value={filter}
+              onChange={handleChangeFilter}
+              label={filters[filter].label}
+              input={
+                <OutlinedInput
+                  notched
+                  labelWidth={labelWidth}
+                  name="filter"
+                  id="outlined-filter"
+                />
+              }
+            >
+              {filters.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <TextField
+              onKeyUp={handleSearch}
+              size="small"
+              id="outlined-basic"
+              label="بحث"
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            ></TextField>
+          </FormControl>
+          <FormControl
+            size="small"
+            variant="outlined"
+            style={{ minWidth: 150, margin: "0 1em 0 1em" }}
+          >
+            <InputLabel
+              style={{ display: "flex" }}
+              shrink
+              ref={inputSortLabel}
+              htmlFor="outlined-sort"
+            >
+              <span>{translate("Sort By")}</span>
+              <Sort />
+            </InputLabel>
+            <Select
+              displayEmpty
+              fullWidth
+              labelId="autowidth-label"
+              id="select-sort"
+              value={sortBy}
+              onChange={handleSortBy}
+              autoWidth
+              input={
+                <OutlinedInput
+                  notched
+                  labelWidth={sortLabelWidth}
+                  name="sort"
+                  id="outlined-sort"
+                />
+              }
+              label={filters[sortBy].label}
+            >
+              {filters.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            style={{ margin: "0px 5px" }}
+            disabled={false}
+            variant="contained"
+            className={classes.submitBtn}
+            onClick={generatePDF}
+          >
+            <span style={{ padding: "0px 0px 0px 10px" }}>
+              {translate("Print")}
+            </span>
+            <Print />
+          </Button>
+          <Button
+            style={{ margin: "0px 5px" }}
+            disabled={false}
+            variant="contained"
+            className={classes.submitBtn}
+            onClick={handleExportData}
+          >
+            <span style={{ padding: "0px 0px 0px 10px" }}>
+              {translate("Export to excel")}
+            </span>
+            <Description />
+          </Button>
+        </GridItem>
+        {showExportColumns && (
+          <GridItem>
+            <Accordion>
+              <AccordionDetails>
+                <GridItem container>
+                  <GridItem
+                    md={12}
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Typography
+                      style={{
+                        backgroundColor: "lightgray",
+                        boxShadow:
+                          "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)",
+                        padding: "0em 1.2em",
+                        margin: "0em 0em .5em 0em",
+                      }}
+                    >
+                      {translate("Select Columns")}
+                    </Typography>
+                  </GridItem>
+                  <GridItem md={12}>
+                    <GridItem
+                      className="list-container"
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {columns
+                        // .filter((item) => !item.hidden)
+                        .map((item, index) => (
+                          <GridItem key={index}>
+                            <input
+                              value={item.field}
+                              type="checkbox"
+                              onChange={handleCheck}
+                            />
+                            <span>{item.title}</span>
+                          </GridItem>
+                        ))}
                     </GridItem>
-                  </AccordionDetails>
-                </Accordion>
-              </GridItem>
-            )}
+                    <GridItem
+                      md={12}
+                      style={{ display: "flex", justifyContent: "center" }}
+                    >
+                      <Button
+                        style={{ margin: "0px 5px" }}
+                        disabled={false}
+                        variant="contained"
+                        className={classes.successText}
+                        onClick={generateExcel}
+                      >
+                        <span style={{ padding: "0px 0px 0px 10px" }}>
+                          {translate("Export")}
+                        </span>
+                        <Description />
+                      </Button>
+                    </GridItem>
+                  </GridItem>
+                </GridItem>
+              </AccordionDetails>
+            </Accordion>
           </GridItem>
-          <GridItem md={12} style={{ marginTop: "1em" }}>
-            {renderPlanCourses()}
-          </GridItem>
-        </>
-      )}
-      {showCourseDetail && (
-        <CourseDetails
-          isCreate={isCreate}
-          details={course}
-          activateEdit={activateEdit}
-          setShow={setShow}
-          show={showCourseDetail}
-          isEditable={isEditable}
-        />
-      )}
+        )}
+      </GridItem>
+      <GridItem md={12} style={{ marginTop: "1em" }}>
+        {renderPlanCourses()}
+      </GridItem>
       <ConfirmDialog />
     </GridContainer>
   );

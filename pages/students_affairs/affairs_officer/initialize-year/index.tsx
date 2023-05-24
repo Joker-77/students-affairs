@@ -14,6 +14,8 @@ import { ISpecialityModel } from "../../../../Models/ApiResponse/SpecialityModel
 import { IStudentYear } from "../../../../Models/StudentsYear/IStudentYear";
 import YearsService from "../../../../Services/SpecYearsService";
 import { error } from "console";
+import EduYearService from "../../../../Services/EduYearService";
+import { toast } from "react-toastify";
 
 const InitializeYear: React.FC = () => {
   const { translate } = useTranslation();
@@ -31,12 +33,20 @@ const InitializeYear: React.FC = () => {
   const [success, SetSuccess] = useState(false);
   const [specialities, SetSpecialities] = useState<ISpecialityModel[]>([]);
   const [initYears, setInitYears] = useState<IStudentYear[]>([]);
+  const [latestYear, setLatestYear] = useState("");
 
   useEffect(() => {
+    EduYearService.GetYears(`${new Date().getFullYear()}`)
+      .then((resp) => {
+        let result = resp.result;
+        console.clear();
+        console.log(result);
+        if (result.length > 0) setLatestYear(result[0].year);
+      })
+      .catch((error) => {});
     SpecialityService.GetAll()
       .then((response) => {
         if (response.result.length > 0) {
-          console.clear();
           console.log(response.result);
           YearsService.GetWhereSpeciality(response.result[0].id)
             .then((res) => {
@@ -67,6 +77,7 @@ const InitializeYear: React.FC = () => {
       })
       .catch((error) => {});
   }, []);
+
   const closeProperties = () => {
     setShow(false);
   };
@@ -75,11 +86,8 @@ const InitializeYear: React.FC = () => {
   };
 
   const confirmOpenYear = (value, message) => {
-    console.clear();
     let alertMessage = message?.split("%")[0] + " 2022-2023";
     let confirmMessage = message?.split("%")[1];
-    console.clear();
-    console.log(specialities);
     setValue(value);
     setAlertMessage(alertMessage);
     setMessage(confirmMessage);
@@ -87,10 +95,30 @@ const InitializeYear: React.FC = () => {
   };
 
   const handleSubmitConfirm = () => {
-    setShowConfirm(false);
-    setShow(false);
-    SetSuccess(true);
+    console.log(value);
+    if (!!value)
+      EduYearService.InitYears({
+        year: latestYear,
+        type: value,
+      })
+        .then((resp) => {
+          let result = resp?.result;
+          if (result && result.success) {
+            setShowConfirm(false);
+            setShow(false);
+            SetSuccess(true);
+          }
+          setShowConfirm(false);
+          setShow(false);
+          SetSuccess(true);
+        })
+        .catch((error) => {
+          setShowConfirm(false);
+          setShow(false);
+          SetSuccess(true);
+        });
   };
+
   const closeConfirmProperties = () => {
     setShowConfirm(false);
   };
@@ -103,7 +131,7 @@ const InitializeYear: React.FC = () => {
         className={classes.typography}
       >
         <Typography variant="h5" component="div">
-          {translate(`You're in the year`) + ` ${"2022"}`}
+          {translate(`You're in the year`) + ` ${latestYear}`}
         </Typography>
       </GridItem>
       <GridItem md={12}>

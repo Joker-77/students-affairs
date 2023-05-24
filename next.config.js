@@ -89,6 +89,10 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
 
     // Years
     LIST_YEARS_URL: "/year",
+
+    // Educational Year
+    LIST_EDU_YEARS_URL: "/edu-year",
+    INIT_YEAR_URL: "/inityear",
     // Login
 
     LOGIN_URL: "/login",
