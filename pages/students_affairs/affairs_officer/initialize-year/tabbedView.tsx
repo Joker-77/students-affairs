@@ -24,6 +24,8 @@ import { Close } from "@material-ui/icons";
 import { IStudentYear } from "../../../../Models/StudentsYear/IStudentYear";
 import YearsService from "../../../../Services/SpecYearsService";
 import Router from "next/router";
+import StudentsImportService from "../../../../Services/StudentsImportService";
+import { toast } from "react-toastify";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -65,6 +67,7 @@ function tabProps(index: number) {
 }
 
 const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
+  latestYear,
   message,
   specialties,
   initYears,
@@ -76,7 +79,7 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  const [year, setYear] = useState<number | undefined>();
+  const [year, setYear] = useState<number | undefined>(null);
   const [speciality, setSpeciality] = useState(1);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [years, setYears] = useState<IStudentYear[]>(initYears);
@@ -88,7 +91,6 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
   };
   const handleChangeSpec = (event) => {
     let _val = event.target.value ?? "";
-    alert(_val);
     if (_val) {
       setDisabled(true);
       setSpeciality(event.target.value);
@@ -105,6 +107,8 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
           console.clear();
           console.log(res);
           setYears(res);
+          if (res.length > 0) setYear(res[0].id);
+          else setYear(undefined);
           setDisabled(false);
         })
         .catch((error) => {});
@@ -114,15 +118,29 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
     setOpenConfirmDialog(true);
   };
   const handleConfirmDialog = () => {
-    alert(speciality);
-    alert(year);
+    const _payload = {
+      edu_year_id: latestYear.id,
+      year_id: year,
+    };
+    StudentsImportService.Import(_payload)
+      .then((result) => {
+        if (result.success) {
+          toast.success(translate("Students Imported Successfully"));
+          setOpenConfirmDialog(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleSpecifyCourses = (e) => {
     e.preventDefault();
-    Router.push(
-      "/students_affairs/affairs_officer/initialize-year/specify-courses"
-    );
+    Router.push({
+      pathname:
+        "/students_affairs/affairs_officer/initialize-year/specify-courses",
+      query: { year: latestYear.id },
+    });
   };
   const handleAssignTeachers = (e) => {
     e.preventDefault();
@@ -139,7 +157,6 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
     return (
       <Dialog open={show} maxWidth="sm" fullWidth>
         <DialogTitle>
-          {" "}
           <Typography>هل تريد تأكيد استيراد الطلاب {studentsMsg}</Typography>
         </DialogTitle>
         <Box position="absolute" top={0} right={0}>

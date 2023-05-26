@@ -41,7 +41,7 @@ const InitializeYear: React.FC = () => {
         let result = resp.result;
         console.clear();
         console.log(result);
-        if (result.length > 0) setLatestYear(result[0].year);
+        if (result.length > 0) setLatestYear(result[0]);
       })
       .catch((error) => {});
     SpecialityService.GetAll()
@@ -98,7 +98,7 @@ const InitializeYear: React.FC = () => {
     console.log(value);
     if (!!value)
       EduYearService.InitYears({
-        year: latestYear,
+        year: latestYear.year,
         type: value,
       })
         .then((resp) => {
@@ -131,7 +131,7 @@ const InitializeYear: React.FC = () => {
         className={classes.typography}
       >
         <Typography variant="h5" component="div">
-          {translate(`You're in the year`) + ` ${latestYear}`}
+          {translate(`You're in the year`) + ` ${latestYear.year}`}
         </Typography>
       </GridItem>
       <GridItem md={12}>
@@ -154,6 +154,7 @@ const InitializeYear: React.FC = () => {
         <GridItem style={{ marginTop: "2em" }}>
           <GridItem md={12}>
             <InitPlanTabs
+              latestYear={latestYear}
               message={message}
               specialties={specialities}
               initYears={initYears}

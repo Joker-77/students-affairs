@@ -93,6 +93,16 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     // Educational Year
     LIST_EDU_YEARS_URL: "/edu-year",
     INIT_YEAR_URL: "/inityear",
+
+    // Students Improt
+    IMPORT_STUDENTS_URL: "/student/import",
+    LIST_IMPORTED_STUDENTS_URL: "/student",
+
+    // Plan
+    LIST_PROGRAMS_URL: "/programs",
+    ADD_PROGRAMS_URL: "/plan/add",
+    LIST_PLAN_URL: "/plan",
+
     // Login
 
     LOGIN_URL: "/login",

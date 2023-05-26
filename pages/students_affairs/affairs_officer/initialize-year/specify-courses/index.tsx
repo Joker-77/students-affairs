@@ -19,22 +19,24 @@ import CourseService from "../../../../../Services/CourseService";
 import { ICourseModel } from "../../../../../Models/Courses/CourseModel";
 import SpecialityService from "../../../../../Services/SpecialityService";
 import { ISpecialityModel } from "../../../../../Models/ApiResponse/SpecialityModel";
-import Router from "next/router";
+import Router, { useRouter, withRouter } from "next/router";
 import YearsService from "../../../../../Services/SpecYearsService";
 import SpecYearsService from "../../../../../Services/SpecYearsService";
 import {
   ISpecYear,
   IStudentYear,
 } from "../../../../../Models/StudentsYear/IStudentYear";
+import PlanService from "../../../../../Services/PlanService";
+import { IProgramModel } from "../../../../../Models/Programs/IProgramModel";
+import { toast } from "react-toastify";
 
-interface ISpecifyCoursesProps {}
-const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = ({}) => {
+const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
   const [programs, setPrograms] = useState([]);
-
+  const [program, setProgram] = useState(null);
   // Courses
   const [courses, setCourses] = useState([]);
   const [course, setCourse] = useState(null);
@@ -61,20 +63,35 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = ({}) => {
   const [specYears, setSpecYears] = useState([]);
   const [specYear, setSpecYear] = useState(null);
 
+  // Year
+  const router = useRouter();
+  const year = router.query?.year;
+
   useEffect(() => {
-    CourseService.GetAll()
-      .then((courses) => {
-        SpecialityService.GetAll()
-          .then((specs) => {
-            console.log("Courses", specs.result);
-            // setFilteredCourses(res.result as ICourseModel[]);
-            setCourses(courses.result as ICourseModel[]);
-            setSpecialities(specs.result as ISpecialityModel[]);
-            courses.result.length > 0 && setCourse(course.result[0].id);
+    console.clear();
+    console.log("params", router?.query?.year);
+  }, [router.query?.year]);
+
+  useEffect(() => {
+    PlanService.GetAll()
+      .then((programs) => {
+        console.log("Program", programs);
+        CourseService.GetAll()
+          .then((courses) => {
+            SpecialityService.GetAll()
+              .then((specs) => {
+                setPrograms(programs.result as IProgramModel[]);
+                setCourses(courses.result as ICourseModel[]);
+                setSpecialities(specs.result as ISpecialityModel[]);
+                courses.result.length > 0 && setCourse(course.result[0].id);
+              })
+              .catch((err) => {});
           })
           .catch((err) => {});
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error("Error", err);
+      });
   }, []);
 
   const [loadSpecYear, setLoadSpecYear] = useState(false);
@@ -84,6 +101,8 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = ({}) => {
     SpecYearsService.GetWhereSpeciality(e.target.value)
       .then((response) => {
         if (response.result && response.result.length > 0) {
+          console.clear();
+          console.log(response.result);
           let _data: ISpecYear[] = response.result.map((e) => {
             return {
               id: e.id,
@@ -106,7 +125,24 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = ({}) => {
         setLoadSpecYear(false);
       });
   };
-  const handleAddCourse = () => {};
+  const handleAddCourse = () => {
+    const payLoad = {
+      program_id: program,
+      year_id: specYear,
+      edu_year_id: year,
+      course_id: course,
+      semester: semester,
+    };
+    console.clear();
+    console.log(payLoad);
+    PlanService.AddCourse(payLoad)
+      .then((result) => {
+        if (result.success) {
+          toast.success(translate("Course Added To Plan Successfully"));
+        }
+      })
+      .catch((error) => {});
+  };
   const handleBack = (e) => {
     e.preventDefault();
     Router.push("/students_affairs/affairs_officer/initialize-year");
@@ -133,6 +169,24 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = ({}) => {
         </Typography>
       </GridItem>
       <GridContainer md={12}>
+        <GridItem md={2}>
+          <FormControl fullWidth variant="filled" size="small" size="small">
+            <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={program}
+              label="programs"
+              onChange={(e) => setProgram(e.target.value)}
+            >
+              {programs.map((program) => (
+                <MenuItem key={program.id} value={program.id}>
+                  {program.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </GridItem>
         <GridItem md={2}>
           <FormControl fullWidth variant="filled" size="small" size="small">
             <InputLabel id="demo-simple-select-label">المقرّر</InputLabel>
