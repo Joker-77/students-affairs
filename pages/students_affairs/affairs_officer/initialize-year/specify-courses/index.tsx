@@ -4,6 +4,7 @@ import GridItem from "../../../../../components/Grid/GridItem";
 import {
   Button,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -27,7 +28,10 @@ import {
   IStudentYear,
 } from "../../../../../Models/StudentsYear/IStudentYear";
 import PlanService from "../../../../../Services/PlanService";
-import { IProgramModel } from "../../../../../Models/Programs/IProgramModel";
+import {
+  IProgramCourseModel,
+  IProgramModel,
+} from "../../../../../Models/Programs/IProgramModel";
 import { toast } from "react-toastify";
 
 const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
@@ -35,8 +39,10 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
+  // Programs
   const [programs, setPrograms] = useState([]);
   const [program, setProgram] = useState(null);
+
   // Courses
   const [courses, setCourses] = useState([]);
   const [course, setCourse] = useState(null);
@@ -65,13 +71,14 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
 
   // Year
   const router = useRouter();
-  const year = router.query?.year;
+  const [year, setYear] = useState(router.query?.year);
 
+  // handle component route data
   useEffect(() => {
-    console.clear();
-    console.log("params", router?.query?.year);
+    setYear(router?.query?.year);
   }, [router.query?.year]);
 
+  // handle component api data
   useEffect(() => {
     PlanService.GetAll()
       .then((programs) => {
@@ -94,6 +101,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
       });
   }, []);
 
+  // handle change speciality
   const [loadSpecYear, setLoadSpecYear] = useState(false);
   const changeSpec = (e) => {
     setLoadSpecYear(true);
@@ -125,6 +133,8 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
         setLoadSpecYear(false);
       });
   };
+
+  // handle add coursse to program
   const handleAddCourse = () => {
     const payLoad = {
       program_id: program,
@@ -143,32 +153,58 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
       })
       .catch((error) => {});
   };
+
+  const handleShowCourses = () => {};
+  // handle routing back
   const handleBack = (e) => {
     e.preventDefault();
     Router.push("/students_affairs/affairs_officer/initialize-year");
   };
-  useEffect(() => {});
+  // handle added courses to program
+  // Courses
+  const [ProgramCourses, setProgramCourses] =
+    React.useState<IProgramCourseModel[]>(null);
+
+  // handle program courses
+  const changeProgram = (val: number) => {
+    setProgram(val);
+  };
   return (
     <GridContainer md={12}>
-      <GridItem
-        style={{ margin: "-1em 0 1em 0" }}
-        md={12}
-        className={classes.typography}
-      >
-        <Typography variant="h5" component="div">
-          {translate(`You're in the year`) + ` ${"2022"}`}
-        </Typography>
-      </GridItem>
-      <GridItem
-        style={{ margin: "0 0 1em 0" }}
-        md={12}
-        className={classes.typography}
-      >
-        <Typography variant="h5" component="div">
-          {translate("Year Plan")} ({translate("Specify Courses")})
-        </Typography>
-      </GridItem>
       <GridContainer md={12}>
+        <GridItem
+          style={{ margin: "-1em 0 1em 0" }}
+          md={12}
+          className={classes.typography}
+        >
+          <Typography variant="h5" component="div">
+            {translate(`You're in the year`) + ` ${"2022"}`}
+          </Typography>
+        </GridItem>
+        <GridItem
+          style={{ margin: "0 0 1em 0" }}
+          md={10}
+          className={classes.typography}
+        >
+          <Typography variant="h5" component="div">
+            {translate("Year Plan")} ({translate("Specify Courses")})
+          </Typography>
+        </GridItem>
+        <GridItem md={2}>
+          <Button
+            style={{ margin: "5px 5px" }}
+            variant="contained"
+            className={classes.warning}
+            onClick={handleBack}
+          >
+            <span style={{ padding: "0px 0px 0px 10px" }}>
+              {translate("Back")}
+            </span>
+            <ArrowBack />
+          </Button>
+        </GridItem>
+      </GridContainer>
+      <Grid container md={12} style={{ margin: "2em 0em" }}>
         <GridItem md={2}>
           <FormControl fullWidth variant="filled" size="small" size="small">
             <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
@@ -177,7 +213,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
               id="demo-simple-select"
               value={program}
               label="programs"
-              onChange={(e) => setProgram(e.target.value)}
+              onChange={(e) => changeProgram(e.target.value)}
             >
               {programs.map((program) => (
                 <MenuItem key={program.id} value={program.id}>
@@ -280,15 +316,15 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
             style={{ margin: "10px 5px" }}
             variant="contained"
             className={classes.submitBtn}
-            onClick={handleBack}
+            onClick={handleShowCourses}
           >
             <span style={{ padding: "0px 0px 0px 10px" }}>
-              {translate("Back")}
+              {translate("Show Courses")}
             </span>
             <ArrowBack />
           </Button>
         </GridItem>
-      </GridContainer>
+      </Grid>
       <GridContainer md={12}>
         <GridItem md={12} style={{ margin: "1em 0 0 0" }}>
           <PlanCourses />

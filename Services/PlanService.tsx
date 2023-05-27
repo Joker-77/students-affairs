@@ -38,4 +38,26 @@ export default class PlanService {
         throw error;
       });
   }
+
+  static async GetProgramCourses(
+    programId: number,
+    yearId: number,
+    eduYear: number
+  ): Promise<ApiResponse> {
+    const listUrl = process.env.LIST_PLAN_URL as string;
+    return await apiConnector
+      .get(
+        listUrl +
+          `?program_id=${programId}&year_id=${yearId}&edu_year_id=${eduYear}`
+      )
+      .then((response) => {
+        if (response && response.data) {
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        console.log("Api Error:", error);
+        throw error;
+      });
+  }
 }

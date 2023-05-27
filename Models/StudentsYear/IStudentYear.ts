@@ -1,3 +1,5 @@
+import { ISpecialityModel } from "../Specialities/SpecialityModel";
+
 export interface IStudentYear {
   id: number;
   en_name: string;
@@ -10,4 +12,5 @@ export interface ISpecYear {
   en_name: string;
   ar_name: string;
   speciality_id: number;
+  speciality: ISpecialityModel;
 }

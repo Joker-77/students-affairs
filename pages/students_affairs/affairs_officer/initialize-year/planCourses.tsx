@@ -53,6 +53,7 @@ import { ExportToCsv } from "export-to-csv";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import _ from "lodash";
 import { ISpecialityModel } from "../../../../Models/ApiResponse/SpecialityModel";
+import { IProgramCourseModel } from "../../../../Models/Programs/IProgramModel";
 interface IPlanCoursesProps {}
 const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
   const { translate } = useTranslation();
@@ -66,7 +67,6 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
     setshowCourseDetail(!showCourseDetail);
   };
 
-  const [isCreate, setIsCreate] = useState<boolean>(true);
 
   /********************** Filter && Sort *********/
   const inputLabel = React.useRef(null);
@@ -107,9 +107,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
       label: translate("Semester"),
     },
   ];
-
-  // Courses
-  const [Courses, setCourses] = React.useState<ICourseModel[]>(null);
+  // Handle Api Data
 
   // Specialities
   const [Specialities, setSpecialities] =
@@ -232,20 +230,6 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
       setFilteredCourses(_filteredCourses);
     }
   };
-  /************************** Data ****************************/
-  useEffect(() => {
-    // CourseService.GetAll()
-    //   .then((res) => {
-    //     console.log("Courses", res.result);
-    //     setFilteredCourses(res.result as ICourseModel[]);
-    //     setCourses(res.result as ICourseModel[]);
-    //   })
-    //   .catch((error) => {
-    //     console.error("error", error);
-    //   });
-  }, []);
-  /************************** Finish Data ****************************/
-
   /**************************  Handle Export data ****************************/
   const [showExportColumns, setShowExportColumns] = React.useState(false);
   const [checked, setChecked] = useState([]);
@@ -292,30 +276,11 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
   /************************** Finish Handle Export Data ****************************/
   const [confirm, setConfirm] = React.useState(false);
   const [deleteCourse, setDeleteCourse] = React.useState(false);
-
   // -------- Handle Table Actions --------
-  const getCourse = (data: any) => {
-    let _course = Courses.find((item, index) => item.id === data?.id);
-    CourseService.Get(data.id)
-      .then((res) => {
-        let _course = res.result as ICourseModel;
-        setCourse(_course);
-        console.log(_course);
-        setIsCreate(false);
-        setIsEditable(false);
-        setshowCourseDetail(true);
-      })
-      .catch((error) => {
-        console.error("error", error);
-      });
-  };
-  const handleConfirmOpen = () => {
-    setConfirm(true);
-  };
-  const handleConfirmClose = () => {
-    setConfirm(false);
-  };
+
   const handleDeleteCourse = () => {};
+  const handleCourseDetail = () => {};
+  const handleConfirmClose = () => {};
 
   const ConfirmDialog = () => (
     <div>
