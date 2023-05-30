@@ -51,6 +51,13 @@ const dashboardRoutes = [
     icon: SupervisorAccount,
     layout: "/students_affairs",
   },
+  {
+    path: "/admin/observers/observations",
+    name: "Observations",
+    rtlName: "المراقبات الامتحانية",
+    icon: SupervisorAccount,
+    layout: "/students_affairs",
+  },
   // {
   //   path: "/table-list",
   //   name: "Table List",

@@ -86,13 +86,17 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     LIST_TEACHER_URL:
       "/teacher",
     ADD_OBSERVER_URL:
-      "/observer/add",
+      "/employee/add",
     EDIT_OBSERVER_URL:
-      "/observer/edit",
+      "/employee/edit",
     DETAILS_OBSERVER_URL:
-      "/observer",
+      "/employee",
     LIST_OBSERVER_URL:
-      "/observer",
+      "/employee",
+    LIST_ACTIVITIES_URL:
+      "/employee/activities",
+    LIST_FUNCTIONAL_BODIES_URL:
+      "/employee/levels",
     ADD_SPECIALITY_URL:
       "/speciality/add",
     EDIT_SPECIALITY_URL:
