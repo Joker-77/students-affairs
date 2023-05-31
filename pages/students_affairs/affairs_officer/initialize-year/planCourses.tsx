@@ -19,6 +19,7 @@ import {
   Typography,
   AccordionSummary,
   AccordionDetails,
+  IconButton,
 } from "@material-ui/core";
 import {
   FilterList,
@@ -34,6 +35,8 @@ import {
   Description,
   ExpandMore,
   FileCopy,
+  Close,
+  Assignment,
 } from "@material-ui/icons";
 import Admin from "../../../../layouts/Admin";
 import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
@@ -54,8 +57,19 @@ import ReactToPrint, { useReactToPrint } from "react-to-print";
 import _ from "lodash";
 import { ISpecialityModel } from "../../../../Models/ApiResponse/SpecialityModel";
 import { IProgramCourseModel } from "../../../../Models/Programs/IProgramModel";
-interface IPlanCoursesProps {}
-const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
+import PlanService from "../../../../Services/PlanService";
+import { toast } from "react-toastify";
+import CourseShallow from "./courseShallow";
+interface IPlanCoursesProps {
+  programCourses: any;
+  nofilter: boolean;
+  type: string;
+}
+const PlanCourses: React.FC<IPlanCoursesProps> = ({
+  programCourses,
+  nofilter,
+  type,
+}) => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -63,10 +77,18 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
   const [showCourseDetail, setshowCourseDetail] = React.useState(false);
   const [course, setCourse] = React.useState<ICourseModel>();
   const [searchResult, setSearchResult] = React.useState(null);
+
+  // data
+  const [data, setData] = useState<any>(programCourses);
+  const [filteredData, setFilteredData] = React.useState<any>(null);
+  useEffect(() => {
+    setData(programCourses);
+    setFilteredData(programCourses);
+  }, [programCourses]);
+
   const setShow = () => {
     setshowCourseDetail(!showCourseDetail);
   };
-
 
   /********************** Filter && Sort *********/
   const inputLabel = React.useRef(null);
@@ -110,11 +132,6 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
   // Handle Api Data
 
   // Specialities
-  const [Specialities, setSpecialities] =
-    React.useState<ISpecialityModel[]>(null);
-
-  const [filteredCourses, setFilteredCourses] =
-    React.useState<ICourseModel[]>(null);
 
   const [filter, setFilter] = React.useState(0);
   const [search, setSearch] = React.useState("");
@@ -273,40 +290,6 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
       })
     );
   };
-  /************************** Finish Handle Export Data ****************************/
-  const [confirm, setConfirm] = React.useState(false);
-  const [deleteCourse, setDeleteCourse] = React.useState(false);
-  // -------- Handle Table Actions --------
-
-  const handleDeleteCourse = () => {};
-  const handleCourseDetail = () => {};
-  const handleConfirmClose = () => {};
-
-  const ConfirmDialog = () => (
-    <div>
-      <Dialog
-        open={confirm}
-        onClose={handleConfirmClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {translate("Delete a course")}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {translate("Are you sure you want to delete this course")}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteCourse}>{translate("Yes")}</Button>
-          <Button onClick={handleConfirmClose} autoFocus>
-            {translate("No")}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
 
   /************************** Handle Delete Course ****************************/
   const tableRef = useRef();
@@ -322,34 +305,80 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
     },
     {
       title: translate("Program"),
-      field: "program",
+      field: "program_id",
     },
     {
       title: translate("Course Code"),
-      field: "course_code",
-      hidden: true,
+      field: "edu_course.course.code",
     },
     {
       title: translate("Course Name"),
-      field: "course_name",
-      hidden: true,
+      field: "edu_course.course.ar_name",
     },
     {
       title: translate("Year"),
-      field: "year",
+      field: "year.ar_name",
     },
     {
       title: translate("Speciality"),
-      field: "speciality",
+      field: "year.speciality.ar_name",
     },
     {
       title: translate("Semester"),
       field: "semester",
+      lookup: { 1: "الأول", 2: "الثاني" },
     },
   ];
+
+  // Confirm Delete
+  const [confirmDelete, setConfirmDelete] = React.useState(false);
+  const [deleteId, setDeleteId] = React.useState(null);
+  const handleDeleteCourse = () => {
+    if (deleteId) {
+      PlanService.DeleteCourse(deleteId)
+        .then((resp) => {
+          if (resp.success) {
+            toast.success("Course deleted successfully");
+            let _data = (data as Array<any>).filter((item) => {
+              return item.id != deleteId;
+            });
+            setData(_data);
+            setFilteredData(_data);
+            setConfirmDelete(false);
+          }
+        })
+        .catch((err) => {});
+    } else toast.success("يجب تحديد معرّف المقرّر ضمن البرنامج");
+  };
+  // Handle Show Confirm Dialog
+  const handleConfirmDialog = (id) => {
+    setDeleteId(id);
+    setConfirmDelete(true);
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setDeleteId(null);
+    setConfirmDelete(false);
+  };
+
+  /************************** Handle Course Detail ****************************/
+  const [showCoursedetail, setShowCourseDetail] = useState(false);
+  const [courseDetail, setCourseDetail] = useState(null);
+
+  const handleCourseDetail = (data) => {
+    console.clear();
+    console.log(data);
+    setCourseDetail(data);
+    setShowCourseDetail(true);
+  };
+  const handleCloseCourseDetail = () => {
+    setShowCourseDetail(false);
+  };
+
+  // Render Program Courses
   const renderPlanCourses = () => {
-    if (filteredCourses != null && filteredCourses.length > 0) {
-      let data = [];
+    console.log("render", data);
+    if (filteredData != null && filteredData.length > 0) {
       let options = {
         // exportAllData: true,
         // exportButton: true,
@@ -369,6 +398,15 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
       let actions = [
         {
           icon: () => (
+            <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
+              {translate("Course Details")}
+              <FileCopy />
+            </SuiButton>
+          ),
+          onClick: (evt, data) => handleCourseDetail(data),
+        },
+        {
+          icon: () => (
             <SuiButton
               style={{
                 minWidth: 80,
@@ -381,18 +419,20 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
               {translate("Delete")}
             </SuiButton>
           ),
-          onClick: (evt, data) => deleteCourse(data),
-        },
-        {
-          icon: () => (
-            <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
-              {translate("Course Details")}
-              <FileCopy />
-            </SuiButton>
-          ),
-          onClick: (evt, data) => getCourse(data),
+          onClick: (evt, data) => handleConfirmDialog(data.id),
         },
       ];
+      if (type == "teachers") {
+        actions.splice(1, 0, {
+          icon: () => (
+            <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
+              {translate("Assign Teacher")}
+              <Assignment />
+            </SuiButton>
+          ),
+          onClick: (evt, data) => Assign(data),
+        });
+      }
       return (
         <div ref={tableRef}>
           <ActionTable
@@ -405,6 +445,33 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
         </div>
       );
     } else return <Placeholder loading={false} />;
+  };
+
+  const ConfirmDialog = ({ id, show, handleClose, handleDeleteCourse }) => {
+    return (
+      <Dialog open={show} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          <Typography>هل تريد تأكيد حذف المقرر</Typography>
+        </DialogTitle>
+        <Box position="absolute" top={0} right={0}>
+          <IconButton onClick={handleClose}>
+            <Close />
+          </IconButton>
+        </Box>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary" variant="contained">
+            {translate("Cancel")}
+          </Button>
+          <Button
+            onClick={() => handleDeleteCourse(id)}
+            color="primary"
+            variant="contained"
+          >
+            {translate("Confirm")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
   };
   return (
     <GridContainer>
@@ -598,7 +665,19 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({}) => {
       <GridItem md={12} style={{ marginTop: "1em" }}>
         {renderPlanCourses()}
       </GridItem>
-      <ConfirmDialog />
+      <ConfirmDialog
+        key={"Confirm Delete Course"}
+        id={deleteId}
+        show={confirmDelete}
+        handleClose={handleCloseConfirmDialog}
+        handleDeleteCourse={handleDeleteCourse}
+      />
+      <CourseShallow
+        show={showCoursedetail}
+        course={courseDetail}
+        close={handleCloseCourseDetail}
+        key={"Shallow Course"}
+      />
     </GridContainer>
   );
 };

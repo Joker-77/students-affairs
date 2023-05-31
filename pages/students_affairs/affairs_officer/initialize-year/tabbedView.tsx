@@ -38,6 +38,7 @@ interface InitPlanTabsProps {
   initYears: IStudentYear[];
   handleChangeEduYear: (value) => void;
   handleChangeSpec: (value) => void;
+  latestYear: any;
 }
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -139,14 +140,16 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
     Router.push({
       pathname:
         "/students_affairs/affairs_officer/initialize-year/specify-courses",
-      query: { year: latestYear.id },
+      query: { year: latestYear.id, eduYear: latestYear.year },
     });
   };
   const handleAssignTeachers = (e) => {
     e.preventDefault();
-    Router.push(
-      "/students_affairs/affairs_officer/initialize-year/assign-teachers"
-    );
+    Router.push({
+      pathname:
+        "/students_affairs/affairs_officer/initialize-year/assign-teachers",
+      query: { year: latestYear.id, eduYear: latestYear.year },
+    });
   };
   const ConfirmDialog = ({
     show,

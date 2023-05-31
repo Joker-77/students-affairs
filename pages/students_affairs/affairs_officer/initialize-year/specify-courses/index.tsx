@@ -33,6 +33,7 @@ import {
   IProgramModel,
 } from "../../../../../Models/Programs/IProgramModel";
 import { toast } from "react-toastify";
+import { number } from "yup";
 
 const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
   const { translate } = useTranslation();
@@ -71,12 +72,14 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
 
   // Year
   const router = useRouter();
-  const [year, setYear] = useState(router.query?.year);
+  const [year, setYear] = useState(router.query?.year) as string;
+  const [eduYear, setEduYear] = useState(router.query?.eduYear) as string;
 
   // handle component route data
   useEffect(() => {
     setYear(router?.query?.year);
-  }, [router.query?.year]);
+    setEduYear(router?.query?.eduYear);
+  }, [router.query?.year, router.query?.eduYear]);
 
   // handle component api data
   useEffect(() => {
@@ -154,7 +157,6 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
       .catch((error) => {});
   };
 
-  const handleShowCourses = () => {};
   // handle routing back
   const handleBack = (e) => {
     e.preventDefault();
@@ -162,9 +164,23 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
   };
   // handle added courses to program
   // Courses
-  const [ProgramCourses, setProgramCourses] =
-    React.useState<IProgramCourseModel[]>(null);
+  const [programCourses, setProgramCourses] = React.useState<any>([]);
 
+  const getProgramCourses = () => {
+    if (year && specYear && program) {
+      PlanService.GetProgramCourses(program, specYear, year)
+        .then((resp) => {
+          if (resp.success) {
+            setProgramCourses(resp.result);
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    } else {
+      toast.error("يجب تحديد البرنامج والسنة والاختصاص");
+    }
+  };
   // handle program courses
   const changeProgram = (val: number) => {
     setProgram(val);
@@ -178,7 +194,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
           className={classes.typography}
         >
           <Typography variant="h5" component="div">
-            {translate(`You're in the year`) + ` ${"2022"}`}
+            {translate(`You're in the year`) + ` ${eduYear}`}
           </Typography>
         </GridItem>
         <GridItem
@@ -215,7 +231,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
               label="programs"
               onChange={(e) => changeProgram(e.target.value)}
             >
-              {programs.map((program) => (
+              {programs?.map((program) => (
                 <MenuItem key={program.id} value={program.id}>
                   {program.name}
                 </MenuItem>
@@ -316,7 +332,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
             style={{ margin: "10px 5px" }}
             variant="contained"
             className={classes.submitBtn}
-            onClick={handleShowCourses}
+            onClick={getProgramCourses}
           >
             <span style={{ padding: "0px 0px 0px 10px" }}>
               {translate("Show Courses")}
@@ -327,7 +343,12 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
       </Grid>
       <GridContainer md={12}>
         <GridItem md={12} style={{ margin: "1em 0 0 0" }}>
-          <PlanCourses />
+          <PlanCourses
+            nofilter={false}
+            type="courses"
+            key={"Plan Courses"}
+            programCourses={programCourses}
+          />
         </GridItem>
       </GridContainer>
     </GridContainer>
