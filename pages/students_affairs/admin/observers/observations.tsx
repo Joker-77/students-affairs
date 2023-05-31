@@ -10,6 +10,7 @@ import React from "react";
 import ActionTable from "../../../../components/MaterialTable/ActionTable";
 import Placeholder from "../../../../Utility/Placeholders";
 import AssignObserversToHallModal from "../../../../components/Modals/AssignObserversToHall";
+import * as Yup from "yup";
 
 interface IObservationsProps { }
 
@@ -56,6 +57,10 @@ const Observations: React.FC<IObservationsProps> = () => {
             examDate: "30/5/2023"
         }]);
     }, []);
+
+    const addObserverScheme = Yup.object().shape({
+        employee: Yup.number().required(translate("{0} is required", "Observer")),
+    });
 
     let columns = [
         {
@@ -131,6 +136,7 @@ const Observations: React.FC<IObservationsProps> = () => {
                 open={openAddObservers}
                 handleClose={handleClose}
                 hall={hall}
+                formScheme={addObserverScheme}
                 submitForm={hanldeAddObserverSubmit}
               />
           {}
