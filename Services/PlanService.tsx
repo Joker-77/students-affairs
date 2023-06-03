@@ -7,15 +7,8 @@ export default class PlanService {
     return await apiConnector
       .get(listUrl)
       .then((response) => {
-        if (!!response) {
-          let resp: ApiResponse = {
-            result: response,
-            authorized: true,
-            error: null,
-            success: true,
-            targetUrl: null,
-          };
-          return resp;
+        if (response && response.data) {
+          return response.data;
         }
       })
       .catch((error) => {

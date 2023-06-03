@@ -90,3 +90,15 @@ export interface IEditTeacherModel {
   attachement?: string;
   attachement_name?: string;
 }
+
+export interface IAssignTeacherModel {
+  teacher_id: number;
+  plan_id: number;
+  theoretical_hours: number;
+  practical_hours: number;
+  mixed_hours: number;
+  theoretical_classes: number;
+  practical_classes: number;
+  mixed_classes: number;
+  notes: string;
+}

@@ -103,6 +103,10 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     ADD_PROGRAMS_URL: "/plan/add",
     LIST_PLAN_URL: "/plan",
 
+    // Teacher Assignment
+    LIST_TEACHER_ASSIGNMENT: "/teacher-assign",
+    ADD_TEACHER_ASSIGNMENT: "/teacher-assign/add",
+    DELETE_TEACHER_ASSIGNMENT: "/teacher-assign/delete",
     // Login
 
     LOGIN_URL: "/login",

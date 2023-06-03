@@ -4,8 +4,7 @@ import { ApiResponse } from "../Models/ApiResponse/ApiResponse";
 export default class TeacherService {
   static async GetAll(): Promise<ApiResponse> {
     const listUrl = process.env.LIST_TEACHER_URL as string;
-    console.clear();
-    console.log(listUrl);
+
     return await apiConnector
       .get(listUrl)
       .then((response) => {
@@ -85,6 +84,62 @@ export default class TeacherService {
     const detailUrl = (process.env.LIST_TEACHER_URL as string) + `/${id}`;
     return await apiConnector
       .get(detailUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        console.log("Api Error:", error);
+        throw error;
+      });
+  }
+
+  /* Teacher Assignments */
+  static async GetTeachersAssignments(
+    plan_id: number,
+    edu_year_id: number
+  ): Promise<ApiResponse> {
+    const detailUrl =
+      (process.env.LIST_TEACHER_ASSIGNMENT as string) +
+      `?plan_id=${plan_id}&edu_year_id=${edu_year_id}`;
+    return await apiConnector
+      .get(detailUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        console.log("Api Error:", error);
+        throw error;
+      });
+  }
+
+  static async AddTeachersAssignments(payload): Promise<ApiResponse> {
+    const addUrl = process.env.ADD_TEACHER_ASSIGNMENT as string;
+    return await apiConnector
+      .post(addUrl, payload)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        console.log("Api Error:", error);
+        throw error;
+      });
+  }
+
+  static async DeleteTeachersAssignments(_id: string): Promise<ApiResponse> {
+    const delUrl = process.env.DELETE_TEACHER_ASSIGNMENT as string;
+    let data = new FormData();
+    data.append("id", _id);
+    return await apiConnector
+      .post(delUrl, data)
       .then((response) => {
         if (response.data.success) {
           let result = response.data;

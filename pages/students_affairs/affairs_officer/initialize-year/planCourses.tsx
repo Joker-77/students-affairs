@@ -60,6 +60,7 @@ import { IProgramCourseModel } from "../../../../Models/Programs/IProgramModel";
 import PlanService from "../../../../Services/PlanService";
 import { toast } from "react-toastify";
 import CourseShallow from "./courseShallow";
+import AssignTeacher from "./assign-teachers/AssignTeacher";
 interface IPlanCoursesProps {
   programCourses: any;
   nofilter: boolean;
@@ -361,13 +362,14 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     setConfirmDelete(false);
   };
 
-  /************************** Handle Course Detail ****************************/
+  /************************** Course Detail ****************************/
   const [showCoursedetail, setShowCourseDetail] = useState(false);
   const [courseDetail, setCourseDetail] = useState(null);
 
+  /************************** Handle Assign Teacher ****************************/
+
+  /************************** Handle Course Detail ****************************/
   const handleCourseDetail = (data) => {
-    console.clear();
-    console.log(data);
     setCourseDetail(data);
     setShowCourseDetail(true);
   };
@@ -399,7 +401,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
         {
           icon: () => (
             <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
-              {translate("Course Details")}
+              {translate("Details")}
               <FileCopy />
             </SuiButton>
           ),
@@ -473,211 +475,244 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
       </Dialog>
     );
   };
+
+  const [showAssignTeacher, setShowAssignTeacher] = useState(false);
+  const [title, setTitle] = useState("");
+  const [pdata, setPdata] = useState(null);
+  const Assign = (data) => {
+    console.clear();
+    console.log(data);
+    const _title = `تكليف مدرّس ضمن المقرّر: 
+    (${data?.edu_course?.course?.code}) 
+    (${data?.edu_course?.course?.ar_name}) 
+    (${data?.edu_year?.year}) 
+    (${data?.year?.speciality?.ar_name})
+    (${data?.year?.ar_name})
+    `;
+    setTitle(_title);
+    setPdata(data);
+    setShowAssignTeacher(true);
+  };
+  const setHide = () => {
+    setShowAssignTeacher(!showAssignTeacher);
+  };
   return (
     <GridContainer>
-      <GridItem md={12}>
-        <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
-          <GridItem md={7}></GridItem>
-          <GridItem></GridItem>
-        </GridItem>
-        <GridItem style={{ marginBottom: "1em", marginTop: "2em" }}>
-          <FormControl
-            size="small"
-            variant="outlined"
-            style={{ minWidth: 150, margin: "0 0 0 1em" }}
-          >
-            <InputLabel
-              style={{ display: "flex" }}
-              shrink
-              ref={inputLabel}
-              htmlFor="outlined-filter"
-            >
-              <span>{translate("Filter")}</span>
-              <FilterList />
-            </InputLabel>
-            <Select
-              id="select-filter"
-              value={filter}
-              onChange={handleChangeFilter}
-              label={filters[filter].label}
-              input={
-                <OutlinedInput
-                  notched
-                  labelWidth={labelWidth}
-                  name="filter"
-                  id="outlined-filter"
-                />
-              }
-            >
-              {filters.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <TextField
-              onKeyUp={handleSearch}
-              size="small"
-              id="outlined-basic"
-              label="بحث"
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-            ></TextField>
-          </FormControl>
-          <FormControl
-            size="small"
-            variant="outlined"
-            style={{ minWidth: 150, margin: "0 1em 0 1em" }}
-          >
-            <InputLabel
-              style={{ display: "flex" }}
-              shrink
-              ref={inputSortLabel}
-              htmlFor="outlined-sort"
-            >
-              <span>{translate("Sort By")}</span>
-              <Sort />
-            </InputLabel>
-            <Select
-              displayEmpty
-              fullWidth
-              labelId="autowidth-label"
-              id="select-sort"
-              value={sortBy}
-              onChange={handleSortBy}
-              autoWidth
-              input={
-                <OutlinedInput
-                  notched
-                  labelWidth={sortLabelWidth}
-                  name="sort"
-                  id="outlined-sort"
-                />
-              }
-              label={filters[sortBy].label}
-            >
-              {filters.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Button
-            style={{ margin: "0px 5px" }}
-            disabled={false}
-            variant="contained"
-            className={classes.submitBtn}
-            onClick={generatePDF}
-          >
-            <span style={{ padding: "0px 0px 0px 10px" }}>
-              {translate("Print")}
-            </span>
-            <Print />
-          </Button>
-          <Button
-            style={{ margin: "0px 5px" }}
-            disabled={false}
-            variant="contained"
-            className={classes.submitBtn}
-            onClick={handleExportData}
-          >
-            <span style={{ padding: "0px 0px 0px 10px" }}>
-              {translate("Export to excel")}
-            </span>
-            <Description />
-          </Button>
-        </GridItem>
-        {showExportColumns && (
-          <GridItem>
-            <Accordion>
-              <AccordionDetails>
-                <GridItem container>
-                  <GridItem
-                    md={12}
-                    style={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <Typography
-                      style={{
-                        backgroundColor: "lightgray",
-                        boxShadow:
-                          "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)",
-                        padding: "0em 1.2em",
-                        margin: "0em 0em .5em 0em",
-                      }}
-                    >
-                      {translate("Select Columns")}
-                    </Typography>
-                  </GridItem>
-                  <GridItem md={12}>
-                    <GridItem
-                      className="list-container"
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      {columns
-                        // .filter((item) => !item.hidden)
-                        .map((item, index) => (
-                          <GridItem key={index}>
-                            <input
-                              value={item.field}
-                              type="checkbox"
-                              onChange={handleCheck}
-                            />
-                            <span>{item.title}</span>
-                          </GridItem>
-                        ))}
-                    </GridItem>
-                    <GridItem
-                      md={12}
-                      style={{ display: "flex", justifyContent: "center" }}
-                    >
-                      <Button
-                        style={{ margin: "0px 5px" }}
-                        disabled={false}
-                        variant="contained"
-                        className={classes.successText}
-                        onClick={generateExcel}
+      {!showAssignTeacher && (
+        <>
+          <GridItem md={12}>
+            <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
+              <GridItem md={7}></GridItem>
+              <GridItem></GridItem>
+            </GridItem>
+            <GridItem style={{ marginBottom: "1em", marginTop: "2em" }}>
+              <FormControl
+                size="small"
+                variant="outlined"
+                style={{ minWidth: 150, margin: "0 0 0 1em" }}
+              >
+                <InputLabel
+                  style={{ display: "flex" }}
+                  shrink
+                  ref={inputLabel}
+                  htmlFor="outlined-filter"
+                >
+                  <span>{translate("Filter")}</span>
+                  <FilterList />
+                </InputLabel>
+                <Select
+                  id="select-filter"
+                  value={filter}
+                  onChange={handleChangeFilter}
+                  label={filters[filter].label}
+                  input={
+                    <OutlinedInput
+                      notched
+                      labelWidth={labelWidth}
+                      name="filter"
+                      id="outlined-filter"
+                    />
+                  }
+                >
+                  {filters.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <TextField
+                  onKeyUp={handleSearch}
+                  size="small"
+                  id="outlined-basic"
+                  label="بحث"
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                ></TextField>
+              </FormControl>
+              <FormControl
+                size="small"
+                variant="outlined"
+                style={{ minWidth: 150, margin: "0 1em 0 1em" }}
+              >
+                <InputLabel
+                  style={{ display: "flex" }}
+                  shrink
+                  ref={inputSortLabel}
+                  htmlFor="outlined-sort"
+                >
+                  <span>{translate("Sort By")}</span>
+                  <Sort />
+                </InputLabel>
+                <Select
+                  displayEmpty
+                  fullWidth
+                  labelId="autowidth-label"
+                  id="select-sort"
+                  value={sortBy}
+                  onChange={handleSortBy}
+                  autoWidth
+                  input={
+                    <OutlinedInput
+                      notched
+                      labelWidth={sortLabelWidth}
+                      name="sort"
+                      id="outlined-sort"
+                    />
+                  }
+                  label={filters[sortBy].label}
+                >
+                  {filters.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Button
+                style={{ margin: "0px 5px" }}
+                disabled={false}
+                variant="contained"
+                className={classes.submitBtn}
+                onClick={generatePDF}
+              >
+                <span style={{ padding: "0px 0px 0px 10px" }}>
+                  {translate("Print")}
+                </span>
+                <Print />
+              </Button>
+              <Button
+                style={{ margin: "0px 5px" }}
+                disabled={false}
+                variant="contained"
+                className={classes.submitBtn}
+                onClick={handleExportData}
+              >
+                <span style={{ padding: "0px 0px 0px 10px" }}>
+                  {translate("Export to excel")}
+                </span>
+                <Description />
+              </Button>
+            </GridItem>
+            {showExportColumns && (
+              <GridItem>
+                <Accordion>
+                  <AccordionDetails>
+                    <GridItem container>
+                      <GridItem
+                        md={12}
+                        style={{ display: "flex", justifyContent: "center" }}
                       >
-                        <span style={{ padding: "0px 0px 0px 10px" }}>
-                          {translate("Export")}
-                        </span>
-                        <Description />
-                      </Button>
+                        <Typography
+                          style={{
+                            backgroundColor: "lightgray",
+                            boxShadow:
+                              "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)",
+                            padding: "0em 1.2em",
+                            margin: "0em 0em .5em 0em",
+                          }}
+                        >
+                          {translate("Select Columns")}
+                        </Typography>
+                      </GridItem>
+                      <GridItem md={12}>
+                        <GridItem
+                          className="list-container"
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          {columns
+                            // .filter((item) => !item.hidden)
+                            .map((item, index) => (
+                              <GridItem key={index}>
+                                <input
+                                  value={item.field}
+                                  type="checkbox"
+                                  onChange={handleCheck}
+                                />
+                                <span>{item.title}</span>
+                              </GridItem>
+                            ))}
+                        </GridItem>
+                        <GridItem
+                          md={12}
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Button
+                            style={{ margin: "0px 5px" }}
+                            disabled={false}
+                            variant="contained"
+                            className={classes.successText}
+                            onClick={generateExcel}
+                          >
+                            <span style={{ padding: "0px 0px 0px 10px" }}>
+                              {translate("Export")}
+                            </span>
+                            <Description />
+                          </Button>
+                        </GridItem>
+                      </GridItem>
                     </GridItem>
-                  </GridItem>
-                </GridItem>
-              </AccordionDetails>
-            </Accordion>
+                  </AccordionDetails>
+                </Accordion>
+              </GridItem>
+            )}
           </GridItem>
-        )}
-      </GridItem>
-      <GridItem md={12} style={{ marginTop: "1em" }}>
-        {renderPlanCourses()}
-      </GridItem>
-      <ConfirmDialog
-        key={"Confirm Delete Course"}
-        id={deleteId}
-        show={confirmDelete}
-        handleClose={handleCloseConfirmDialog}
-        handleDeleteCourse={handleDeleteCourse}
-      />
-      <CourseShallow
-        show={showCoursedetail}
-        course={courseDetail}
-        close={handleCloseCourseDetail}
-        key={"Shallow Course"}
-      />
+          <GridItem md={12} style={{ marginTop: "1em" }}>
+            {renderPlanCourses()}
+          </GridItem>
+          <ConfirmDialog
+            key={"Confirm Delete Course"}
+            id={deleteId}
+            show={confirmDelete}
+            handleClose={handleCloseConfirmDialog}
+            handleDeleteCourse={handleDeleteCourse}
+          />
+          <CourseShallow
+            show={showCoursedetail}
+            course={courseDetail}
+            close={handleCloseCourseDetail}
+            key={"Shallow Course"}
+          />
+        </>
+      )}
+      {showAssignTeacher && (
+        <AssignTeacher
+          data={pdata}
+          title={title}
+          setShow={setHide}
+          key={"AssignTeacher"}
+        />
+      )}
     </GridContainer>
   );
 };
