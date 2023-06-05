@@ -22,8 +22,9 @@ import { error } from "console";
 
 interface IProps {
   planData: any;
+  refresh: boolean;
 }
-export const AssignedTeachers: React.FC<IProps> = ({ planData }) => {
+export const AssignedTeachers: React.FC<IProps> = ({ planData, refresh }) => {
   const router = useRouter();
   const { translate } = useTranslation();
   const [deleteId, setDeleteId] = useState(null);
@@ -31,7 +32,8 @@ export const AssignedTeachers: React.FC<IProps> = ({ planData }) => {
   const [assignedTeachers, setAssignedTeachers] = React.useState([]);
   const tableRef = useRef();
   const [teachers, setTeachers] = useState([]);
-  useEffect(() => {
+  const [name, setName] = useState("");
+  const fetch = () => {
     TeacherService.GetAll()
       .then((res) => {
         setTeachers(res.result);
@@ -43,15 +45,15 @@ export const AssignedTeachers: React.FC<IProps> = ({ planData }) => {
             .then((resp) => {
               if (resp.result != null && resp.result.length > 0) {
                 let assignedTeachers = resp.result.map((entity) => {
-                  const teacher = teachers?.find(
+                  const teacher = res.result?.find(
                     (e) => e.id == entity?.teacher_id
                   );
                   return {
                     id: entity.id,
                     teacher_id: entity.teacher_id,
                     teacher: `${teacher?.prefix_name} 
-                                  ${teacher?.person?.first_name} 
-                                  ${teacher?.person?.last_name}`,
+                                ${teacher?.person?.first_name} 
+                                ${teacher?.person?.last_name}`,
                     theo: `${entity.theoretical_hours}/${entity.theoretical_classes}`,
                     pract: `${entity.practical_hours}/${entity.practical_classes}`,
                     mixed: `${entity.mixed_hours}/${entity.mixed_classes}`,
@@ -67,7 +69,13 @@ export const AssignedTeachers: React.FC<IProps> = ({ planData }) => {
       .catch((err) => {
         toast.error(err?.error);
       });
-  }, [teachers]);
+  };
+  // useEffect(() => {
+  //   fetch();
+  // }, []);
+  useEffect(() => {
+    fetch();
+  }, [refresh]);
   const columns = [
     {
       title: "المعرّف",
@@ -95,7 +103,7 @@ export const AssignedTeachers: React.FC<IProps> = ({ planData }) => {
     return (
       <Dialog open={show} maxWidth="sm" fullWidth>
         <DialogTitle>
-          <Typography>هل تريد تأكيد حذف المقرر</Typography>
+          <Typography>{`هل تريد تأكيد إنهاء تكليف المدرّس ${name}`}</Typography>
         </DialogTitle>
         <Box position="absolute" top={0} right={0}>
           <IconButton onClick={handleClose}>
@@ -119,23 +127,20 @@ export const AssignedTeachers: React.FC<IProps> = ({ planData }) => {
   };
   const handleDeleteCourse = () => {
     if (deleteId) {
-      //   PlanService.DeleteCourse(deleteId)
-      //     .then((resp) => {
-      //       if (resp.success) {
-      //         toast.success("Course deleted successfully");
-      //         let _data = (data as Array<any>).filter((item) => {
-      //           return item.id != deleteId;
-      //         });
-      //         setData(_data);
-      //         setFilteredData(_data);
-      //         setConfirmDelete(false);
-      //       }
-      //     })
-      //     .catch((err) => {});
-    } else toast.error("يجب تحديد معرّف المقرّر ضمن البرنامج");
+      TeacherService.DeleteTeachersAssignments(deleteId)
+        .then((resp) => {
+          if (resp.success) {
+            toast.success(translate("Teacher disengage successfully"));
+            setConfirmDelete(false);
+            fetch();
+          }
+        })
+        .catch((err) => {});
+    } else toast.error("يجب تحديد معرّف");
   };
-  const handleConfirmDialog = (id) => {
-    setDeleteId(id);
+  const handleConfirmDialog = (data) => {
+    setName(data.teacher);
+    setDeleteId(data.id);
     setConfirmDelete(true);
   };
   const handleCloseConfirmDialog = () => {
@@ -173,7 +178,7 @@ export const AssignedTeachers: React.FC<IProps> = ({ planData }) => {
               {translate("Delete")}
             </SuiButton>
           ),
-          onClick: (evt, data) => handleConfirmDialog(data.id),
+          onClick: (evt, data) => handleConfirmDialog(data),
         },
       ];
       return (

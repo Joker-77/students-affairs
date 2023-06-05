@@ -334,6 +334,10 @@
   "Students Imported Successfully": "تم استيراد الطلاب بنجاح",
   "Course Added To Plan Successfully": "تم إضافة مقرر إلى الخطة الدرسية بنجاح",
   "Show Courses": "عرض المقرّرات",
+  "Number of accredited hours": "عدد الساعات المعتمدة",
+  "Teacher assigned successfully": "تم تكليف المدرّس بنجاح",
+  "Teacher disengage successfully": "تم إنهاء تكليف المدرّس بنجاح",
+  "Course removed from plan successfully": "تم حذف المقرّر من الخطة الدرسية",
 
   "Add": "إضافة",
   "Confirm": "تأكيد",
@@ -344,7 +348,6 @@
   "None": "بلا",
   "Sort By": "ترتيب حسب",
   "Number of all hours": "عدد الساعات الكلية",
-  "Number of accredited hours": "عدد الساعات المعتمدة",
 
   "Notes": "ملاحظات",
   "Details": "تفاصيل",

@@ -86,25 +86,28 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
     mixed_classes: 0,
     notes: "",
   };
-  const submitForm = (values, setSubmitting) => {
-    // CourseService.Add(payload)
-    //   .then((response) => {
-    //     if (response.success) {
-    //       toast.success("Course Added Successfully");
-    //     } else {
-    //       console.log(response.error);
-    //       toast.error(response.error.message);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.message);
-    //     toast.error(error.message);
-    //     throw new Error(error);
-    //   });
+  const [refresh, setRefresh] = useState(false);
+  const submitForm = (values, setSubmitting, resetForm) => {
+    values = {
+      ...values,
+      plan_id: data.id,
+    };
+    console.log(values);
+    TeacherService.AddTeachersAssignments(values)
+      .then((response) => {
+        if (response.success) {
+          toast.success(translate("Teacher assigned successfully"));
+          resetForm({});
+        } else {
+          console.log(response.error);
+          toast.error(response.error.message);
+        }
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+    setRefresh(true);
     setSubmitting(false);
-    // CourseService.Add(payload)
-    //   .then(() => {})
-    //   .catch((e) => console.error(e));
   };
 
   return (
@@ -136,8 +139,8 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
           <Formik
             initialValues={initialValues}
             validationSchema={asssignTeacherSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              submitForm(values, setSubmitting);
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              submitForm(values, setSubmitting, resetForm);
               // console.clear();
               // console.log(values);
             }}
@@ -185,6 +188,7 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                       <Grid item xs={3} md={3}>
                         <GridItem>
                           <TextField
+                            value={values.teacher_id || -1}
                             variant="outlined"
                             size="small"
                             type="select"
@@ -213,6 +217,7 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
+                          value={values.theoretical_hours || ""}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -237,6 +242,7 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                     <Grid item xs={3} md={3}>
                       <GridItem>
                         <TextField
+                          value={values.practical_hours || ""}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
@@ -260,6 +266,7 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                       <GridItem>
                         <TextField
                           onChange={handleChange}
+                          value={values.mixed_hours || ""}
                           variant="outlined"
                           size="small"
                           type="number"
@@ -300,6 +307,7 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                       <GridItem>
                         <TextField
                           onChange={handleChange}
+                          value={values.theoretical_classes || ""}
                           variant="outlined"
                           size="small"
                           type="number"
@@ -329,6 +337,7 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                           type="number"
                           id="practical_classes"
                           name="practical_classes"
+                          value={values.practical_classes || ""}
                           onBlur={handleBlur}
                           error={Boolean(
                             touched.practical_classes &&
@@ -351,8 +360,9 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                           variant="outlined"
                           size="small"
                           type="number"
-                          id="mixed_hours"
-                          name="mixed_hours"
+                          id="mixed_classes"
+                          name="mixed_classes"
+                          value={values.mixed_classes || ""}
                           onBlur={handleBlur}
                           error={Boolean(
                             touched.mixed_classes && errors.mixed_classes
@@ -376,6 +386,7 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                           type="text"
                           id="notes"
                           name="notes"
+                          value={values.notes || ""}
                           onBlur={handleBlur}
                           error={Boolean(touched.notes && errors.notes)}
                           helperText={touched.notes && errors.notes}
@@ -422,7 +433,7 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
           </Formik>
         </Card>
         <Card>
-          <AssignedTeachers planData={data} />
+          <AssignedTeachers planData={data} refresh={refresh} />
         </Card>
       </Grid>
     </Grid>

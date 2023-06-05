@@ -53,4 +53,21 @@ export default class PlanService {
         throw error;
       });
   }
+
+  static async DeleteCourse(_id): Promise<ApiResponse> {
+    const delUrl = process.env.DELETE_PLAN_URL as string;
+    return await apiConnector
+      .post(delUrl, {
+        id: parseInt(_id),
+      })
+      .then((response) => {
+        if (response && response.data) {
+          return response.data;
+        }
+      })
+      .catch((error) => {
+        console.log("Api Error:", error);
+        throw error;
+      });
+  }
 }

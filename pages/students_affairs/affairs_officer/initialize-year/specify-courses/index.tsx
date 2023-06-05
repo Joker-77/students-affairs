@@ -14,7 +14,7 @@ import {
 import Admin from "../../../../../layouts/Admin";
 import { useTranslation } from "../../../../../Utility/Translations/useTranslation";
 import styles from "../../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
-import { Add, ArrowBack, Backspace } from "@material-ui/icons";
+import { Add, ArrowBack, Backspace, ZoomIn } from "@material-ui/icons";
 import PlanCourses from "../planCourses";
 import CourseService from "../../../../../Services/CourseService";
 import { ICourseModel } from "../../../../../Models/Courses/CourseModel";
@@ -146,15 +146,22 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
       course_id: course,
       semester: semester,
     };
-    console.clear();
-    console.log(payLoad);
     PlanService.AddCourse(payLoad)
       .then((result) => {
         if (result.success) {
           toast.success(translate("Course Added To Plan Successfully"));
+          PlanService.GetProgramCourses(program, specYear, year)
+            .then((resp) => {
+              if (resp.success) {
+                setProgramCourses(resp.result);
+              }
+            })
+            .catch((err) => {});
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   // handle routing back
@@ -337,7 +344,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
             <span style={{ padding: "0px 0px 0px 10px" }}>
               {translate("Show Courses")}
             </span>
-            <ArrowBack />
+            <ZoomIn />
           </Button>
         </GridItem>
       </Grid>

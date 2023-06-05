@@ -291,7 +291,6 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
       })
     );
   };
-
   /************************** Handle Delete Course ****************************/
   const tableRef = useRef();
   const generatePDF = useReactToPrint({
@@ -339,7 +338,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
       PlanService.DeleteCourse(deleteId)
         .then((resp) => {
           if (resp.success) {
-            toast.success("Course deleted successfully");
+            toast.success(translate("Course removed from plan successfully"));
             let _data = (data as Array<any>).filter((item) => {
               return item.id != deleteId;
             });
@@ -352,8 +351,11 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     } else toast.success("يجب تحديد معرّف المقرّر ضمن البرنامج");
   };
   // Handle Show Confirm Dialog
-  const handleConfirmDialog = (id) => {
-    setDeleteId(id);
+
+  const [name, setName] = useState("");
+  const handleConfirmDialog = (data) => {
+    setDeleteId(data.id);
+    setName(data.edu_course.course.ar_name);
     setConfirmDelete(true);
   };
 
@@ -379,7 +381,6 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
 
   // Render Program Courses
   const renderPlanCourses = () => {
-    console.log("render", data);
     if (filteredData != null && filteredData.length > 0) {
       let options = {
         // exportAllData: true,
@@ -421,7 +422,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
               {translate("Delete")}
             </SuiButton>
           ),
-          onClick: (evt, data) => handleConfirmDialog(data.id),
+          onClick: (evt, data) => handleConfirmDialog(data),
         },
       ];
       if (type == "teachers") {
@@ -448,12 +449,11 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
       );
     } else return <Placeholder loading={false} />;
   };
-
   const ConfirmDialog = ({ id, show, handleClose, handleDeleteCourse }) => {
     return (
       <Dialog open={show} maxWidth="sm" fullWidth>
         <DialogTitle>
-          <Typography>هل تريد تأكيد حذف المقرر</Typography>
+          <Typography>{`هل تريد تأكيد حذف المقرر ${name}`}</Typography>
         </DialogTitle>
         <Box position="absolute" top={0} right={0}>
           <IconButton onClick={handleClose}>
