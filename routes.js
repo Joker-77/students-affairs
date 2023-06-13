@@ -1,10 +1,14 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
-import { People, School, SupervisorAccount } from "@material-ui/icons";
+import {
+  People,
+  School,
+  SupervisorAccount,
+  Edit
+} from "@material-ui/icons";
 
-const dashboardRoutes = [
-  {
+const dashboardRoutes = [{
     path: "/dashboard",
     name: "Dashboard",
     rtlName: "لوحة التحكم",
@@ -51,6 +55,13 @@ const dashboardRoutes = [
     name: "Courses",
     rtlName: "المقرّرات",
     icon: School,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/exams/exams-list",
+    name: "Exams",
+    rtlName: "الواقعات الامتحانية",
+    icon: Edit,
     layout: "/students_affairs",
   },
   {

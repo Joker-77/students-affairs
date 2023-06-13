@@ -7,7 +7,11 @@ const path = require("path");
 const nextEnv = require("next-env");
 const dotenvLoad = require("dotenv-load");
 const withNextEnv = nextEnv();
-module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
+module.exports = withPlugins([
+  [withSass],
+  [withImages],
+  [withCSS]
+], {
   i18n: {
     locales: ["ar", "en"],
     defaultLocale: "ar",
@@ -107,6 +111,10 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     LIST_TEACHER_ASSIGNMENT: "/teacher-assign",
     ADD_TEACHER_ASSIGNMENT: "/teacher-assign/add",
     DELETE_TEACHER_ASSIGNMENT: "/teacher-assign/delete",
+
+    // Exam 
+    LIST_EXAM_URL: '/exam',
+    LIST_EXAM_COURSE_URL: '/exam/course',
     // Login
 
     LOGIN_URL: "/login",

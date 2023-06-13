@@ -33,7 +33,6 @@ import {
   IProgramModel,
 } from "../../../../../Models/Programs/IProgramModel";
 import { toast } from "react-toastify";
-import { number } from "yup";
 
 const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
   const { translate } = useTranslation();
