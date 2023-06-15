@@ -28,6 +28,7 @@ import { arSA } from "date-fns/locale";
 import { toast } from 'react-toastify';
 import './exams-list-style.css';
 import { Card } from '@material-ui/core';
+import SuiButton from '../../../../components/SuiButton';
 
 interface IExamsListProps { }
 const ExamsList: React.FC<IExamsListProps> = ({ }) => {
@@ -95,6 +96,7 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
     // Dynamic Halls
     const [inputFields, setInputFields] = useState([{
         hall: 0,
+        planId: 0,
         num_studs: 0
     }]);
     const addInputField = () => {
@@ -103,6 +105,7 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
         else
             setInputFields([...inputFields, {
                 hall: 0,
+                planId: 0,
                 num_studs: 0
             }])
     }
@@ -124,6 +127,7 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
         setSelectedOldStds(0);
         setSelectedPlans([]);
         setPlans([]);
+        setSelectedPlanData([]);
         setInputFields([{
             hall: 0,
             num_studs: 0
@@ -148,32 +152,8 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
     // Halls
     // const [halls, setHalls] = useState([]);
     // handle add coursse to program
-    const handleAddExam = () => {
-        // const payLoad = {
-        //   program_id: program,
-        //   year_id: specYear,
-        //   edu_year_id: year,
-        //   course_id: course,
-        //   semester: semester,
-        // };
-        // PlanService.AddCourse(payLoad)
-        //   .then((result) => {
-        //     if (result.success) {
-        //       toast.success(translate("Course Added To Plan Successfully"));
-        //       PlanService.GetProgramCourses(program, specYear, year)
-        //         .then((resp) => {
-        //           if (resp.success) {
-        //             setProgramCourses(resp.result);
-        //           }
-        //         })
-        //         .catch((err) => {});
-        //     }
-        //   })
-        //   .catch((error) => {
-        //     toast.error(error.message);
-        //   });
-    };
 
+    const [selectedPlanData, setSelectedPlanData] = useState([]);
     const [selectedPlans, setSelectedPlans] = useState<number[]>([]);
     const [selectedNewStds, setSelectedNewStds] = useState(0);
     const [selectedOldStds, setSelectedOldStds] = useState(0);
@@ -216,11 +196,11 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
             let index = _arr.findIndex(e => e == valAsNum);
             _arr.splice(index, 1);
             setSelectedPlans(_arr);
-
             let sel = _arr.length > 0 ? plans.map(e => {
                 if (_arr.includes(parseInt(e.id)))
                     return e
             }) : [];
+            setSelectedPlanData(sel);
             if (sel.length > 0) {
                 const sumOld = sel.reduce((partialSum, a) => partialSum + a.old_students_num, 0);
                 const sumNew = sel.reduce((partialSum, a) => partialSum + a.new_students_num, 0);
@@ -240,6 +220,7 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
                 if (_arr.includes(parseInt(e.id)))
                     return e
             }) : [];
+            setSelectedPlanData(sel);
             const sumOld = sel.reduce((partialSum, a) => partialSum + a.old_students_num, 0);
             const sumNew = sel.reduce((partialSum, a) => partialSum + a.new_students_num, 0);
             setSelectedNewStds(sumNew);
@@ -247,7 +228,39 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
         }
     }
 
-
+    const handleAddExam = () => {
+        const payLoad = {
+            plan_ids: [...selectedPlans],
+            type: `${examsTypes.filter(e => e.id == examType)[0].name}`,
+            date: `${('0' + selectedDate.getDay()).slice(-2)}-${('0' + selectedDate.getMonth()).slice(-2)}-${selectedDate.getFullYear()}`,
+            from: `${('0' + startTime.getHours()).slice(-2)}-${('0' + startTime.getMinutes()).slice(-2)}`,
+            to: `${('0' + endTime.getHours()).slice(-2)}-${('0' + endTime.getMinutes()).slice(-2)}`,
+            halls: inputFields.map(dd => {
+                return {
+                    id: dd.hall,
+                    plan_id: dd.planId,
+                    students_num: parseInt(`${dd.num_studs}`)
+                }
+            })
+        };
+        console.log(payLoad);
+        // PlanService.AddCourse(payLoad)
+        //   .then((result) => {
+        //     if (result.success) {
+        //       toast.success(translate("Course Added To Plan Successfully"));
+        //       PlanService.GetProgramCourses(program, specYear, year)
+        //         .then((resp) => {
+        //           if (resp.success) {
+        //             setProgramCourses(resp.result);
+        //           }
+        //         })
+        //         .catch((err) => {});
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     toast.error(error.message);
+        //   });
+    };
     const renderPlans = (plans) => {
         if (plans.length > 0) {
             return <MuiPickersUtilsProvider locale={arSA} utils={DateFnsUtils}>
@@ -351,24 +364,48 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
                         {
                             inputFields.map((data, index) => {
                                 console.log(data);
+                                console.log(selectedPlanData);
                                 return (
                                     <Grid container md={12} style={{ marginTop: '1em' }}>
                                         <GridItem md={2}>
-                                            <Select
-                                                fullWidth
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.hall}
-                                                label="halls"
-                                                name="hall"
-                                                onChange={(evnt) => handleChange(index, evnt)}
-                                            >
-                                                {halls.map((hall) => (
-                                                    !hall.selected && <MenuItem key={hall.id} value={hall.id}>
-                                                        {hall.name}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
+                                            <FormControl fullWidth variant="filled" size="small" size="small">
+                                                <InputLabel id="demo-simple-select-label">القاعة</InputLabel>
+                                                <Select
+                                                    fullWidth
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={data.hall}
+                                                    label="halls"
+                                                    name="hall"
+                                                    onChange={(evnt) => handleChange(index, evnt)}
+                                                >
+                                                    {halls.map((hall) => (
+                                                        !hall.selected && <MenuItem key={hall.id} value={hall.id}>
+                                                            {hall.name}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </GridItem>
+                                        <GridItem md={2}>
+                                            <FormControl fullWidth variant="filled" size="small" size="small">
+                                                <InputLabel id="demo-simple-select-label">السنة والاختصاص</InputLabel>
+                                                <Select
+                                                    fullWidth
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={data.planId}
+                                                    label="halls"
+                                                    name="planId"
+                                                    onChange={(evnt) => handleChange(index, evnt)}
+                                                >
+                                                    {selectedPlanData.map((data) => (
+                                                        <MenuItem key={data.id} value={data.id}>
+                                                            {`${data.year ?.ar_name} - ${data.year ?.speciality ?.ar_name}`}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
                                         </GridItem>
                                         <GridItem md={5}>
                                             <TextField
@@ -400,6 +437,17 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
                                 )
                             })
                         }
+                        <SuiButton
+                            onClick={handleAddExam}
+                            style={{
+                                margin: "2em 0",
+                                color: "rgb(255, 255, 255)",
+                                background: "rgb(23, 193, 232)",
+                            }}
+                            type="button"
+                        >
+                            {`إضافة واقعة امتحانية`}
+                        </SuiButton>
                     </Card>
                 </Grid>
             </MuiPickersUtilsProvider >
@@ -502,7 +550,7 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
                     </Select>
                 </FormControl>
             </GridItem>
-            <GridItem md={2}>
+            {/* <GridItem md={2}>
                 <Button
                     style={{ margin: "10px 5px" }}
                     variant="contained"
@@ -514,7 +562,7 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
                     </span>
                     <Add />
                 </Button>
-            </GridItem>
+            </GridItem> */}
             {/* <GridItem md={2}>
                 <Button
                     style={{ margin: "10px 5px" }}
