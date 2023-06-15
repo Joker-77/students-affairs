@@ -12,6 +12,7 @@ import {
     Typography,
     makeStyles,
     Input,
+    TextField,
 } from "@material-ui/core";
 import GridItem from '../../../../components/Grid/GridItem';
 import PlanService from '../../../../Services/PlanService';
@@ -21,6 +22,12 @@ import ExamService from '../../../../Services/ExamService';
 import { useTranslation } from '../../../../Utility/Translations/useTranslation';
 import styles from 'assets/jss/nextjs-material-dashboard/views/dashboardStyle.js';
 import { type } from '../../../../components/Privilege/Privilege';
+import { KeyboardDatePicker, TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
+import { arSA } from "date-fns/locale";
+import { toast } from 'react-toastify';
+import './exams-list-style.css';
+import { Card } from '@material-ui/core';
 
 interface IExamsListProps { }
 const ExamsList: React.FC<IExamsListProps> = ({ }) => {
@@ -78,28 +85,68 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
         setLoadCourses(false)
     };
 
+
+
+    const [loadCourses, setLoadCourses] = useState(false);
+    const [loadExamsType, setLoadExamsType] = useState(false);
+
+    const [plans, setPlans] = useState([]);
+
+    // Dynamic Halls
+    const [inputFields, setInputFields] = useState([{
+        hall: 0,
+        num_studs: 0
+    }]);
+    const addInputField = () => {
+        if (inputFields.length >= halls.length)
+            toast.error("لايمكنك الإضافة! لايوجد سوى قاعتين");
+        else
+            setInputFields([...inputFields, {
+                hall: 0,
+                num_studs: 0
+            }])
+    }
+    const removeInputFields = (index) => {
+        const rows = [...inputFields];
+        rows.splice(index, 1);
+        setInputFields(rows);
+    }
+    const handleChange = (index, evnt) => {
+        const { name, value } = evnt.target;
+        const list = [...inputFields];
+        list[index][name] = value;
+        setInputFields(list);
+        console.log(list);
+    }
+    // ------------------------
+    const clear = () => {
+        setSelectedNewStds(0);
+        setSelectedOldStds(0);
+        setSelectedPlans([]);
+        setPlans([]);
+        setInputFields([{
+            hall: 0,
+            num_studs: 0
+        }])
+    }
     const changeCourse = (val: number) => {
+        clear();
         setCourse(val);
         setLoadExamsType(true);
         let _course = courses.find(e => e.id === val);
         setExamsType(_course.evaluation_methods);
         setLoadExamsType(false);
     }
-
-    const [loadCourses, setLoadCourses] = useState(false);
-    const [loadExamsType, setLoadExamsType] = useState(false);
-
-    const [plans, setPlans] = useState([]);
     const changeExamType = (val: number) => {
+        clear();
         let _course = courses.find(e => e.id == course);
         setExamType(val);
-        console.clear();
-        console.log(courses);
-        console.log(_course);
         ExamService.GetAllPlans(program, eduYear, _course.edu_course_id, val.toString())
             .then(resp => setPlans(resp.result))
             .catch(error => { })
     }
+    // Halls
+    // const [halls, setHalls] = useState([]);
     // handle add coursse to program
     const handleAddExam = () => {
         // const payLoad = {
@@ -127,47 +174,235 @@ const ExamsList: React.FC<IExamsListProps> = ({ }) => {
         //   });
     };
 
+    const [selectedPlans, setSelectedPlans] = useState<number[]>([]);
+    const [selectedNewStds, setSelectedNewStds] = useState(0);
+    const [selectedOldStds, setSelectedOldStds] = useState(0);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [startTime, setStartTime] = useState(new Date());
+    const [endTime, setEndTime] = useState(new Date());
+    const _halls =
+        [
+            {
+                id: 1,
+                name: "ق1",
+                selected: false,
+            },
+            {
+                id: 2,
+                name: "ق2",
+                selected: false,
+            }
+        ]
+    const [halls, setHalls] = useState(_halls);
+    const handleDateChange = (e) => {
+        setSelectedDate(e);
+    }
+    const handleStartTime = (e) => {
+        setStartTime(e);
+    }
+    const handleEndTime = (e) => {
+        setEndTime(e);
+        const startHour = startTime.getHours();
+        const startMinute = startTime.getMinutes();
+        const endHour = e.getHours();
+        const endMinute = e.getMinutes();
+        if (e < startTime)
+            toast.error('وقت الانتهاء يجب أن يكون بعد وقت البدء');
+    }
+    const selectPlan = (id) => {
+        let valAsNum = parseInt(id);
+        let _arr = selectedPlans.slice();
+        if (_arr.includes(valAsNum)) {
+            let index = _arr.findIndex(e => e == valAsNum);
+            _arr.splice(index, 1);
+            setSelectedPlans(_arr);
+
+            let sel = _arr.length > 0 ? plans.map(e => {
+                if (_arr.includes(parseInt(e.id)))
+                    return e
+            }) : [];
+            if (sel.length > 0) {
+                const sumOld = sel.reduce((partialSum, a) => partialSum + a.old_students_num, 0);
+                const sumNew = sel.reduce((partialSum, a) => partialSum + a.new_students_num, 0);
+                setSelectedNewStds(sumNew);
+                setSelectedOldStds(sumOld);
+            }
+            else {
+                setSelectedNewStds(0);
+                setSelectedOldStds(0);
+            }
+
+        }
+        else {
+            _arr.push(valAsNum);
+            setSelectedPlans(_arr);
+            let sel = _arr.length > 0 ? plans.map(e => {
+                if (_arr.includes(parseInt(e.id)))
+                    return e
+            }) : [];
+            const sumOld = sel.reduce((partialSum, a) => partialSum + a.old_students_num, 0);
+            const sumNew = sel.reduce((partialSum, a) => partialSum + a.new_students_num, 0);
+            setSelectedNewStds(sumNew);
+            setSelectedOldStds(sumOld);
+        }
+    }
+
+
     const renderPlans = (plans) => {
         if (plans.length > 0) {
-            return <>
-                <Grid container md={12}>
-                    <GridItem md={2}>
-                        <h5 style={{ fontWeight: 'bold' }}>السنة</h5>
+            return <MuiPickersUtilsProvider locale={arSA} utils={DateFnsUtils}>
+                <Card style={{ margin: "5px 0px", width: "100%", paddingRight: "1em", paddingBottom: "1em" }}>
+                    <Grid container md={12} style={{ height: "7em" }}>
+                        <GridItem md={2}>
+                            <h5 style={{ fontWeight: 'bold' }}>السنة</h5>
+                        </GridItem>
+                        <GridItem md={2}>
+                            <h5 style={{ fontWeight: 'bold' }}>الاختصاص</h5>
+                        </GridItem>
+                        <GridItem md={2}>
+                            <h5 style={{ fontWeight: 'bold' }}>الفصل</h5>
+                        </GridItem>
+                        <GridItem md={2}>
+                            <h5 style={{ fontWeight: 'bold', marginBottom: "0" }}>عدد الطلاب </h5>
+                            <h5 style={{ fontWeight: 'bold', marginTop: "0" }}>مستجد | معيد </h5>
+                        </GridItem>
+                    </Grid>
+                    <Grid container md={12} style={{ margin: "2em 0em" }}>
+                        {
+                            plans.map(e => (<>
+                                <GridItem md={2}>
+                                    <TextField variant="outlined" size="small" disabled value={e.year ?.ar_name} />
+                                </GridItem>
+                                <GridItem md={2}>
+                                    <TextField variant="outlined" size="small" disabled value={e.year ?.speciality ?.ar_name} />
+                                </GridItem>
+                                <GridItem md={2}>
+                                    <TextField variant="outlined" size="small" disabled value={e.semester} />
+                                </GridItem>
+                                <GridItem md={1}>
+                                    {e.new_students_num} | {e.old_students_num}
+                                </GridItem>
+                                <GridItem md={2}>
+                                    <input type="checkbox" checked={selectedPlans.includes(e.id)} value={e.id} onChange={p => selectPlan(p.target.value)} />
+                                </GridItem>
+                            </>))
+                        }
+                    </Grid>
+                    <Grid container md={12}>
+                        <GridItem md={1}>
+                            التاريخ
                     </GridItem>
-                    <GridItem md={2}>
-                        <h5 style={{ fontWeight: 'bold' }}>الاختصاص</h5>
-                    </GridItem>
-                    <GridItem md={2}>
-                        <h5 style={{ fontWeight: 'bold' }}>الفصل</h5>
-
-                    </GridItem>
-                    <GridItem md={2}>
-                        <h5 style={{ fontWeight: 'bold' }}>عدد الطلاب </h5>
-                        <h5 style={{ fontWeight: 'bold' }}>مستجد | معيد </h5>
-                    </GridItem>
+                        <GridItem md={3}>
+                            <KeyboardDatePicker
+                                clearable
+                                value={selectedDate}
+                                onChange={date => handleDateChange(date)}
+                                minDate={new Date()}
+                                format="MM/dd/yyyy"
+                            // inputVariant="outlined"
+                            />
+                        </GridItem>
+                    </Grid>
+                    <Grid container md={12} style={{ marginTop: '3em' }}>
+                        <GridItem style={{ display: "flex", marginTop: "1em" }} md={1}>
+                            <span> الوقت</span>
+                        </GridItem>
+                        <GridItem md={2}>
+                            <TimePicker
+                                clearable
+                                label="من"
+                                value={startTime}
+                                onChange={handleStartTime}
+                            />
+                        </GridItem>
+                        <GridItem md={2}>
+                            <TimePicker
+                                showTodayButton
+                                todayLabel="now"
+                                label="إلى"
+                                value={endTime}
+                                minutesStep={5}
+                                onChange={handleEndTime}
+                            />
+                        </GridItem>
+                        <GridItem md={1}></GridItem>
+                        <Grid container md={4}>
+                            <Grid item md={5}>
+                                <p style={{ margin: "0" }}>المجموع الكلي</p>
+                                <p style={{ margin: "0" }}>مستجد</p>
+                                <p style={{ margin: "0" }}>معيد</p>
+                            </Grid>
+                            <Grid item md={3}>
+                                <p style={{ margin: "0" }}>{`${selectedNewStds + selectedOldStds}`}</p>
+                                <p style={{ margin: "0" }}>{selectedNewStds}</p>
+                                <p style={{ margin: "0" }}>{selectedOldStds}</p>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Card>
+                <Grid container md={12} style={{ marginTop: '1em' }}>
+                    <Card style={{ margin: "5px 0px", width: "100%", paddingRight: "1em", paddingBottom: "1em" }}>
+                        <Grid container>
+                            <Button style={{ margin: "10px 5px" }}
+                                variant="contained"
+                                className={classes.submitBtn}
+                                onClick={addInputField}>إضافة قاعة</Button>
+                        </Grid>
+                        {
+                            inputFields.map((data, index) => {
+                                console.log(data);
+                                return (
+                                    <Grid container md={12} style={{ marginTop: '1em' }}>
+                                        <GridItem md={2}>
+                                            <Select
+                                                fullWidth
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={data.hall}
+                                                label="halls"
+                                                name="hall"
+                                                onChange={(evnt) => handleChange(index, evnt)}
+                                            >
+                                                {halls.map((hall) => (
+                                                    !hall.selected && <MenuItem key={hall.id} value={hall.id}>
+                                                        {hall.name}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </GridItem>
+                                        <GridItem md={5}>
+                                            <TextField
+                                                onChange={(evnt) => handleChange(index, evnt)}
+                                                variant="outlined"
+                                                size="small"
+                                                type="number"
+                                                name="num_studs"
+                                                value={data.num_studs}
+                                                label={translate("عدد الطلّاب")}
+                                                fullWidth
+                                            />
+                                        </GridItem>
+                                        <GridItem md={3}>
+                                            {(inputFields.length !== 1) ?
+                                                <Button
+                                                    type="button"
+                                                    style={{
+                                                        width: "10%",
+                                                        color: "white",
+                                                        background: "red"
+                                                    }}
+                                                    variant="outlined"
+                                                    className={classes.closeBtn}
+                                                    onClick={removeInputFields}
+                                                >x</Button> : ''}
+                                        </GridItem>
+                                    </Grid>
+                                )
+                            })
+                        }
+                    </Card>
                 </Grid>
-                <Grid container md={12} style={{ margin: "2em 0em" }}>
-                    {
-                        plans.map(e => (<>
-                            <GridItem md={2}>
-                                {e.year ?.ar_name}
-                            </GridItem>
-                            <GridItem md={2}>
-                                {e.year ?.speciality ?.ar_name}
-                            </GridItem>
-                            <GridItem md={2}>
-                                {e.semester}
-                            </GridItem>
-                            <GridItem md={1}>
-                                {e.new_students_num} | {e.old_students_num}
-                            </GridItem>
-                            <GridItem md={2}>
-                                <Input type="checkbox" />
-                            </GridItem>
-                        </>))
-                    }
-                </Grid>
-            </>
+            </MuiPickersUtilsProvider >
         }
         else {
             return <Grid container md={12} style={{

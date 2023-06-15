@@ -115,6 +115,7 @@ module.exports = withPlugins([
     // Exam 
     LIST_EXAM_URL: '/exam',
     LIST_EXAM_COURSE_URL: '/exam/course',
+
     // Login
 
     LOGIN_URL: "/login",

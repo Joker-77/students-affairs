@@ -4,7 +4,7 @@
 }
 
 button.MuiButton-root {
-  min-width: 0!important;
+  min-width: 0 !important;
 }
 
 .MuiSelect-selectMenu {
@@ -22,20 +22,20 @@ button.MuiButton-root {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px!important;
+  width: 10px !important;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1!important;
+  background: #f1f1f1 !important;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888!important;
+  background: #888 !important;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555!important;
+  background: #555 !important;
 }
