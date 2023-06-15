@@ -364,7 +364,7 @@ const ObserversList: React.FC<IObserversListProps> = () => {
     },
     {
       title: translate("Name"),
-      field: "full_name",
+      field: "printing_name",
     },
     {
       title: translate("Functional Body"),
@@ -523,7 +523,7 @@ const ObserversList: React.FC<IObserversListProps> = () => {
             Title={translate("Observers List")}
             Columns={columns}
             Data={data.map(item => { return {...item,
-              full_name: `${item.nick_name} ${item.first_name} ${item.last_name}`,
+              //full_name: `${item.nick_name} ${item.first_name} ${item.last_name}`,
               is_excluded: item.excluded == 0 ? translate("No") : translate("Yes"),
               authority: levels?.find(level => level.id == item.level_id)?.name,
               activity: activities?.find(activity => activity.id == item.activity_id)?.name,

@@ -9,53 +9,91 @@ import SuiButton from "../../../../components/SuiButton";
 import React from "react";
 import ActionTable from "../../../../components/MaterialTable/ActionTable";
 import Placeholder from "../../../../Utility/Placeholders";
-import AssignObserversToHallModal from "../../../../components/Modals/AssignObserversToHall";
+import AssignObserversToHall from "../../../../components/AssignObserversToHall";
 import * as Yup from "yup";
+import EducationalYearService from "../../../../Services/EducationalYearService";
+import { IEducationalYearModel } from "../../../../Models/EducationalYearModel";
+import ExamHallsService from "../../../../Services/ExamHallsService";
 
 interface IObservationsProps { }
 
 const Observations: React.FC<IObservationsProps> = () => {
+    const [eduYear, setEduYear] = useState(null);
     const today = new Date();
     const todayStr = today.getFullYear() + "-" + 
                      (today.getMonth() + 1).toString().padStart(2, "0") + "-" +
                      today.getDate().toString().padStart(2, "0");
     const { translate } = useTranslation();
-    const [openAddObservers, setOpenAddObservers] = useState(false);
     const [examDate, setExamDate] = useState(todayStr);
+
+    const [showAssignObservers, setshowAssignObservers] = React.useState(false);
+    const setShow = () => {
+        setshowAssignObservers(!showAssignObservers);
+    };
 
     const handleDateChange = (event) => {
         setExamDate(event.target.value);
     };
 
     useEffect(() => {
-
+        if (eduYear) {
+            ExamHallsService.GetAll(eduYear.id, examDate)
+            .then((res) => {
+                console.log(res.result);
+                setHalls(res.result);
+            })
+            .catch((error) => {
+                console.error("error", error);
+            });
+        }
     }, [examDate]);
+
+    useEffect(() => {
+        if (eduYear && !showAssignObservers) {
+            ExamHallsService.GetAll(eduYear.id, examDate)
+            .then((res) => {
+                console.log(res.result);
+                setHalls(res.result);
+            })
+            .catch((error) => {
+                console.error("error", error);
+            });
+        }
+    }, [showAssignObservers]);
 
     const handleAddObserver = (data) => {
         setHall(data);
-        setOpenAddObservers(true);
+        setshowAssignObservers(true);
     }
 
     const handleClose = () => {
-        setOpenAddObservers(false);
+        setshowAssignObservers(false);
     }
 
-    const hanldeAddObserverSubmit = (values, submitting) => {}
+    const handleAddObserverSubmit = (values, submitting) => {}
 
     const [loading, setLoading] = useState(false);
     const [halls, setHalls] = useState([]);
     const [hall, setHall] = useState(null);
     /************** LOADING DATA ***************/
     useEffect(() => {
-        setHalls([{
-            id: 1,
-            hallName: "قاعة 1",
-            from: "09:30",
-            to: "11:30",
-            examsDetails: "سنة أولى فرنسي مشترك + سنة ثانية لغات برمجة معلوميات",
-            observersNumber: 0,
-            examDate: "30/5/2023"
-        }]);
+        EducationalYearService.GetAll()
+            .then((res) => {
+                let edu_year = (res.result as IEducationalYearModel[]).slice(0)[0];
+                setEduYear(edu_year);
+                ExamHallsService.GetAll(edu_year?.id, examDate)
+                    .then((res) => {
+                        console.log("Exam Halls:");
+                        console.log(res.result);
+                        setHalls(res.result);
+                    })
+                    .catch((error) => {
+                        console.error("error", error);
+                    });
+            })
+            .catch((error) => {
+                console.error("error", error);
+        });
     }, []);
 
     const addObserverScheme = Yup.object().shape({
@@ -64,8 +102,13 @@ const Observations: React.FC<IObservationsProps> = () => {
 
     let columns = [
         {
-            title: translate("Id"),
-            field: "id",
+            title: translate("Exam Halls Ids"),
+            field: "exam_halls_ids",
+            hidden: true,
+        },
+        {
+            title: translate("Hall Id"),
+            field: "hall",
             hidden: true,
         },
         {
@@ -86,7 +129,7 @@ const Observations: React.FC<IObservationsProps> = () => {
         },
         {
             title: translate("Number of observers"),
-            field: "observersNumber",
+            field: "observers",
         },
     ];
 
@@ -127,19 +170,17 @@ const Observations: React.FC<IObservationsProps> = () => {
               <ActionTable
                 Title=""
                 Columns={columns}
-                Data={data}
+                Data={data.map(item => { return {...item,
+                    hallName: item.hall.name,
+                    from: item.timePeriod.slice(11, 16),
+                    to: item.timePeriod.slice(33, 38),
+                    examsDetails: item.exams.reduce((acc, exam) => {
+                        return acc ? `${acc} + ${exam.ar_year} ${exam.ar_name} ${exam.code}` : `${exam.ar_year} ${exam.ar_name} ${exam.code}` 
+                    }, ""),
+                }})}
                 Options={options}
                 Actions={actions}
               />
-              {}
-              <AssignObserversToHallModal 
-                open={openAddObservers}
-                handleClose={handleClose}
-                hall={hall}
-                formScheme={addObserverScheme}
-                submitForm={hanldeAddObserverSubmit}
-              />
-          {}
             </div>
           );
         } else return <Placeholder loading={false} />;
@@ -318,10 +359,19 @@ const Observations: React.FC<IObservationsProps> = () => {
                 )}
         </React.Fragment>
     );*/
-    return (
+    return (!showAssignObservers ? (
         <React.Fragment>
         <Grid container>
             <Grid item md={12} spacing={2}>
+                <Grid item md={4}>
+                    <Box mb={2}>
+                        <Box mb={1} ml={0.5}>
+                            <Typography component="label" variant="caption">
+                                {`${translate("Educational year")}: ${eduYear?.year}`}
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Grid>
                 <Grid item md={4}>
                     <Box mb={2}>
                         <Box mb={1} ml={0.5}>
@@ -354,6 +404,14 @@ const Observations: React.FC<IObservationsProps> = () => {
         </Grid>
         {renderHalls()}
         </React.Fragment>
+    ) : (
+            <AssignObserversToHall
+              setShow={setShow}
+              hall={hall}
+              formScheme={addObserverScheme}
+              examDate={examDate}
+            />
+          )
     );
 };
 

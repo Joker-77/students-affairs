@@ -101,7 +101,10 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
           .required(translate("Field is required")),
         status: yup
           .string(translate("Status")),
-          //.required(translate("Field is required")),        
+          //.required(translate("Field is required")),
+        printing_name: yup
+          .string(translate("Printing name"))
+          .required(translate("Field is required")),        
       });
 
   let initialValues = 
@@ -118,6 +121,7 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         excluded: observer ? observer.excluded : 0,
         status: observer?.status,
         nick_name: observer?.nick_name,
+        printing_name: observer?.printing_name,
       };
     
   /************************* Handle Edit Observer ************/
@@ -142,13 +146,14 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         excluded: values.excluded,
         status: values.status,
         nick_name: values.nick_name,
+        printing_name: values.printing_name,
       };
       //console.clear();
       console.log(payload);
       ObserverService.Add(payload)
         .then((response) => {
           if (response.success) {
-            toast.success("Observer Added Successfully");
+            toast.success(translate("Observer Added Successfully"));
             setShow();
           } else {
             console.log(response.error);
@@ -175,12 +180,13 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         excluded: values.excluded,
         status: values.status,
         nick_name: values.nick_name,
+        printing_name: values.printing_name,
       };
       console.log(payload);
       ObserverService.Edit(payload)
         .then((response) => {
           if (response.success) {
-            toast.success("Observer Edited Successfully");
+            toast.success(translate("Observer Edited Successfully"));
             setShow();
           } else {
             console.log(response.error);
@@ -551,9 +557,26 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                         </GridItem>
                       </Grid>
                       <Grid item xs={6} md={6}>
-                        {/* Intentionally empty */}
-                      </Grid>
+                      <GridItem>
+                        <TextField
+                          disabled={!isEditable}
+                          onChange={handleChange}
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="printing_name"
+                          name="printing_name"
+                          value={values.printing_name}
+                          onBlur={handleBlur}
+                          error={Boolean(touched.printing_name && errors.printing_name)}
+                          helperText={touched.printing_name && errors.printing_name}
+                          placeholder={translate("Printing name")}
+                          label={translate("Printing name")}
+                          fullWidth
+                        />
+                      </GridItem>
                     </Grid>
+                  </Grid>
                   //)
                 }
                 

@@ -15,6 +15,7 @@ export interface IObserverModel {
   excluded: number;
   bulding: string;
   nick_name: string;
+  printing_name: string;
 }
 
 export interface ICreateObserverModel {
@@ -29,6 +30,7 @@ export interface ICreateObserverModel {
   excluded: number;
   status: string;
   nick_name: string;
+  printing_name: string;
 }
 
 export interface IEditObserverModel {
@@ -44,6 +46,7 @@ export interface IEditObserverModel {
   excluded: number;
   status: string;
   nick_name: string;
+  printing_name: string;
 }
 
 export interface ILevelModel {

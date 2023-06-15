@@ -97,6 +97,18 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
       "/employee/activities",
     LIST_FUNCTIONAL_BODIES_URL:
       "/employee/levels",
+    LIST_EDU_YEARS_URL:
+      "/edu-year",
+    LIST_EXAM_HALLS_URL:
+      "/examhalls",
+    LIST_OBSERVATIONS_URL:
+      "/observation",
+    LIST_AVAILABLE_OBSERVERS_URL:
+      "/observation/employees",
+    ADD_OBSERVATION_URL:
+      "/observation/add",
+    DELETE_OBSERVATION_URL:
+      "/observation/delete",
     ADD_SPECIALITY_URL:
       "/speciality/add",
     EDIT_SPECIALITY_URL:
