@@ -78,8 +78,8 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         number: yup
           .number(translate("ID Number"))
           .required(translate("Field is required")),
-        bulding: yup
-          .string(translate("Building")),
+        //bulding: yup
+          //.string(translate("Building")),
           //.required(translate("Field is required")),
         level_id: yup
           .number(translate("Functional Body"))
@@ -113,7 +113,7 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         first_name: observer?.first_name,
         last_name: observer?.last_name,
         number: observer?.number,
-        bulding: observer?.bulding,
+        //bulding: observer?.bulding,
         level_id: observer?.level_id,
         activity_id: observer?.activity_id,
         office_number: observer?.office_number,
@@ -138,7 +138,7 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         first_name: values.first_name,
         last_name: values.last_name,
         number: values.number,
-        bulding: values.bulding,
+        //bulding: values.bulding,
         level_id: values.level_id,
         activity_id: values.activity_id,
         office_number: values.office_number,
@@ -172,7 +172,7 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         first_name: values.first_name,
         last_name: values.last_name,
         number: values.number,
-        bulding: values.bulding,
+        //bulding: values.bulding,
         level_id: values.level_id,
         activity_id: values.activity_id,
         office_number: values.office_number,
@@ -368,26 +368,22 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                     <Grid container md={12} xs={12} style={{ margin: "1em 0em" }}>
                       <Grid item xs={6} md={6}>
                         <GridItem>
-                          <TextField
-                            disabled={!isEditable}
-                            onChange={handleChange}
-                            variant="outlined"
-                            size="small"
-                            type="text"
-                            id="bulding"
-                            name="bulding"
-                            value={values.bulding}
-                            onBlur={handleBlur}
-                            error={Boolean(
-                              touched.bulding && errors.bulding
-                            )}
-                            helperText={
-                              touched.bulding && errors.bulding
-                            }
-                            placeholder={translate("Building")}
-                            label={translate("Building")}
-                            fullWidth
-                          />
+                        <TextField
+                          disabled={!isEditable}
+                          onChange={handleChange}
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="printing_name"
+                          name="printing_name"
+                          value={values.printing_name}
+                          onBlur={handleBlur}
+                          error={Boolean(touched.printing_name && errors.printing_name)}
+                          helperText={touched.printing_name && errors.printing_name}
+                          placeholder={translate("Printing name")}
+                          label={translate("Printing name")}
+                          fullWidth
+                        />
                         </GridItem>
                       </Grid>
                       <Grid item xs={6} md={6}>
@@ -558,22 +554,7 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                       </Grid>
                       <Grid item xs={6} md={6}>
                       <GridItem>
-                        <TextField
-                          disabled={!isEditable}
-                          onChange={handleChange}
-                          variant="outlined"
-                          size="small"
-                          type="text"
-                          id="printing_name"
-                          name="printing_name"
-                          value={values.printing_name}
-                          onBlur={handleBlur}
-                          error={Boolean(touched.printing_name && errors.printing_name)}
-                          helperText={touched.printing_name && errors.printing_name}
-                          placeholder={translate("Printing name")}
-                          label={translate("Printing name")}
-                          fullWidth
-                        />
+                        {/* Intentionally empty */}
                       </GridItem>
                     </Grid>
                   </Grid>

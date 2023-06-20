@@ -24,6 +24,7 @@ import Admin from "../layouts/Admin";
 import { IObservationModel } from "../Models/ObservationModel";
 import ObserverService from "../Services/ObserverService";
 //import {Autocomplete} from "@material-ui/Autocomplete";
+import AlertDialog from "./Modals/AlertDialog";
 
 interface IAssignObserversToHallProps {
   setShow(): void;
@@ -95,6 +96,7 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
   const [initialObservers, setInitialObservers] = React.useState([]);
   const [inactiveEmployees, setInactiveEmployees] = React.useState([]);
   const [hallChefDisabled, setHallChefDisabled] = React.useState(false);
+  const [showAlert, setShowAlert] = React.useState(false);
 
   const loadData = () => {
     //console.log(`${examDate}===${hall.hall.id}`);
@@ -185,7 +187,20 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
       setHallChefDisabled(false);
   }
 
-  const handleSave = () => {
+  const noHallChefAlert = () => {
+    return (
+      <AlertDialog
+        open={showAlert}
+        handleClose={() => {setShowAlert(false);}}
+        text={translate("There's no chef in this hall. Do you want to continue?")}
+        handleOK={() => {saveObservers(); setShowAlert(false);}}
+        ok={translate("Yes")}
+        discard={translate("No")}
+      />
+    );
+  };
+
+  const saveObservers = () => {
     if (!_.isEqual(observers, initialObservers)) {
       let success = true;
       if (initialObservers.length === 0) {
@@ -287,6 +302,15 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
     }
     else
       setShow();
+  };
+
+  const handleSave = () => {
+    if (hallChefDisabled) {
+      saveObservers();
+    }
+    else {
+      setShowAlert(true);
+    }
   }
 
   const renderObservers = () => {
@@ -343,6 +367,7 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
   
 
   return (
+    <>
     <Grid container md={12} sm={12}>
       <Grid md={12} sm={12} xs={12}>
         <Card style={{ padding: "1em 4em", margin: "5px 0px" }}>
@@ -462,6 +487,8 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
           </Card>
       </Grid>
     </Grid>
+    {noHallChefAlert()}
+    </>
   );
 };
 
