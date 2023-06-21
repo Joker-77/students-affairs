@@ -19,6 +19,7 @@ import {
   Typography,
   AccordionSummary,
   AccordionDetails,
+  Checkbox,
 } from "@material-ui/core";
 import {
   FilterList,
@@ -45,62 +46,85 @@ import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
 import {
-  ITeacherModel,
-  //ITeacherDescriptionModel,
-} from "../../../../Models/Teachers/TeacherModel";
-import TeacherService from "../../../../Services/TeacherService";
+  IActivityModel,
+  ILevelModel,
+  IObserverModel,
+} from "../../../../Models/Observers/ObserverModel";
+import ObserverService from "../../../../Services/ObserverService";
 import SuiButton from "../../../../components/SuiButton";
-import CandidateDetails from "../../affairs_officer/candidates/candidate-details";
-import TeacherDetails from "./teacher-details";
+import ObserverDetails from "./observer-details";
 import { ExportToCsv } from "export-to-csv";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import _ from "lodash";
-import TeacherDetailsPrint from "../../../../components/TeacherDetailsPrint/TeacherDetailsPrint";
+import { GetStaticProps } from "next";
 
-interface ITeachersListProps {}
-const TeachersList: React.FC<ITeachersListProps> = ({}) => {
+interface IObserversListProps {}
+
+const ObserversList: React.FC<IObserversListProps> = () => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const router = useRouter();
-  const [showTeacherDetail, setshowTeacherDetail] = React.useState(false);
-  const [teacher, setTeacher] = React.useState<ITeacherModel>();
-  const [searchResult, setSearchResult] = React.useState(null);
+  const [showObserverDetail, setshowObserverDetail] = React.useState(false);
+  const [observer, setObserver] = React.useState<IObserverModel>();
   const setShow = () => {
-    setshowTeacherDetail(!showTeacherDetail);
+    setshowObserverDetail(!showObserverDetail);
   };
   const activateEdit = () => {
     setIsEditable(!isEditable);
   };
 
-  const getTeacher = (data: any) => {
-    let _teacher = Teachers.find((item, index) => item.id === data?.id);
-    TeacherService.Get(data.id)
+  const getObserver = (data: any) => {
+    let _observer = Observers.find((item, index) => item.id === data?.id);
+    ObserverService.Get(data.id)
       .then((res) => {
-        let _teacher = res.result as ITeacherModel;
-        setTeacher(_teacher);
-        console.log(_teacher);
+        let _observer = res.result as IObserverModel;
+        setObserver(_observer);
+        console.log(_observer);
         setIsCreate(false);
         setIsEditable(false);
-        setshowTeacherDetail(true);
+        setshowObserverDetail(true);
       })
       .catch((error) => {
         console.error("error", error);
       });
   };
 
+  const [levels, setLevels] = useState([]);
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    ObserverService.GetLevels()
+      .then((res) => {
+        console.log("Levels", res.result);
+        setLevels(res.result as ILevelModel[]);
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
+
+    ObserverService.GetActivities()
+      .then((res) => {
+        console.log("activities", res.result);
+        setActivities(res.result as IActivityModel[]);
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
+  }, []);
+
   const [isCreate, setIsCreate] = useState<boolean>(true);
 
   const handleCreate = () => {
-    setTeacher(null);
+    setObserver(null);
     setIsCreate(true);
     setIsEditable(true);
-    setshowTeacherDetail(true);
+    setshowObserverDetail(true);
   };
 
   const handleClose = () => {
-    setSearchResult(null);
-    setshowTeacherDetail(false);
+    //setSearchResult(null);
+    setshowObserverDetail(false);
   };
 
   /********************** Filter && Sort *********/
@@ -131,104 +155,124 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     },
     {
       value: "3",
-      label: translate("Work Field"),
+      label: translate("Activity"),
     },
     {
       value: "4",
       label: translate("Functional Body"),
     },
+    /*{
+      value: "5",
+      label: translate("Excluded"),
+    },*/
   ];
 
-  const [Teachers, setTeachers] = React.useState<ITeacherModel[]>(null);
-  const [filteredTeachers, setFilteredTeachers] =
-    React.useState<ITeacherModel[]>(null);
+  const [isExcluded, setExcluded] = React.useState(false);
+  const handleChangeExcluded = (event) => {
+    setExcluded(!isExcluded);
+    //filterData();
+  }
+  const [Observers, setObservers] = React.useState<IObserverModel[]>(null);
+  const [filteredObservers, setFilteredObservers] =
+    React.useState<IObserverModel[]>(null);
   const [filter, setFilter] = React.useState(0);
   const [search, setSearch] = React.useState("");
 
   const filterData = () => {
-    let _filteredTeachers = Teachers;
+    let _filteredObservers = Observers;
     let _value = search;
-    if (filter == 0) {
-      _filteredTeachers = Teachers.filter((teacher, index) => {
-        return (
-          teacher?.person?.first_name.includes(_value) ||
-          teacher?.person?.last_name.includes(_value) ||
-          teacher?.father_name.includes(_value) ||
-          teacher?.number?.toString().includes(_value) ||
-          teacher?.work_field.includes(_value) || teacher?.activity?.includes(_value) ||
-          teacher?.authority.includes(_value)
-        );
-      });
-      setFilteredTeachers(_filteredTeachers);
+
+    if (_filteredObservers != null) {
+      if (filter == 0) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          let level = levels.find(level => level.id == observer?.level_id).name;
+          let activity = activities.find(activity => activity.id == observer?.activity_id).name;
+          return (
+            observer?.first_name.includes(_value) ||
+            observer?.last_name.includes(_value) ||
+            observer?.number?.toString().includes(_value) ||
+            activity.includes(_value) ||
+            level.includes(_value)
+          );
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (filter == 1) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          return (
+            observer?.first_name.includes(_value) ||
+            observer?.last_name.includes(_value)
+          );
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (filter == 2) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          return observer?.number.toString().includes(_value);
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (filter == 3) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          let activity = activities.find(activity => activity.id == observer?.activity_id).name;
+          return activity.includes(_value)
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (filter == 4) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          let level = levels.find(level => level.id == observer?.level_id).name;
+          return level.includes(_value)
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (isExcluded) {
+        _filteredObservers = _filteredObservers.filter((observer, index) => {
+          return observer?.excluded
+        });
+      }
     }
-    if (filter == 1) {
-      _filteredTeachers = Teachers.filter((teacher, index) => {
-        return (
-          teacher?.person?.first_name.includes(_value) ||
-          teacher?.person?.last_name.includes(_value) ||
-          teacher?.father_name.includes(_value)
-        );
-      });
-      setFilteredTeachers(_filteredTeachers);
-    }
-    if (filter == 2) {
-      _filteredTeachers = Teachers.filter((teacher, index) => {
-        return teacher?.number.toString().includes(_value);
-      });
-      setFilteredTeachers(_filteredTeachers);
-    }
-    if (filter == 3) {
-      _filteredTeachers = Teachers.filter((teacher, index) => {
-        return teacher?.work_field.includes(_value) || teacher?.activity?.includes(_value)
-      });
-      setFilteredTeachers(_filteredTeachers);
-    }
-    if (filter == 4) {
-      _filteredTeachers = Teachers.filter((teacher, index) => {
-        return teacher?.authority.includes(_value)
-      });
-      setFilteredTeachers(_filteredTeachers);
-    }
+    setFilteredObservers(_filteredObservers);
   };
   const handleChangeFilter = (event) => {
     setFilter(event.target.value);
-    filterData();
+    //filterData();
   };
   const handleSearch = (event) => {
     let _value = event?.target?.value;
     setSearch(_value);
-    filterData();
+    //filterData();
   };
+
+  useEffect(() => {
+    filterData();
+  }, [filter, search, isExcluded]);
 
   const [sortBy, setSortBy] = React.useState(0);
   const handleSortBy = (event) => {
-    let _value = event?.target?.value;
+    let _value = event?.target?.value; 
     setSortBy(_value);
-    let _filteredTeachers = Teachers;
+    let _filteredObservers = Observers;
     if (sortBy == 1) {
-      _filteredTeachers = Teachers.sort((a, b) => {
-        if (a.person?.last_name > b.person?.last_name) {
+      _filteredObservers = Observers.sort((a, b) => {
+        if (a.last_name > b.last_name) {
           return 1;
-        } else if (a.person?.last_name < b.person?.last_name) {
+        } else if (a.last_name < b.last_name) {
           return -1;
         }
-        if (a.person?.first_name > b.person?.first_name) {
+        if (a.first_name > b.first_name) {
           return 1;
-        } else if (a.person?.first_name < b.person?.first_name) {
+        } else if (a.first_name < b.first_name) {
           return -1;
         }
-        if (a.father_name > b.father_name) {
-          return 1;
-        } else if (a.father_name < b.father_name) {
-          return -1;
-        } else {
+        else {
           return 0;
         }
       });
-      setFilteredTeachers(_filteredTeachers);
+      setFilteredObservers(_filteredObservers);
     }
     if (sortBy == 2) {
-      _filteredTeachers = Teachers.sort((a, b) => {
+      _filteredObservers = Observers.sort((a, b) => {
         if (
           parseInt(a.number, 10) >
           parseInt(b.number, 10)
@@ -243,40 +287,44 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
           return 0;
         }
       });
-      setFilteredTeachers(_filteredTeachers);
+      setFilteredObservers(_filteredObservers);
     }
     if (sortBy == 3) {
-      _filteredTeachers = Teachers.sort((a, b) => {
-        if (a.work_field > b.work_field)
+      _filteredObservers = Observers.sort((a, b) => {
+        let a_activity = activities.find(activity => activity.id == a.activity_id).name;
+        let b_activity = activities.find(activity => activity.id == b.activity_id).name;
+        if (a_activity > b_activity)
           return 1;
-        if (a.work_field < b.work_field)
+        if (a_activity < b_activity)
           return -1;
         return 0;
       });
-      setFilteredTeachers(_filteredTeachers);
+      setFilteredObservers(_filteredObservers);
     }
     if (sortBy == 4) {
-      _filteredTeachers = Teachers.sort((a, b) => {
-        if (a.authority > b.authority)
+      _filteredObservers = Observers.sort((a, b) => {
+        let a_level = levels.find(level => level.id == a.level_id).name;
+        let b_level = levels.find(level => level.id == b.level_id).name;
+        if (a_level > b_level)
           return 1;
-        if (a.authority < b.authority)
+        if (a_level < b_level)
           return -1;
         return 0;
       });
-      setFilteredTeachers(_filteredTeachers);
+      setFilteredObservers(_filteredObservers);
     }
   };
   /************************** Data ****************************/
 
-  //const [teachersRefs, setTeachersRefs] = React.useState([]);
+  //const [observersRefs, setObserversRefs] = React.useState([]);
   
   useEffect(() => {
-    TeacherService.GetAll()
+    ObserverService.GetAll()
       .then((res) => {
-        console.log("Teachers", res.result);
-        setFilteredTeachers(res.result as ITeacherModel[]);
-        setTeachers(res.result as ITeacherModel[]);
-        //setTeachersRefs(Teachers.map(teacher => {return {id: teacher.id, ref: useRef()};}));
+        console.log("Observers", res.result);
+        setFilteredObservers(res.result as IObserverModel[]);
+        setObservers(res.result as IObserverModel[]);
+        //setObserversRefs(Observers.map(observer => {return {id: observer.id, ref: useRef()};}));
       })
       .catch((error) => {
         console.error("error", error);
@@ -284,19 +332,19 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (!showTeacherDetail) {
-      TeacherService.GetAll()
+    if (!showObserverDetail) {
+      ObserverService.GetAll()
         .then((res) => {
-          console.log("Teachers", res.result);
-          setFilteredTeachers(res.result as ITeacherModel[]);
-          setTeachers(res.result as ITeacherModel[]);
-          //setTeachersRefs(Teachers.map(teacher => {return {id: teacher.id, ref: useRef()};}));
+          console.log("Observers", res.result);
+          setFilteredObservers(res.result as IObserverModel[]);
+          setObservers(res.result as IObserverModel[]);
+          //setObserversRefs(Observers.map(observer => {return {id: observer.id, ref: useRef()};}));
         })
         .catch((error) => {
           console.error("error", error);
         });
     }
-  }, [showTeacherDetail]);
+  }, [showObserverDetail]);
   /************************** Finish Data ****************************/
   /************************** Handle edit data ****************************/
   const [isEditable, setIsEditable] = React.useState(true);
@@ -315,20 +363,24 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
       field: "number",
     },
     {
-      title: translate("Full Name"),
-      field: "full_name",
+      title: translate("Name"),
+      field: "printing_name",
     },
     {
       title: translate("Functional Body"),
       field: "authority",
     },
     {
-      title: translate("Work Field"),
-      field: "work_field",
+      title: translate("Activity"),
+      field: "activity",
     },
     {
       title: translate("Office Phone"),
-      field: "office_phone",
+      field: "office_number",
+    },
+    {
+      title: translate("Excluded"),
+      field: "is_excluded",
     },
   ];
   const [checked, setChecked] = useState([]);
@@ -362,15 +414,21 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
   };
   const generateExcel = () => {
     csvExporter.generateCsv(
-      filteredTeachers.map((teacher, idx) => {
+      filteredObservers.map((observer, idx) => {
         let object = {};
         selectedColumns.forEach((item, index) => {
           if (item.field === 'full_name')
-            _.set(object, 'full_name', `${teacher.person?.first_name} ${teacher.father_name ?? ''} ${teacher.person?.last_name}`);
-          else if (item.field === 'office_phone')
-            _.set(object, 'office_phone', teacher.person.phones.find(phone => phone.type === "office")?.phone ?? "");
+            _.set(object, 'full_name', `${observer.nick_name} ${observer.first_name} ${observer.last_name}`);
+          //else if (item.field === 'office_phone')
+            //_.set(object, 'office_phone', observer.person.phones.find(phone => phone.type === "office")?.phone ?? "");
+          else if (item.field === 'is_excluded')
+            _.set(object, 'is_excluded', observer.excluded == 0 ? translate("No") : translate("Yes"));
+          else if (item.field === 'authority')
+            _.set(object, 'authority', levels.find(level => level.id == observer.level_id).name);
+          else if (item.field === 'activity')
+            _.set(object, 'activity', activities.find(activity => activity.id == observer.activity_id).name);           
           else
-            _.set(object, `col ${index}`, _.get(teacher, item.field) ?? "");
+            _.set(object, `col ${index}`, _.get(observer, item.field) ?? "");
         });
         console.log(object);
         return object;
@@ -379,7 +437,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
   };
   /************************** Finish Handle Export Data ****************************/
   const [confirm, setConfirm] = React.useState(false);
-  const [deleteTeacher, setDeleteTeacher] = React.useState(false);
+  const [deleteObserver, setDeleteObserver] = React.useState(false);
   const handleConfirmOpen = () => {
     setConfirm(true);
   };
@@ -387,7 +445,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
   const handleConfirmClose = () => {
     setConfirm(false);
   };
-  const handleDeleteTeacher = () => {};
+  const handleDeleteObserver = () => {};
 
   const ConfirmDialog = () => (
     <div>
@@ -398,15 +456,15 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {translate("Delete a teacher")}
+          {translate("Delete a observer")}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {translate("Are you sure you want to delete this teacher")}
+            {translate("Are you sure you want to delete this observer")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteTeacher}>{translate("Yes")}</Button>
+          <Button onClick={handleDeleteObserver}>{translate("Yes")}</Button>
           <Button onClick={handleConfirmClose} autoFocus>
             {translate("No")}
           </Button>
@@ -415,35 +473,16 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     </div>
   );
 
-  /************************** Handle Delete Teacher ****************************/
+  /************************** Handle Delete Observer ****************************/
   const tableRef = useRef();
   const generatePDF = useReactToPrint({
     content: () => tableRef.current,
-    documentTitle: translate("Teachers"),
+    documentTitle: translate("Observers"),
   });
 
-  /*const getTeacherToPrint = (data: any) => {
-    let _teacher = Teachers.find((item, index) => item.id === data?.id);
-    TeacherService.Get(data.id)
-      .then((res) => {
-        let _teacher = res.result as ITeacherModel;
-        setTeacher(_teacher);
-      })
-      .catch((error) => {
-        console.error("error", error);
-      });
-  };*/
-
-  const teacherDetailsRef = useRef();
-  const generateTeacherPDF = useReactToPrint({
-    content: () => teacherDetailsRef.current,
-    documentTitle: "",
-    //onAfterPrint: () => {setTeacher(null)},
-  });
-
-  const renderTeachers = () => {
-    if (filteredTeachers != null && filteredTeachers.length > 0) {
-      let data = filteredTeachers;
+  const renderObservers = () => {
+    if (filteredObservers != null && filteredObservers.length > 0) {
+      let data = filteredObservers;
       let options = {
         // exportAllData: true,
         // exportButton: true,
@@ -463,51 +502,31 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
       let actions = [
         {
           icon: () => (
-            /*<SuiButton
-                  style={{ margin: "0px 5px"}}
-                  color={"primary"}
-                >
-                  <span style={{ padding: "0px 0px 0px 10px" }}>
-                    {translate("Print")}
-                  </span>
-                  <Print />
-                </SuiButton>*/
-              <SuiButton style={{ minWidth: 80, width: 80 }} color={"primary"}>
-                <span style={{ padding: "0px 0px 0px 10px" }}>
-                {translate("Print")}
-                </span>
-                <Print />
-              </SuiButton>
+            <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
+              {translate("Observer Details")}
+            </SuiButton>
           ),
-          onClick: (evt, data) => {
-            TeacherService.Get(data.id)
-              .then((res) => {
-                let _teacher = res.result as ITeacherModel;
-                setTeacher(_teacher);
-                generateTeacherPDF();
-              })
-              .catch((error) => {
-                console.error("error", error);
-              });
-          },
+          onClick: (evt, data) => getObserver(data),
         },
         {
           icon: () => (
             <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
-              {translate("Teacher Details")}
+              {translate("Observing Assignments")}
             </SuiButton>
           ),
-          onClick: (evt, data) => getTeacher(data),
+          onClick: (evt, data) => {},
         },
       ];
       return (
         <div ref={tableRef}>
           <ActionTable
-            Title={translate("Teachers List")}
+            Title={translate("Observers List")}
             Columns={columns}
             Data={data.map(item => { return {...item,
-              full_name: `${item.person?.first_name} ${item.father_name} ${item.person?.last_name}`,
-              office_phone: item.person.phones.find(phone => phone.type === "office")?.phone,
+              //full_name: `${item.nick_name} ${item.first_name} ${item.last_name}`,
+              is_excluded: item.excluded == 0 ? translate("No") : translate("Yes"),
+              authority: levels?.find(level => level.id == item.level_id)?.name,
+              activity: activities?.find(activity => activity.id == item.activity_id)?.name,
               }})}
             Options={options}
             Actions={actions}
@@ -518,7 +537,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
   };
   return (
     <GridContainer>
-      {!showTeacherDetail && (
+      {!showObserverDetail && (
         <>
           <GridItem md={12}>
             <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
@@ -531,7 +550,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
                   onClick={handleCreate}
                 >
                   <span style={{ padding: "0px 0px 0px 10px" }}>
-                    {translate("Add New Teacher")}
+                    {translate("Add New Observer")}
                   </span>
                   <Add />
                 </Button> */}
@@ -569,7 +588,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
                   onClick={handleCreate}
                 >
                   <span style={{ padding: "0px 0px 0px 10px" }}>
-                    {translate("Add New Teacher")}
+                    {translate("Add New Observer")}
                   </span>
                   <AddBox />
                 </Button>
@@ -732,49 +751,54 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
                   ))}
                 </Select>
               </FormControl>
+              <FormControl 
+                size="small"
+                variant="outlined"
+                style={{ minWidth: 150, margin: "0 1em 0 1em" }}
+              >
+                <Checkbox
+                  disabled={!isEditable}
+                  onChange={handleChangeExcluded}
+                  id="excluded"
+                  name="excluded"
+                  checked={isExcluded} 
+                  //onBlur={handleBlur}
+                  placeholder={translate("Excluded")}
+                />
+                <InputLabel
+                  style={{ display: "flex" }}
+                  shrink
+                  //ref={inputExcludedLabel}
+                  htmlFor="outlined-sort"
+                >
+                  <span>{translate("Excluded")}</span>
+                </InputLabel>
+              </FormControl>
             </GridItem>
           </GridItem>
-          <GridItem md={12}>{renderTeachers()}</GridItem>
+          <GridItem md={12}>{renderObservers()}</GridItem>
         </>
       )}
-      {showTeacherDetail ? ( 
-        //<div ref={teacherDetailsRef}>
-        <TeacherDetails
+      {showObserverDetail && ( 
+        //<div ref={observerDetailsRef}>
+        <ObserverDetails
           isCreate={isCreate}
-          details={teacher}
+          details={observer}
           activateEdit={activateEdit}
           setShow={setShow}
-          show={showTeacherDetail}
+          show={showObserverDetail}
           //isEditable={isEditable}
           isEditable={true}
-          //ref={teacherDetailsRef}
+          //ref={observerDetailsRef}
+          levels={levels}
+          activities={activities}
         />
        //</div>
-      ) :
-        
-        <div style={{display: 'none'}}>
-          {/*
-          <TeacherDetails
-            isCreate={isCreate}
-            details={teacher}
-            activateEdit={activateEdit}
-            setShow={setShow}
-            show={showTeacherDetail}
-            //isEditable={isEditable}
-            isEditable={true}
-            //ref={teachersRefs.find(item => item.id == teacher.id)[0].ref}
-            ref={teacherDetailsRef}
-          />
-        */}
-        <div ref={teacherDetailsRef}> 
-          <TeacherDetailsPrint teacher={teacher} />
-        </div>
-        </div>
-      }
+      )}
       <ConfirmDialog />
     </GridContainer>
   );
 };
-(TeachersList as any).auth = true;
-(TeachersList as any).layout = Admin;
-export default TeachersList;
+(ObserversList as any).auth = true;
+(ObserversList as any).layout = Admin;
+export default ObserversList;
