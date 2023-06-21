@@ -24,6 +24,7 @@
     "chroma-js": "^2.4.2",
     "classnames": "2.2.6",
     "dotenv-load": "^2.0.1",
+    "export-to-csv": "^0.2.1",
     "formik": "^2.2.9",
     "history": "5.0.0",
     "jwt-check-expiration": "^1.0.5",
@@ -45,6 +46,7 @@
     "react-router-dom": "^6.3.0",
     "react-stickynode": "^4.1.0",
     "react-swipeable-views": "^0.13.9",
+    "react-to-print": "^2.14.12",
     "react-toastify": "^9.0.3",
     "yup": "^0.32.11"
   },

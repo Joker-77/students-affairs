@@ -9,8 +9,8 @@ const dotenvLoad = require("dotenv-load");
 const withNextEnv = nextEnv();
 module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
   i18n: {
-    locales: ['ar', 'en'],
-    defaultLocale: 'ar',
+    locales: ["ar", "en"],
+    defaultLocale: "ar",
     localeDetection: false,
   },
   typescript: {
@@ -25,8 +25,8 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     return config;
   },
   env: {
-    // SITE_URL: "http://teststudent.hiast.edu.sy:3000",
-    SITE_URL: "http://localhost:3000",
+    SITE_URL: "http://teststudent.hiast.edu.sy:3000",
+    // SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
     // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public",
     BASE_URL: "http://teststudent.hiast.edu.sy/backend/public",
@@ -141,5 +141,15 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
       "/attachement/add",
     DELETE_ATTACHMENT_URL:
       "/attachement/delete",
+// Courses
+    LIST_COURSE_URL: "/course",
+    EDIT_COURSE_URL: "/course/edit",
+    CREATE_COURSE_URL: "/course/add",
+    ADD_DESC_TO_COURSE: "/course/add/description",
+    
+
+    // Login
+
+    LOGIN_URL: "/login",
   },
 });

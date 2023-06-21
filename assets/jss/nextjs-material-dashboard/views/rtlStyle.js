@@ -101,9 +101,14 @@ const rtlStyle = {
   textField: {},
   submitBtn: {
     color: "rgb(255, 255, 255)",
+    marginBottom: "1em",
+    marginTop: "1em",
     background:
       `linear-gradient(310deg, ${colors.gradients.primary.main}, ${colors.gradients.info.state})`,
     "&:hover": {},
+  },
+  select:{
+    marginBottom: "1em",
   },
   userMngSubmitBtnGrid: {
     marginTop: ".5em !important",

@@ -10,12 +10,11 @@ import {Box, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, TextField, Typ
 import Card from "../../../../components/Card/Card";
 import CardHeader from "../../../../components/Card/CardHeader";
 import CardBody from "../../../../components/Card/CardBody";
-import {FieldArray, Form, Formik} from "formik";
+import {Form, Formik} from "formik";
 import {acceptPlaces, acceptStatus, governorates, registerationClasses, studyPlaces} from "../../../../Static/resources";
 import SuiButton from "../../../../components/SuiButton";
 import SpecialityService from "../../../../Services/SpecialityService";
 import RegisterationService from "../../../../Services/RegisterationService";
-import {toast} from "react-toastify";
 
 interface IEditRegistrationProps {candidate: any}
 
@@ -23,7 +22,8 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
     const useStyles = makeStyles(styles);
     const classes = useStyles();
     const {translate} = useTranslation();
-    const {locale} = useRouter();
+    const router = useRouter();
+    const locale = router?.locale;
 
     const candidate = props.candidate;
     const registeration = candidate?.registerations[0] || {};
@@ -54,7 +54,7 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
         RegisterationService.Edit({...values, id: registeration?.id})
             .then((res) => {
                 console.log("Registeration", res);
-                toast(translate('Registration updated.'), {type: 'success'});
+                router.back();
             })
             .catch((error) => {
                 console.error("error", error);
@@ -354,7 +354,7 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
                                                     placeholder={translate("Acceptance Speciality")}
                                                     fullWidth
                                                 >
-                                                    {specialities.filter(item => !(values?.accept_place === translate('Aleppo')) || item.ar_name === 'هندسة طيران').map((speciality) => (
+                                                    {specialities.filter(item => values?.accept_place === translate('Aleppo') ? item.ar_name === 'هندسة طيران' : item.ar_name !== 'هندسة طيران').map((speciality) => (
                                                         <MenuItem key={speciality.id} value={speciality.id}>
                                                             {locale === 'ar' ? speciality.ar_name : speciality.en_name}
                                                         </MenuItem>

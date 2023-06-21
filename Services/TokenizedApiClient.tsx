@@ -6,6 +6,7 @@ apiConnector.interceptors.request.use(
     console.log("token", token);
     // alert(token);
     config.headers = {
+      "Access-Control-Allow-Origin": "*",
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
       // "Content-Type": "application/x-www-form-urlencoded",
