@@ -5,10 +5,12 @@ import {
   People,
   School,
   SupervisorAccount,
-  Edit
+  Edit,
+  EditAttributesSharp,
 } from "@material-ui/icons";
 
-const dashboardRoutes = [{
+const dashboardRoutes = [
+  {
     path: "/dashboard",
     name: "Dashboard",
     rtlName: "لوحة التحكم",
@@ -71,6 +73,21 @@ const dashboardRoutes = [{
     icon: SupervisorAccount,
     layout: "/students_affairs",
   },
+  {
+    path: "/admin/students_courses",
+    name: "Observers",
+    rtlName: "مقررات الطالب",
+    icon: EditAttributesSharp,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/marks",
+    name: "Observers",
+    rtlName: "إدخال العلامات",
+    icon: EditAttributesSharp,
+    layout: "/students_affairs",
+  },
+
   // {
   //   path: "/table-list",
   //   name: "Table List",
