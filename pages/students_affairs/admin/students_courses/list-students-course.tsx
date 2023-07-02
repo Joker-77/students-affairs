@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import GridContainer from "components/Grid/GridContainer.js";
 import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
@@ -44,6 +44,8 @@ import {
 } from "@material-ui/icons";
 import SuiButton from "../../../../components/SuiButton";
 import { Grid } from "@material-ui/core";
+import StudentsImportService from "../../../../Services/StudentsImportService";
+
 interface IListCourses {
   courses: any;
 }
@@ -53,16 +55,28 @@ const StudentListCourses = ({ courses }) => {
   const classes = useStyles();
   const router = useRouter();
   const [confirm, setConfirm] = React.useState(false);
-  const [deleteTeacher, setDeleteTeacher] = React.useState(false);
+  const [deleteCourse, setDeleteCourse] = React.useState(false);
+  const [data, setData] = React.useState(courses);
   const tableRef = useRef();
-  const handleConfirmDialog = () => {
+  const handleConfirmDialog = (data) => {
+    setDeleteCourse(data.id);
     setConfirm(true);
   };
-
+  // const [data, setData] = useState(courses);
   const handleConfirmClose = () => {
     setConfirm(false);
   };
-  const handleDeleteCourse = () => {};
+  const handleDeleteCourse = () => {
+    StudentsImportService.DeleteStudentCourss(deleteCourse)
+      .then((msg) => {
+        console.log(deleteCourse);
+        let courses = data.filter((e) => e.id != deleteCourse);
+        setData(courses);
+        toast.success("تم حذف المقرّر بنجاح");
+        setConfirm(false);
+      })
+      .catch((e) => {});
+  };
 
   const ConfirmDialog = () => (
     <div>
@@ -101,7 +115,9 @@ const StudentListCourses = ({ courses }) => {
       </Dialog>
     </div>
   );
-
+  useEffect(() => {
+    setData(courses);
+  }, [courses]);
   const renderCourses = () => {
     let columns = [
       {
@@ -110,20 +126,21 @@ const StudentListCourses = ({ courses }) => {
         hidden: true,
       },
       {
-        title: translate("en_name"),
+        title: translate("English Name"),
         field: "en_name",
       },
       {
-        title: translate("ar_name Name"),
+        title: translate("Arabic Name"),
         field: "ar_name",
       },
       {
-        title: translate("code"),
+        title: translate("Code"),
         field: "code",
       },
     ];
     if (courses != null && courses.length > 0) {
-      let data = courses;
+      // let data = courses;
+      console.log(data);
       let options = {
         actionsColumnIndex: -1,
         headerStyle: {

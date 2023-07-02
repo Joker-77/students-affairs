@@ -71,4 +71,22 @@ export default class StudentsImportService {
         throw error;
       });
   }
+
+  static async DeleteStudentCourss(id): Promise<ApiResponse> {
+    const listUrl = process.env.LIST_STUDENTS_Courses_URL as string;
+    let data = new FormData();
+    data.append("id", id);
+    return await apiConnector
+      .post(listUrl + `/delete`, data)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        console.log("Api Error:", error);
+        throw error;
+      });
+  }
 }

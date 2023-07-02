@@ -6,11 +6,13 @@ import GridItem from "../../../../components/Grid/GridItem.js";
 import ActionTable from "../../../../components/MaterialTable/ActionTable";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
 import { useRouter } from "next/router";
-import CourseService from "../../../../Services/CourseService";
+import ExamService from "../../../../Services/ExamService";
 import StudentsImportService from "../../../../Services/StudentsImportService";
 import EduYearService from "../../../../Services/EduYearService";
 import SpecialityService from "../../../../Services/SpecialityService";
 import SpecYearsService from "../../../../Services/SpecYearsService";
+import PlanService from "../../../../Services/PlanService";
+
 import StudentListCourses from "./list-students-course";
 import { toast } from "react-toastify";
 import {
@@ -95,22 +97,32 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
   const [selectedSpeciality, setSpeciality] = useState(null);
   const [loadSpecYears, setloadSpecYears] = useState(false);
   const [loadStuds, setloadStuds] = useState(false);
+  const [loadCourses, setLoadCourses] = useState(false);
+  // Programs
+  const [programs, setPrograms] = useState([]);
+  const [program, setProgram] = useState(null);
+
   const handleCreate = () => {
-    let ids = studentCourses.map((e) => e.edu_course?.course?.id);
-    console.log(ids);
-    console.log(selectedCourse);
+    let ids = studentCourses.map((e) => e.edu_course_id);
     if (ids.includes(selectedCourse)) {
       toast.error("المقرر موجود ضمن مقرّرات الطالب");
     } else {
       let data = new FormData();
-      alert(selectedStudent);
-      alert(selectedEduYear);
-      alert(selectedCourse);
       data.append("student_id", selectedStudent);
       data.append("edu_year_id", selectedEduYear);
       data.append("edu_course_id", selectedCourse);
       StudentsImportService.AddStudentCourss(data)
         .then((e) => {
+          let stCourses = studentCourses.slice();
+          stCourses.push(e.result[0]);
+          StudentsImportService.GetStudentCourses(
+            selectedStudent,
+            selectedEduYear
+          )
+            .then((resp) => {
+              setStudentCourses(resp.result);
+            })
+            .catch((e) => {});
           toast.success("تمت إضافة المقرر بنجاح");
         })
         .catch((e) => toast.error(e.message));
@@ -143,6 +155,13 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
   };
   const changeEduYear = (id) => {
     setEduYear(id);
+    setLoadCourses(true);
+    ExamService.GetAllCourses(program, id)
+      .then((resp) => {
+        setCourses(resp.result);
+        setLoadCourses(false);
+      })
+      .catch((error) => {});
   };
   const changeYear = (id) => {
     setYear(id);
@@ -154,9 +173,13 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
       })
       .catch((err) => {});
   };
+  const changeProgram = (id) => {
+    setProgram(id);
+  };
   useEffect(() => {
-    CourseService.GetAll()
-      .then((res) => {
+    PlanService.GetAll()
+      .then((programs) => {
+        setPrograms(programs.result);
         EduYearService.GetYears("")
           .then((years) => {
             SpecialityService.GetAll()
@@ -169,11 +192,8 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
           .catch((error) => {
             console.error("error", error);
           });
-        setCourses(res.result as ICourseModel[]);
       })
-      .catch((error) => {
-        console.error("error", error);
-      });
+      .catch((e) => {});
   }, []);
   return (
     <GridContainer>
@@ -189,6 +209,24 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
         </GridItem>
       </GridContainer>
       <Grid container md={12} style={{ margin: "2em 0em" }}>
+        <GridItem md={2}>
+          <FormControl fullWidth variant="filled" size="small" size="small">
+            <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={program}
+              label="program"
+              onChange={(e) => changeProgram(e.target.value)}
+            >
+              {programs?.map((program) => (
+                <MenuItem key={program.id} value={program.id}>
+                  {program.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </GridItem>
         <GridItem md={2}>
           <FormControl fullWidth variant="filled" size="small" size="small">
             <InputLabel id="demo-simple-select-label">
@@ -211,7 +249,7 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
         </GridItem>
         <GridItem md={2}>
           <FormControl fullWidth variant="filled" size="small" size="small">
-            <InputLabel id="demo-simple-select-label">الاختصاصات</InputLabel>
+            <InputLabel id="demo-simple-select-label">الاختصاص</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -229,7 +267,7 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
         </GridItem>
         <GridItem md={2}>
           <FormControl fullWidth variant="filled" size="small" size="small">
-            <InputLabel id="demo-simple-select-label">السنوات</InputLabel>
+            <InputLabel id="demo-simple-select-label">السنة</InputLabel>
             <Select
               disabled={loadSpecYears}
               labelId="demo-simple-select-label"
@@ -268,6 +306,7 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
           <FormControl fullWidth variant="filled" size="small" size="small">
             <InputLabel id="demo-simple-select-label">المقرّر</InputLabel>
             <Select
+              disabled={loadCourses}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={selectedCourse}
@@ -275,7 +314,10 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
               onChange={(e) => changeCourse(e.target.value)}
             >
               {courses.map((course) => (
-                <MenuItem key={course.id} value={course.id}>
+                <MenuItem
+                  key={course.edu_course_id}
+                  value={course.edu_course_id}
+                >
                   {course.ar_name}
                 </MenuItem>
               ))}
@@ -284,7 +326,7 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
         </GridItem>
         <GridItem>
           <Button
-            style={{ margin: "0px 5px" }}
+            style={{ margin: "10px 5px" }}
             disabled={false}
             variant="contained"
             className={classes.submitBtn}
