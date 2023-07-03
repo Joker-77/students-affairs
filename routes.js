@@ -9,8 +9,7 @@ import {
   EditAttributesSharp,
 } from "@material-ui/icons";
 
-const dashboardRoutes = [
-  {
+const dashboardRoutes = [{
     path: "/dashboard",
     name: "Dashboard",
     rtlName: "لوحة التحكم",
@@ -83,7 +82,7 @@ const dashboardRoutes = [
   {
     path: "/admin/marks",
     name: "Observers",
-    rtlName: "إدخال العلامات",
+    rtlName: "علامات الطالب",
     icon: EditAttributesSharp,
     layout: "/students_affairs",
   },

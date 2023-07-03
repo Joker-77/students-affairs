@@ -23,8 +23,13 @@ import {
   Tabs,
   Typography,
   makeStyles,
+  DialogContentText,
 } from "@material-ui/core";
-interface IMarksProps {}
+import { ISpecialityModel } from "../../../../Models/Specialities/SpecialityModel";
+import { IStudentYear } from '../../../../.history/Models/StudentsYear/IStudentYear_20230527030144';
+import { Card } from '@material-ui/core';
+import { AddMark } from "./add-mark";
+interface IMarksProps { }
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -66,7 +71,7 @@ function tabProps(index: number) {
   };
 }
 
-const Marks: React.FC<IMarksProps> = ({}) => {
+const Marks: React.FC<IMarksProps> = ({ }) => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -81,7 +86,7 @@ const Marks: React.FC<IMarksProps> = ({}) => {
   const handleCloseConfirmLock = () => {
     setConfirm(false);
   };
-  const handleLock = () => {};
+  const handleLock = () => { };
   // Lock Dialog
   const ConfirmDialog = () => (
     <div>
@@ -110,13 +115,36 @@ const Marks: React.FC<IMarksProps> = ({}) => {
   );
 
   const [value, setValue] = React.useState(0);
+  const [title, setTitle] = React.useState('إدخال العلامات');
+  React.useEffect(() => {
+    value == 0 ? setTitle('إدخال العلامات') : setTitle('تعديل علامة');
+  }, [value])
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   return (
     <GridContainer>
-      <TabPanel value={value} index={0}></TabPanel>
-      <TabPanel value={value} index={1}></TabPanel>
+      <Card style={{ padding: "1em 4em", width: '100%', margin: "5px 0px" }}>
+        <Grid container>
+          <Typography variant="h5" component="div">
+            {title}
+          </Typography>
+        </Grid>
+        <Grid item md={12} style={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            <Tab label="إدخال العلامات" {...tabProps(0)} />
+            <Tab label="تعديل العلامات" {...tabProps(1)} />
+          </Tabs>
+        </Grid>
+        <TabPanel value={value} index={0}>
+          <AddMark />
+        </TabPanel>
+        <TabPanel value={value} index={1}></TabPanel>
+      </Card>
     </GridContainer>
   );
 };
