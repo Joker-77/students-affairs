@@ -22,6 +22,7 @@ import {
   useAppDispatch,
   setCandidate,
 } from "../../../../redux";
+import {toast} from "react-toastify";
 
 interface ICandidatePersonalInfoProps {
   initValues: any;
@@ -45,9 +46,8 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
   const submitFunction = forAdd ? CandidateService.Add : CandidateService.Edit;
 
   const submitForm = async (values: any, setSubmitting) => {
-    console.log("values", values);
-
       setSubmitting(true);
+      values = {...values, permenant_address: 'permenant_address', temporary_address: 'temporary_address'}
       submitFunction(values)
           .then((res) => {
               console.log("res", res);
@@ -55,6 +55,8 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                 handleClose && handleClose();
                 dispatch(setCandidate({...res.result, certificates: [], person: values?.person}));
                 router.push(`/${router.locale}/students_affairs/affairs_officer/candidates/candidate-details`)
+              } else {
+                  toast(translate('Candidate updated.'), {type: 'success'});
               }
             })
           .catch((error) => {

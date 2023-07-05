@@ -11,6 +11,7 @@ import CandidateDesireList from "./CandidateDesiresList";
 import CandidateAttachmentsList from "./CandidateAttachmentsList";
 import TabsMenu from "../../../../components/TabsMenu/TabsMenu";
 import {connect} from "react-redux";
+import {yesNo} from "../../../../Static/resources";
 
 interface ICandidateDetailsProps {candidate: any}
 
@@ -55,7 +56,7 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
                 <TabsMenu tabs={tabs}/>
             </div>
             <div style={{marginRight: 220}} id={'personal'}>
-                <CandidatePersonalInfo initValues={candidate || {}}/>
+                <CandidatePersonalInfo initValues={candidate ? {...candidate, residance: candidate?.residance || yesNo(translate)[0].value} : {}}/>
                 <div id={'certificate'} style={spacer}/>
                 {candidate?.certificates?.length > 0 &&
                   <CandidateCertificateInfo initValues={candidate?.certificates[0]}/>}
