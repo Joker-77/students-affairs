@@ -28,7 +28,7 @@ import {
 import { ISpecialityModel } from "../../../../Models/Specialities/SpecialityModel";
 import { IStudentYear } from '../../../../.history/Models/StudentsYear/IStudentYear_20230527030144';
 import { Card } from '@material-ui/core';
-import { AddMark } from "./add-mark";
+import { AddMark } from "../../../../components/AddMark/add-mark";
 interface IMarksProps { }
 
 interface TabPanelProps {

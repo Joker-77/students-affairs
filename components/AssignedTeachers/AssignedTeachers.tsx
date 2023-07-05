@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import SuiButton from "../../../../../components/SuiButton";
+import SuiButton from "../SuiButton";
 import { useRouter } from "next/router";
-import { useTranslation } from "../../../../../Utility/Translations/useTranslation";
+import { useTranslation } from "../../Utility/Translations/useTranslation";
 import {
   Box,
   Button,
@@ -12,12 +12,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
-import ActionTable from "../../../../../components/MaterialTable/ActionTable";
+import ActionTable from "../MaterialTable/ActionTable";
 import { toast } from "react-toastify";
-import Placeholder from "../../../../../Utility/Placeholders";
-import GridContainer from "../../../../../components/Grid/GridContainer";
-import GridItem from "../../../../../components/Grid/GridItem";
-import TeacherService from "../../../../../Services/TeacherService";
+import Placeholder from "../../Utility/Placeholders";
+import GridContainer from "../Grid/GridContainer";
+import GridItem from "../Grid/GridItem";
+import TeacherService from "../../Services/TeacherService";
 import { error } from "console";
 
 interface IProps {

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import GridContainer from '../../../../components/Grid/GridContainer';
+import GridContainer from '../Grid/GridContainer';
 import { FormControl, MenuItem, OutlinedInput, InputLabel, Select, Table, TableHead, TableCell, TableBody, TableRow, Card } from '@material-ui/core';
-import GridItem from 'components/Grid/GridItem.js';
-import ExamService from '../../../../Services/ExamService';
-import PlanService from '../../../../Services/PlanService';
-import EduYearService from '../../../../Services/EduYearService';
-import MarkService from '../../../../Services/MarkService';
+import GridItem from '../Grid/GridItem.js';
+import ExamService from '../../Services/ExamService';
+import PlanService from '../../Services/PlanService';
+import EduYearService from '../../Services/EduYearService';
+import MarkService from '../../Services/MarkService';
 
 interface IAddMarkProps { }
 export const AddMark: React.FC<IAddMarkProps> = () => {

@@ -20,7 +20,7 @@ import { IAssignTeacherModel } from "../../../../../Models/Teachers/TeacherModel
 import { ArrowBack, Close } from "@material-ui/icons";
 import SuiButton from "../../../../../components/SuiButton";
 import TeacherService from "../../../../../Services/TeacherService";
-import { AssignedTeachers } from "./AssignedTeachers";
+import { AssignedTeachers } from "../../../../../components/AssignedTeachers/AssignedTeachers";
 
 interface IAssignTeacherProps {
   title: string;
