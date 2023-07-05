@@ -7,7 +7,11 @@ const path = require("path");
 const nextEnv = require("next-env");
 const dotenvLoad = require("dotenv-load");
 const withNextEnv = nextEnv();
-module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
+module.exports = withPlugins([
+  [withSass],
+  [withImages],
+  [withCSS]
+], {
   i18n: {
     locales: ["ar", "en"],
     defaultLocale: "ar",
@@ -25,10 +29,99 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
     return config;
   },
   env: {
-    // SITE_URL: "http://teststudent.hiast.edu.sy:3000",
-    SITE_URL: "http://localhost:3000",
+    SITE_URL: "http://teststudent.hiast.edu.sy:3000",
+    // SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
     // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public",
+    BASE_URL: "http://teststudent.hiast.edu.sy/backend/public",
+    LIST_ROLES_URL: "/roles",
+    ADD_ROLE_URL: "/roles/add",
+    DELETE_ROLE_URL: "/roles/delete",
+    ASSIGN_USER_TO_ROLE_URL: "/user/assign-role",
+    ADD_PERMISSION_URLS: "/permissions/add",
+    LIST_PERMISSIONS_URL: "/permissions",
+    ASSIGN_PERMISSION_TO_ROLE_URLS: "/role/assign-permission",
+    LIST_PERSON_URL: "/people",
+    ADD_PERSON_URL: "/person/add",
+    EDIT_PERSON: "/person/edit",
+    DETAILS_PERSON_URL: "/person/details",
+    ADD_PHONE_URL: "/person/add-phone",
+    EDIT_PHONE_URL: "/person/edit-phone",
+    DELETE_PHONE_URL: "/person/delete-phone",
+    SEARCH_CANDIDATE_URL: "/ministry/candidate/get",
+    SEARCH_ADD_CANDIDATE_URL: "/ministry/candidate/add",
+    ADD_CANDIDATE_URL: "/candidate/add",
+    EDIT_CANDIDATE_URL: "/candidate/edit",
+    DETAILS_CANDIDATE_URL: "/candidate/details",
+    LIST_CANDIDATE_URL: "/candidate",
+    ADD_CERTIFICATE_URL: "/certificate/add",
+    EDIT_CERTIFICATE_URL: "/certificate/edit",
+    DETAILS_CERTIFICATE_URL: "/certificate/details",
+    LIST_CERTIFICATE_URL: "/certificate/list",
+    ADD_TEACHER_URL: "/teacher/add",
+    EDIT_TEACHER_URL: "/teacher/edit",
+    DETAILS_TEACHER_URL: "/teacher",
+    LIST_TEACHER_URL: "/teacher",
+    ADD_OBSERVER_URL: "/observer/add",
+    EDIT_OBSERVER_URL: "/observer/edit",
+    DETAILS_OBSERVER_URL: "/observer",
+    LIST_OBSERVER_URL: "/observer",
+    ADD_SPECIALITY_URL: "/speciality/add",
+    EDIT_SPECIALITY_URL: "/speciality/edit",
+    DETAILS_SPECIALITY_URL: "/speciality/details",
+    LIST_SPECIALITY_URL: "/speciality",
+    ADD_REGISTERATION_URL: "/registeration/add",
+    LIST_REGISTERATION_URL: "/registeration/add",
+    EDIT_REGISTERATION_URL: "/registeration/edit",
+    DETAILS_REGISTERATION_URL: "/registeration/details",
+    REG_DESIRES_LIST_URL: "/registeration/desire/list",
+    ADD_REG_DESIRE_URL: "/registeration/desire/add",
+    EDIT_REG_DESIRE_URL: "/registeration/desire/edit",
+    ADD_DESIRES_URL: "/desire/add",
+    EDIT_DESIRES_URL: "/desire/edit",
+    LIST_DESIRES_URL: "/desire/list",
+    ADD_ATTACHMENT_URL: "/attachement/add",
+    DELETE_ATTACHMENT_URL: "/attachement/delete",
+
+    // Courses
+    LIST_COURSE_URL: "/course",
+    EDIT_COURSE_URL: "/course/edit",
+    CREATE_COURSE_URL: "/course/add",
+    ADD_DESC_TO_COURSE: "/course/add/description",
+    // Teachers
+    LIST_TEACHER_URL: "/teacher",
+
+    // Years
+    LIST_YEARS_URL: "/year",
+
+    // Educational Year
+    LIST_EDU_YEARS_URL: "/edu-year",
+    INIT_YEAR_URL: "/inityear",
+
+    // Students Improt
+    IMPORT_STUDENTS_URL: "/student/import",
+    LIST_IMPORTED_STUDENTS_URL: "/student",
+    LIST_STUDENTS_Courses_URL: "/student/course",
+
+    // Plan
+    LIST_PROGRAMS_URL: "/programs",
+    ADD_PROGRAMS_URL: "/plan/add",
+    LIST_PLAN_URL: "/plan",
+    DELETE_PLAN_URL: "/plan/delete",
+    // Teacher Assignment
+    LIST_TEACHER_ASSIGNMENT: "/teacher-assign",
+    ADD_TEACHER_ASSIGNMENT: "/teacher-assign/add",
+    DELETE_TEACHER_ASSIGNMENT: "/teacher-assign/delete",
+
+    // Exam
+    LIST_EXAM_URL: "/exam",
+    LIST_EXAM_COURSE_URL: "/exam/course",
+
+    // Mark
+    MARK_URL: '/mark',
+    // Login
+
+    LOGIN_URL: "/login",
     BASE_URL: "http://teststudent.hiast.edu.sy/backend/public",
     LIST_ROLES_URL: "/roles",
     ADD_ROLE_URL:
@@ -141,12 +234,12 @@ module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
       "/attachement/add",
     DELETE_ATTACHMENT_URL:
       "/attachement/delete",
-// Courses
+    // Courses
     LIST_COURSE_URL: "/course",
     EDIT_COURSE_URL: "/course/edit",
     CREATE_COURSE_URL: "/course/add",
     ADD_DESC_TO_COURSE: "/course/add/description",
-    
+
 
     // Login
 

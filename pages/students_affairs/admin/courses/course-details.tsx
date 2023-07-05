@@ -37,7 +37,7 @@ interface ICourseDetailProps {
   isCreate: boolean;
   details: ICourseModel;
   isEditable: boolean;
-  setShow(): void;
+  setShow(val): void;
   activateEdit(): void;
 }
 
@@ -48,17 +48,16 @@ const CourseDetail: FC<ICourseDetailProps> = ({
   setShow,
   activateEdit,
 }) => {
+  console.clear();
+  console.log(details);
   const methodTypes = [
     {
-      id: 1,
       name: "مذاكرة",
     },
     {
-      id: 2,
       name: "عملي",
     },
     {
-      id: 3,
       name: "امتحان",
     },
   ];
@@ -179,7 +178,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
             return {
               id: ev.id,
               name: ev.name,
-              percentage: ev.percentage * 100,
+              percentage: ev.percentage,
             };
           }),
         attachement: course?.current_description?.attachement,
@@ -190,6 +189,24 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         ar_name: course.ar_name,
         fr_name: course.fr_name,
         code: course.code,
+        credit: course?.current_description?.credit,
+        theoretical_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "theoretic"
+        )?.hours,
+        practical_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "practical"
+        )?.hours,
+        mixed_hours: course?.current_description?.hours?.find(
+          (hour) => hour?.type == "mixed"
+        )?.hours,
+        evaluation_methods:
+          course?.current_description?.evaluation_methods?.map((ev, idx) => {
+            return {
+              id: ev.id,
+              name: ev.name,
+              percentage: ev.percentage,
+            };
+          }),
         attachement: course?.current_description?.attachement,
       };
   /************************* Handle Edit Course ************/
@@ -377,7 +394,12 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         theoretic_hours: values.theoretical_hours,
         practical_hours: values.practical_hours,
         mixed_hours: values.mixed_hours,
-        evaluation_methods: values.evaluation_methods,
+        evaluation_methods: values.evaluation_methods.map((e) => {
+          return {
+            name: e.name,
+            percentage: e.percentage,
+          };
+        }),
       };
       const isFile = hiddenInput.current.value != "";
       if (isFile) payload.attachement = values.attachement;
@@ -394,7 +416,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         .catch((error) => {
           console.log(error.message);
           toast.error(error.message);
-          throw new Error(error);
+          // throw new Error(error);
         });
     } else {
       const payload: IEditCourseBasicInfo = {
@@ -473,7 +495,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
               </Typography>
             </GridItem>
             <GridItem md={3} xs={12} sm={12}>
-              <SuiButton onClick={setShow} color={"warning"}>
+              <SuiButton onClick={() => setShow(false)} color={"warning"}>
                 <ArrowBack />
                 {translate("Back To Previous Page")}
               </SuiButton>
@@ -745,7 +767,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                                           id={`evaluation_methods.${index}.name`}
                                           name={`evaluation_methods.${index}.name`}
                                           select={true}
-                                          value={method.id}
+                                          value={method.name}
                                           onChange={handleChange(
                                             `evaluation_methods.${index}.name`
                                           )}
@@ -754,7 +776,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                                         >
                                           {methodTypes?.map((type) => (
                                             <MenuItem
-                                              key={type.id}
+                                              key={type.name}
                                               value={type.name}
                                             >
                                               {type.name}

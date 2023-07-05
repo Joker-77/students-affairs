@@ -7,8 +7,8 @@ import CardHeader from "../Card/CardHeader.js";
 import CardBody from "../Card/CardBody.js";
 import SuiButton from "../SuiButton";
 import { IPhoneModel } from "../../Models/ApiResponse/PersonModel.jsx";
-import {useRouter} from "next/router";
-import {useTranslation} from "../../Utility/Translations/useTranslation";
+import { useRouter } from "next/router";
+import { useTranslation } from "../../Utility/Translations/useTranslation";
 import colors from "../../assets/theme/base/colors";
 
 interface ICusomModalProps {
@@ -27,8 +27,8 @@ const AddPhoneModal: React.FC<ICusomModalProps> = ({
   formScheme,
   handleClose,
 }) => {
-  const {locale} = useRouter();
-  const {translate} = useTranslation();
+  const { locale } = useRouter();
+  const { translate } = useTranslation();
 
   const style = {
     position: "absolute" as "absolute",
@@ -69,7 +69,8 @@ const AddPhoneModal: React.FC<ICusomModalProps> = ({
               borderTopRightRadius: "inherit",
               borderTopLeftRadius: "inherit",
               backgroundColor: colors.gradients.primary.main,
-      color: "#fff",            }}
+              color: "#fff",
+            }}
           >
             <h4 style={{ fontWeight: "bold" }}>{title}</h4>
           </CardHeader>

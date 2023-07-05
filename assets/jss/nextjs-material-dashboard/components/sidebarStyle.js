@@ -23,6 +23,7 @@ const sidebarStyle = (theme) => ({
     bottom: "0",
     left: "0",
     zIndex: "1",
+    overflowX: "hidden",
     ...boxShadow,
     width: drawerWidth,
     [theme.breakpoints.up("md")]: {
@@ -183,7 +184,7 @@ const sidebarStyle = (theme) => ({
   },
   menuIconRtl: {
     position: "relative !important",
-    right: "75px !important"
+    right: "75px !important",
   },
   itemIconToggle: {
     float: "right !important",
@@ -344,6 +345,9 @@ const sidebarStyle = (theme) => ({
     width: "260px",
     zIndex: "4",
     overflowScrolling: "touch",
+    overflow: "scroll",
+    height: "40em",
+    overflowX: "hidden",
   },
   activePro: {
     [theme.breakpoints.up("md")]: {

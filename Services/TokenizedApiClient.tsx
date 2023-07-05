@@ -3,8 +3,6 @@ import apiConnector from "./ApiClient";
 apiConnector.interceptors.request.use(
   async (config) => {
     let token = localStorage.getItem("sa_access_token");
-    console.log("token", token);
-    // alert(token);
     config.headers = {
       "Access-Control-Allow-Origin": "*",
       Authorization: `Bearer ${token}`,
@@ -18,5 +16,4 @@ apiConnector.interceptors.request.use(
     Promise.reject(error);
   }
 );
-
 export default apiConnector;

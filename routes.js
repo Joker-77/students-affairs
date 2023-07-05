@@ -8,11 +8,16 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
-import {People, School, SupervisorAccount} from "@material-ui/icons";
 
+import {
+  People,
+  School,
+  SupervisorAccount,
+  Edit,
+  EditAttributesSharp,
+} from "@material-ui/icons";
 
-const dashboardRoutes = [
-  {
+const dashboardRoutes = [{
     path: "/dashboard",
     name: "Dashboard",
     rtlName: "لوحة التحكم",
@@ -34,6 +39,13 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
+    path: "/affairs_officer/initialize-year",
+    name: "Specialities",
+    rtlName: "تهيئة عام دراسي",
+    icon: LibraryBooks,
+    layout: "/students_affairs",
+  },
+  {
     path: "/admin/specialities/specialities-list",
     name: "Specialities",
     rtlName: "الاختصاصات",
@@ -41,17 +53,27 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
-    path: "/admin/courses/courses-list",
-    name: "Courses",
-    rtlName: "المقررات",
-    icon: Books,
-    layout: "/students_affairs",
-  },
-  {
+    path: "/admin/teachers/teachers-list",
+    name: "Teachers",
+    rtlName: "المدرسون",
     path: "/admin/teachers/teachers-list",
     name: "Teachers",
     rtlName: "المدرسون",
     icon: School,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/courses/courses-list",
+    name: "Courses",
+    rtlName: "المقرّرات",
+    icon: School,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/exams/exams-list",
+    name: "Exams",
+    rtlName: "الواقعات الامتحانية",
+    icon: Edit,
     layout: "/students_affairs",
   },
   {
@@ -68,6 +90,21 @@ const dashboardRoutes = [
     icon: SupervisorAccount,
     layout: "/students_affairs",
   },
+  {
+    path: "/admin/students_courses",
+    name: "Observers",
+    rtlName: "مقررات الطالب",
+    icon: EditAttributesSharp,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/marks",
+    name: "Observers",
+    rtlName: "علامات الطالب",
+    icon: EditAttributesSharp,
+    layout: "/students_affairs",
+  },
+
   // {
   //   path: "/table-list",
   //   name: "Table List",
