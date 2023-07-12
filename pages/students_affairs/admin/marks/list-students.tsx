@@ -26,8 +26,12 @@ export const ListStudents = ({ students, exam }: IStudentsProps) => {
     const [selExam, setExam] = useState(exam);
     useEffect(() => {
         setData(students)
+        setInitUpdateMarks([]);
+    }, [students]);
+    useEffect(() => {
         setExam(exam)
-    }, [students, exam]);
+        setInitUpdateMarks([]);
+    }, [exam])
     const handleUpdateMark = (_id, _val) => {
         let marks = initUpdateMarks.slice();
         let el = marks.filter(e => parseInt(e.id) == _id)[0];
@@ -62,6 +66,7 @@ export const ListStudents = ({ students, exam }: IStudentsProps) => {
                 field: "mark",
                 render: (rowData) => (
                     <TextField
+                        value={initUpdateMarks.length > 0 ? initUpdateMarks.filter(e => e.id == rowData.id)[0] ?.mark : ''}
                         onChange={(event) => handleUpdateMark(rowData.id, event.target.value)}
                         disabled={updating}
                     />
