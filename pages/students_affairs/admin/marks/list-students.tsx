@@ -10,19 +10,20 @@ import GridItem from 'components/Grid/GridItem.js';
 interface IStudentsProps {
     students: any;
     exam: number;
+    type: number;
 }
 interface Marks {
     id: string;
     mark: number
 }
-export const ListStudents = ({ students, exam }: IStudentsProps) => {
+export const ListStudents = ({ students, exam, type }: IStudentsProps) => {
     console.log(exam);
     const { translate } = useTranslation();
     const useStyles = makeStyles(styles);
     const classes = useStyles();
     const [initUpdateMarks, setInitUpdateMarks] = React.useState<Marks[]>([]);
     const [updating, setUpdating] = React.useState(false);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
     const [selExam, setExam] = useState(exam);
     useEffect(() => {
         setData(students)
@@ -33,49 +34,91 @@ export const ListStudents = ({ students, exam }: IStudentsProps) => {
         setInitUpdateMarks([]);
     }, [exam])
     const handleUpdateMark = (_id, _val) => {
-        let marks = initUpdateMarks.slice();
-        let el = marks.filter(e => parseInt(e.id) == _id)[0];
-        if (!!el)
-            el.mark = parseInt(_val);
-        else
-            marks.push({
-                id: `${_id}`,
-                mark: parseInt(_val)
-            })
-        console.log(marks, exam);
-        setInitUpdateMarks(marks);
+        if (type == 0) {
+            let marks = initUpdateMarks.slice();
+            let el = marks.filter(e => parseInt(e.id) == _id)[0];
+            if (!!el)
+                el.mark = parseInt(_val);
+            else
+                marks.push({
+                    id: `${_id}`,
+                    mark: parseInt(_val)
+                })
+            console.log(marks, exam);
+            setInitUpdateMarks(marks);
+        }
+        else {
+            let _dt = data.slice();
+            let el = _dt.filter(e => e.id == parseInt(_id))[0];
+            if (el)
+                el.mark = parseInt(_val);
+            let index = _dt.indexOf(el);
+            _dt.splice(index, 1, el)
+            setData(_dt);
+        }
     };
     const tableRef = useRef();
     const renderStudents = () => {
-        let columns = [
-            {
-                title: translate("Id"),
-                field: "id",
-                hidden: true,
-            },
-            {
-                title: translate("ID Number"),
-                field: "number",
-            },
-            {
-                title: "اسم الطالب",
-                field: 'name',
-            },
-            {
-                title: "العلامة",
-                field: "mark",
-                render: (rowData) => (
-                    <TextField
-                        value={initUpdateMarks.length > 0 ? initUpdateMarks.filter(e => e.id == rowData.id)[0] ?.mark : ''}
-                        onChange={(event) => handleUpdateMark(rowData.id, event.target.value)}
-                        disabled={updating}
-                    />
-                ),
-            },
-        ];
+        let columns = [];
+        if (type == 0)
+            columns = [
+                {
+                    title: translate("Id"),
+                    field: "id",
+                    hidden: true,
+                },
+                {
+                    title: translate("ID Number"),
+                    field: "number",
+                },
+                {
+                    title: "اسم الطالب",
+                    field: 'name',
+                },
+                {
+                    title: "العلامة",
+                    field: "mark",
+                    render: (rowData) => (
+                        <TextField
+                            value={initUpdateMarks.length > 0 ? initUpdateMarks.filter(e => e.id == rowData.id)[0] ?.mark : ''}
+                            onChange={(event) => handleUpdateMark(rowData.id, event.target.value)}
+                            disabled={updating}
+                        />
+                    ),
+                },
+            ];
+        else
+            columns = [
+                {
+                    title: translate("Id"),
+                    field: "id",
+                    hidden: true,
+                },
+                {
+                    title: translate("ID Number"),
+                    field: "personal_number",
+                },
+                {
+                    title: "اسم الطالب",
+                    field: 'name',
+                },
+                {
+                    title: "السنة",
+                    field: 'year',
+                },
+                {
+                    title: "العلامة",
+                    field: "mark",
+                    render: (rowData) => (
+                        <TextField
+                            defaultValue={rowData.mark}
+                            onChange={(event) => handleUpdateMark(rowData.id, event.target.value)}
+                            disabled={updating}
+                        />
+                    ),
+                },
+            ];
         if (data != null && data.length > 0) {
-            // let data = courses;
-            console.log("data", data, selExam);
             let options = {
                 actionsColumnIndex: -1,
                 headerStyle: {
@@ -90,36 +133,65 @@ export const ListStudents = ({ students, exam }: IStudentsProps) => {
                 search: false,
                 tableLayout: "auto",
             };
-            return (
-                <div ref={tableRef}>
-                    <ActionTable
-                        Title={`${translate("قائمة الطلاب ")} (${data.length})`}
-                        Columns={columns}
-                        Data={data.map((item: any) => {
-                            return {
-                                ...item,
-                                number: `${!!item.candidate.registeration_number ? item.candidate.registeration_number : ''}`,
-                                name: `${item.candidate.person.first_name} ${item.candidate.person.last_name}`,
-                            };
-                        })}
-                        Options={options}
-                        Actions={null}
-                    />
-                </div>
-            );
+            if (type == 0)
+                return (
+                    <div ref={tableRef}>
+                        <ActionTable
+                            Title={`${translate("قائمة الطلاب ")} (${data.length})`}
+                            Columns={columns}
+                            Data={data.map((item: any) => {
+                                return {
+                                    ...item,
+                                    number: `${!!item.candidate.registeration_number ? item.candidate.registeration_number : ''}`,
+                                    name: `${item.candidate.person.first_name} ${item.candidate.person.last_name}`,
+                                };
+                            })}
+                            Options={options}
+                            Actions={null}
+                        />
+                    </div>
+                );
+            else
+                return (
+                    <div ref={tableRef}>
+                        <ActionTable
+                            Title={`${translate("قائمة الطلاب ")} (${data.length})`}
+                            Columns={columns}
+                            Data={data}
+                            Options={options}
+                            Actions={null}
+                        />
+                    </div>
+                );
         } else return <Placeholder loading={false} />;
     };
     const addMarks = () => {
-        console.clear();
-        const payload =
-        {
-            exam_id: parseInt(exam),
-            marks: initUpdateMarks
+        if (type == 0) {
+            console.clear();
+            const payload =
+            {
+                exam_id: parseInt(exam.toString()),
+                marks: initUpdateMarks
+            }
+            console.log(payload);
         }
-        console.log(payload);
+        else {
+            const payload =
+            {
+                exam_id: parseInt(exam.toString()),
+                marks: data.map(dt => {
+                    return {
+                        id: `${dt ?.id}`,
+                        mark: dt ?.mark
+                            };
+                })
+            }
+            console.log(payload);
+        }
+
     }
     const lockExam = () => {
-        console.log(parseInt(exam))
+        console.log(parseInt(exam.toString()))
     }
     return <>
         <GridItem md={12} style={{ marginTop: "1em" }}>

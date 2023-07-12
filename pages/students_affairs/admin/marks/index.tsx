@@ -29,6 +29,7 @@ import { ISpecialityModel } from "../../../../Models/Specialities/SpecialityMode
 import { IStudentYear } from '../../../../.history/Models/StudentsYear/IStudentYear_20230527030144';
 import { Card } from '@material-ui/core';
 import { AddMark } from "./add-mark";
+import { EditMark } from './edit-mark';
 interface IMarksProps { }
 
 interface TabPanelProps {
@@ -143,7 +144,9 @@ const Marks: React.FC<IMarksProps> = ({ }) => {
         <TabPanel value={value} index={0}>
           <AddMark />
         </TabPanel>
-        <TabPanel value={value} index={1}></TabPanel>
+        <TabPanel value={value} index={1}>
+          <EditMark />
+        </TabPanel>
       </Card>
     </GridContainer>
   );

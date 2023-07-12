@@ -1,29 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { Component, useState, useEffect } from 'react';
 import GridContainer from '../../../../components/Grid/GridContainer';
-import {
-    makeStyles, Button,
-    FormControl, MenuItem,
-    OutlinedInput, InputLabel,
-    Select, Table, TableHead,
-    TableCell, TableBody, TableRow, Card, Grid, Radio, FormControlLabel, RadioGroup
-} from '@material-ui/core';
-import GridItem from 'components/Grid/GridItem.js';
-import ExamService from '../../../../Services/ExamService';
+import GridItem from '../../../../components/Grid/GridItem';
+import { FormControl, InputLabel, Select, MenuItem, makeStyles, Table, TableHead, TableRow, TableCell, TableBody, FormControlLabel, Radio } from '@material-ui/core';
+import { useTranslation } from '../../../../Utility/Translations/useTranslation';
+import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
 import PlanService from '../../../../Services/PlanService';
 import EduYearService from '../../../../Services/EduYearService';
-import MarkService from '../../../../Services/MarkService';
-import { useTranslation } from "../../../../Utility/Translations/useTranslation";
-import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
 import SpecialityService from '../../../../Services/SpecialityService';
-import SpecYearsService from '../../../../Services/SpecYearsService';
+import ExamService from '../../../../Services/ExamService';
+import MarkService from '../../../../Services/MarkService';
 import { ListStudents } from './list-students';
-import StudentsImportService from '../../../../Services/StudentsImportService';
 
-interface IAddMarkProps { }
-export const AddMark: React.FC<IAddMarkProps> = () => {
+interface EditMarkProps { }
+
+export const EditMark = ({ }) => {
     const { translate } = useTranslation();
     const useStyles = makeStyles(styles);
     const classes = useStyles();
+
     const [courses, setCourses] = useState([]);
     const [course, setCourse] = useState();
 
@@ -32,10 +26,6 @@ export const AddMark: React.FC<IAddMarkProps> = () => {
 
     const [selectedEduYear, setEduYear] = useState(null);
     const [selectedYear, setYear] = useState(null);
-
-    // Specialities
-    const [specialities, setSpecialities] = React.useState([]);
-    const [selectedSpeciality, setSpeciality] = useState(null);
 
     // Programs
     const [programs, setPrograms] = useState([]);
@@ -57,13 +47,8 @@ export const AddMark: React.FC<IAddMarkProps> = () => {
                 setPrograms(programs.result);
                 EduYearService.GetYears("")
                     .then((years) => {
-                        SpecialityService.GetAll()
-                            .then((specs) => {
-                                setSpecialities(specs.result);
-                                setEduYears(years.result);
-                                setPrograms(programs.result);
-                            })
-                            .catch((err) => { });
+                        setEduYears(years.result);
+                        setPrograms(programs.result);
                     })
                     .catch((error) => {
                         console.error("error", error);
@@ -83,6 +68,7 @@ export const AddMark: React.FC<IAddMarkProps> = () => {
             .catch((error) => { });
     };
     const [courseName, setCourseName] = useState("");
+    const [exam, setExam] = useState(null);
     const changeCourse = (id) => {
         setCourse(id);
         console.log(courses);
@@ -96,50 +82,12 @@ export const AddMark: React.FC<IAddMarkProps> = () => {
     const changeProgram = (id) => {
         setProgram(id);
     };
-    const showStudents = () => {
-        StudentsImportService.GetAllImported(selectedYear, selectedEduYear)
-            .then((resp) => {
-                setStudents(resp.result);
-            })
-            .catch((err) => { });
-    }
-
-    const [loadSpecYears, setloadSpecYears] = useState(false);
-    const changeSpeciality = (id) => {
-        setSpeciality(id);
-        setloadSpecYears(true);
-        SpecYearsService.GetWhereSpeciality(id)
-            .then((resp) => {
-                setYears(resp.result);
-                setloadSpecYears(false);
-            })
-            .catch((er) => { });
-    };
-    const changeYear = (id) => {
-        setYear(id);
-    };
-    const [exam, setExam] = useState(null);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setExam((event.target as HTMLInputElement).value);
+        ExamService.getMarks(event.target.value).then(resp => {
+            setStudents(resp.result)
+        }).catch(e => { })
     };
-    const columns = [
-        {
-            id: 0,
-            title: translate("Id"),
-            field: "id",
-            hidden: true,
-        },
-        {
-            id: 1,
-            title: translate("ID Number"),
-            field: "number",
-        },
-        {
-            id: 2,
-            title: "اسم الطالب",
-            field: 'name',
-        }
-    ];
     return <GridContainer>
         <GridContainer md={12}>
             <GridItem md={2}>
@@ -164,7 +112,7 @@ export const AddMark: React.FC<IAddMarkProps> = () => {
                 <FormControl fullWidth variant="filled" size="small" size="small">
                     <InputLabel id="demo-simple-select-label">
                         السنة الدراسية
-            </InputLabel>
+                 </InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
@@ -229,55 +177,7 @@ export const AddMark: React.FC<IAddMarkProps> = () => {
                 </TableBody>
             </Table>
         </GridContainer>
-        <Grid container md={12} style={{ padding: '0', marginTop: '3em' }}>
-            <GridItem md={2}>
-                <FormControl fullWidth variant="filled" size="small" size="small">
-                    <InputLabel id="demo-simple-select-label">الاختصاص</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={selectedSpeciality}
-                        label="specs"
-                        onChange={(e) => changeSpeciality(e.target.value)}
-                    >
-                        {specialities ?.map((spec) => (
-                            <MenuItem key={spec.id} value={spec.id}>
-                                {spec.ar_name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </GridItem>
-            <GridItem md={2}>
-                <FormControl fullWidth variant="filled" size="small" size="small">
-                    <InputLabel id="demo-simple-select-label">السنة</InputLabel>
-                    <Select
-                        disabled={loadSpecYears}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={selectedYear}
-                        label="specs"
-                        onChange={(e) => changeYear(e.target.value)}
-                    >
-                        {years ?.map((specYear) => (
-                            <MenuItem key={specYear.id} value={specYear.id}>
-                                {specYear.ar_name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </GridItem>
-            <GridItem md={2}>
-                <Button
-                    style={{ margin: "10px 5px" }}
-                    variant="contained"
-                    className={classes.submitBtn}
-                    onClick={showStudents}
-                >
-                    إظهار طلاب السنة
-                </Button>
-            </GridItem>
-        </Grid>
-        <ListStudents exam={exam} type={0} students={students} />
+        <ListStudents exam={exam} type={1} students={students} />
     </GridContainer>
+
 }
