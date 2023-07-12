@@ -104,7 +104,7 @@ export const ListStudents = ({ students, exam }: IStudentsProps) => {
             );
         } else return <Placeholder loading={false} />;
     };
-    const lockMarks = () => {
+    const addMarks = () => {
         console.clear();
         const payload =
         {
@@ -113,20 +113,33 @@ export const ListStudents = ({ students, exam }: IStudentsProps) => {
         }
         console.log(payload);
     }
+    const lockExam = () => {
+        console.log(parseInt(exam))
+    }
     return <>
         <GridItem md={12} style={{ marginTop: "1em" }}>
             {renderStudents()}
         </GridItem>
-        <GridItem md={12} style={{ marginTop: "1em" }}>
-            <Button
-                style={{ margin: "10px 5px" }}
-                variant="contained"
-                className={classes.submitBtn}
-                onClick={lockMarks}
-            >
-                إقفال
-            </Button>
-        </GridItem>
+        {
+            data != null && data.length > 0 && <GridItem md={12} style={{ marginTop: "1em" }}>
+                <Button
+                    style={{ margin: "10px 5px" }}
+                    variant="contained"
+                    className={classes.submitBtn}
+                    onClick={addMarks}
+                >
+                    حفظ العلامات
+           </Button>
+                <Button
+                    style={{ margin: "10px 5px" }}
+                    variant="contained"
+                    className={classes.submitBtn}
+                    onClick={lockExam}
+                >
+                    إقفال
+           </Button>
+            </GridItem>
+        }
     </>
 
 }

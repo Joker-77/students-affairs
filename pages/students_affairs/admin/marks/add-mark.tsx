@@ -82,18 +82,20 @@ export const AddMark: React.FC<IAddMarkProps> = () => {
             })
             .catch((error) => { });
     };
+    const [courseName, setCourseName] = useState("");
     const changeCourse = (id) => {
         setCourse(id);
+        console.log(courses);
+        let course = courses.filter(e => e.edu_course_id == parseInt(id))[0];
+        setCourseName(course.ar_name);
+        setExam(null);
         MarkService.GetAllExams(id, selectedEduYear).then(e => {
-            console.clear();
-            console.log(e.result);
             setRows(e.result);
         }).catch(e => { })
     };
     const changeProgram = (id) => {
         setProgram(id);
     };
-    const handleChangeCourse = () => { }
     const showStudents = () => {
         StudentsImportService.GetAllImported(selectedYear, selectedEduYear)
             .then((resp) => {
@@ -188,6 +190,7 @@ export const AddMark: React.FC<IAddMarkProps> = () => {
                 <TableHead>
                     <TableRow>
                         <TableCell style={{ textAlign: 'center', fontWeight: 'bold' }}>المعرّف</TableCell>
+                        <TableCell style={{ textAlign: 'center', fontWeight: 'bold' }}>اسم المقرر</TableCell>
                         <TableCell style={{ textAlign: 'center', fontWeight: 'bold' }}>نوع الواقعة</TableCell>
                         <TableCell style={{ textAlign: 'center', fontWeight: 'bold' }}>تاريخ الواقعة</TableCell>
                         <TableCell style={{ textAlign: 'center', fontWeight: 'bold' }}></TableCell>
@@ -197,6 +200,7 @@ export const AddMark: React.FC<IAddMarkProps> = () => {
                     {
                         rows.length > 0 && rows.map(row => <TableRow>
                             <TableCell style={{ textAlign: 'center', background: 'lightgrey' }}>{row.id}</TableCell>
+                            <TableCell style={{ textAlign: 'center', background: 'lightgrey' }}>{courseName}</TableCell>
                             <TableCell style={{ textAlign: 'center', background: 'lightgrey' }}>{row.evaluatio_method_name}</TableCell>
                             <TableCell style={{ textAlign: 'center', background: 'lightblue' }}>{row.date.split('T')[0]}</TableCell>
                             <TableCell style={{ textAlign: 'center', background: 'lightblue' }}>
