@@ -21,7 +21,6 @@ import EduYearService from "../../../../Services/EduYearService";
 import ExamService from "../../../../Services/ExamService";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
 import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
-import { type } from "../../../../components/Privilege/Privilege";
 import {
   KeyboardDatePicker,
   TimePicker,
