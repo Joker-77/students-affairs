@@ -188,7 +188,6 @@ export const ListStudents = ({ students, exam, type }: IStudentsProps) => {
             }
             console.log(payload);
         }
-
     }
     const lockExam = () => {
         console.log(parseInt(exam.toString()))
