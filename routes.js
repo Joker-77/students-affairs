@@ -97,7 +97,13 @@ const dashboardRoutes = [{
     icon: EditAttributesSharp,
     layout: "/students_affairs",
   },
-
+  {
+    path: '/admin/course_result',
+    name: "CourseResult",
+    rtlName: "حساب معدّل مقرر",
+    icon: EditAttributesSharp,
+    layout: "/students_affairs"
+  }
   // {
   //   path: "/table-list",
   //   name: "Table List",

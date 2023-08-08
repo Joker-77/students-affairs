@@ -92,4 +92,19 @@ export default class ExamService {
         throw error;
       });
   }
+
+  static async getMarks(exam_id: string): Promise<ApiResponse> {
+    const getUrl = process.env.MARK_URL as string;
+    return await apiConnector
+      .get(getUrl + "?exam_id=" + exam_id)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }
