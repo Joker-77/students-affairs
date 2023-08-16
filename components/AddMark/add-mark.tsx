@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import GridContainer from '../../../../components/Grid/GridContainer';
+import GridContainer from '../../components/Grid/GridContainer';
 import {
     makeStyles, Button,
     FormControl, MenuItem,
@@ -7,17 +7,17 @@ import {
     Select, Table, TableHead,
     TableCell, TableBody, TableRow, Card, Grid, Radio, FormControlLabel, RadioGroup
 } from '@material-ui/core';
-import GridItem from 'components/Grid/GridItem.js';
-import ExamService from '../../../../Services/ExamService';
-import PlanService from '../../../../Services/PlanService';
-import EduYearService from '../../../../Services/EduYearService';
-import MarkService from '../../../../Services/MarkService';
-import { useTranslation } from "../../../../Utility/Translations/useTranslation";
-import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
-import SpecialityService from '../../../../Services/SpecialityService';
-import SpecYearsService from '../../../../Services/SpecYearsService';
-import { ListStudents } from './list-students';
-import StudentsImportService from '../../../../Services/StudentsImportService';
+import GridItem from '../../components/Grid/GridItem.js';
+import ExamService from '../../Services/ExamService';
+import PlanService from '../../Services/PlanService';
+import EduYearService from '../../Services/EduYearService';
+import MarkService from '../../Services/MarkService';
+import { useTranslation } from "../../Utility/Translations/useTranslation";
+import styles from "../../assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
+import SpecialityService from '../../Services/SpecialityService';
+import SpecYearsService from '../../Services/SpecYearsService';
+import { ListStudents } from '../../pages/students_affairs/admin/marks/list-students';
+import StudentsImportService from '../../Services/StudentsImportService';
 
 interface IAddMarkProps { }
 export const AddMark: React.FC<IAddMarkProps> = () => {

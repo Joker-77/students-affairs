@@ -218,9 +218,9 @@ const SearchAddCandidateModal: React.FC<ICusomModalProps> = ({
                                     margin="normal"
                                     fullWidth
                                 >
-                                  {years.map((year) => (
+                                  {years(translate).map((year) => (
                                       <MenuItem key={year.value} value={year.value}>
-                                        {year.value}
+                                        {year.name}
                                       </MenuItem>
                                   ))}
                                 </TextField>

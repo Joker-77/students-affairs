@@ -2,7 +2,10 @@ import { useRouter } from 'next/router'
 import dictionary from './dictionary'
 
 export const useTranslation = () => {
-  const { locales = [], defaultLocale, ...nextRouter} = useRouter()
+  const router = useRouter();
+  const locales = router?.locales || [];
+  const defaultLocale = router?.defaultLocale || 'ar';
+  const nextRouter = router;
   const locale = locales.includes(nextRouter.locale || '')
     ? nextRouter.locale
     : defaultLocale;

@@ -5,18 +5,23 @@ import { makeStyles } from "@material-ui/core/styles";
 import UserCard from "../../../../components/UserCard/UserCard.js";
 import CandidatePersonalInfo from "./CandidatePersonalInfo";
 import {useTranslation} from "../../../../Utility/Translations/useTranslation";
-import {selectCandidate, useAppSelector} from "../../../../redux";
+import {setCandidate, useAppDispatch, useAppSelector} from "../../../../redux";
 import CandidateCertificateInfo from "./CandidateCertificateInfo";
 import CandidateDesireList from "./CandidateDesiresList";
 import CandidateAttachmentsList from "./CandidateAttachmentsList";
 import TabsMenu from "../../../../components/TabsMenu/TabsMenu";
 import {connect} from "react-redux";
 import {yesNo} from "../../../../Static/resources";
+import SuiButton from "../../../../components/SuiButton";
+import {useRouter} from "next/router";
 
 interface ICandidateDetailsProps {candidate: any}
+import {getCandidateToPrint} from "../../../../Helpers/candidate-print.js";
 
 const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
     const useStyles = makeStyles(styles);
+    const dispatch = useAppDispatch();
+    const router = useRouter();
     const classes = useStyles();
     const {translate} = useTranslation();
     const tabs = [
@@ -44,6 +49,13 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
 
     const candidate = props.candidate;
 
+    const goToPrint = (docType) => {
+        dispatch(setCandidate(candidate));
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(getCandidateToPrint(candidate, docType));
+        setTimeout(() => printWindow.print(), 1000);
+    };
+
     return (
         <div>
             <div style={{position: 'fixed', width: 200}}>
@@ -54,6 +66,25 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
                 />
                 <div style={spacer}/>
                 <TabsMenu tabs={tabs}/>
+                <br/>
+                <SuiButton
+                    style={{ margin: 5 }}
+                    onClick={() => goToPrint(1)} // remove a friend from the list
+                >
+                    طباعة الاستمارة 1
+                </SuiButton>
+                <SuiButton
+                    style={{ margin: 5 }}
+                    onClick={() => goToPrint(2)} // remove a friend from the list
+                >
+                    طباعة الاستمارة 2
+                </SuiButton>
+                <SuiButton
+                    style={{ margin: 5 }}
+                    onClick={() => goToPrint(2)} // remove a friend from the list
+                >
+                    طباعة الاستمارة 3
+                </SuiButton>
             </div>
             <div style={{marginRight: 220}} id={'personal'}>
                 <CandidatePersonalInfo initValues={candidate ? {...candidate, residance: candidate?.residance || yesNo(translate)[0].value} : {}}/>
