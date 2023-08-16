@@ -543,9 +543,9 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                             : "block",
                       }}
                     >
-                      <Grid item xs={3} md={3} style={{ color: "red" }}>
+                      {/* <Grid item xs={3} md={3} style={{ color: "red" }}>
                         {JSON.stringify(errors)}
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                     <Grid item xs={3} md={3}>
                       <GridItem>
