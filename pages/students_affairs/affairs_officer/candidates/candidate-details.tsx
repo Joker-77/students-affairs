@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Admin from "../../../../layouts/Admin";
 import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,6 +17,7 @@ import {useRouter} from "next/router";
 
 interface ICandidateDetailsProps {candidate: any}
 import {getCandidateToPrint} from "../../../../Helpers/candidate-print.js";
+import DesireService from "../../../../Services/DesireService";
 
 const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
     const useStyles = makeStyles(styles);
@@ -47,14 +48,35 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
         marginBottom: "25px",
     };
 
-    const candidate = props.candidate;
+    const [candidate, updateCandidate] = useState(props.candidate);
 
     const goToPrint = (docType) => {
         dispatch(setCandidate(candidate));
         const printWindow = window.open('', '_blank');
-        printWindow.document.write(getCandidateToPrint(candidate, docType));
+        // const styleElement = window.document.createElement('style');
+        // styleElement.textContent = `@media print {
+        //     header, footer {
+        //         display: none;
+        //     }
+        // }`;
+        // printWindow.document.head.appendChild(styleElement);
+        printWindow.document .write(getCandidateToPrint(candidate, docType));
         setTimeout(() => printWindow.print(), 1000);
     };
+
+    /************************** Data ****************************/
+    useEffect(() => {
+        DesireService.GetAll(candidate.id)
+            .then((res) => {
+                console.log("Desire", res);
+                updateCandidate({...candidate, desires: res.result.map((item) => {return {...item.speciality, id: item.speciality_id.toString()}})});
+            })
+            .catch((error) => {
+                console.error("error", error);
+            });
+    }, []);
+    /************************** Finish Data ****************************/
+
 
     return (
         <div>
@@ -71,19 +93,7 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
                     style={{ margin: 5 }}
                     onClick={() => goToPrint(1)} // remove a friend from the list
                 >
-                    طباعة الاستمارة 1
-                </SuiButton>
-                <SuiButton
-                    style={{ margin: 5 }}
-                    onClick={() => goToPrint(2)} // remove a friend from the list
-                >
-                    طباعة الاستمارة 2
-                </SuiButton>
-                <SuiButton
-                    style={{ margin: 5 }}
-                    onClick={() => goToPrint(2)} // remove a friend from the list
-                >
-                    طباعة الاستمارة 3
+                    طباعة استمارة التسجيل الأولي
                 </SuiButton>
             </div>
             <div style={{marginRight: 220}} id={'personal'}>

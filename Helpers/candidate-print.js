@@ -22,14 +22,20 @@ const getFields = (candidate, docType = 1) => [
       }) : '')},
   {label: 'الجنسية', value: candidate?.nationality || ''},
   {label: 'الرقم الوطني', value: candidate?.national_number || ''},
-  {label: 'الرغبات', value: candidate?.desires?.join('/') || ''},
-  {label: 'أرقام الهواتف', value: candidate?.phones?.join('/') || ''},
-  {label: 'الرغبة المعتمدة', value: candidate?.registerations[0]?.speciality || ''},
-  {label: 'مكان تقديم امحتان القبول', value: candidate?.registerations[0]?.accept_place || ''},
-  {label: 'مجموع الطالب (من 2400)', value: candidate?.certificates[0]?.result || ''},
-  {label: 'علامة القبول في الرياضيات', value: candidate?.registerations[0]?.math || '', hidden: docType !== 2},
-  {label: 'علامة القبول في الفيزياء', value: candidate?.registerations[0]?.physics || '', hidden: docType !== 2},
-  {label: 'علامة الطالب التي يفاضل وفقها (من 3400)', value: candidate?.registerations[0]?.mark_3400 || '', hidden: docType !== 2},
+  {label: 'الرغبات', value: candidate?.desires?.map(item => item.ar_name).join(' / ') || '', col: 'col-xs-12'},
+  {label: 'أرقام الهواتف', value: candidate?.person?.phones?.map(item => item.phone).join(' / ') || ''},
+  {label: 'الرغبة المعتمدة', value: candidate?.registerations[0]?.speciality || '', hidden: docType === 1},
+  {label: 'مكان تقديم امتحان القبول', value: candidate?.exam_place},
+  {label: 'مجموع الطالب (من 2400)', value: candidate?.certificates[0]?.result || '', col: 'col-xs-6'},
+  {label: 'مجموع الطالب (من 2400)', value: candidate?.certificates[0]?.result || '', hidden: docType !== 3, col: 'col-xs-6'},
+  {label: 'علامة القبول في الرياضيات', value: candidate?.registerations[0]?.math || '', hidden: docType === 1, col: 'col-xs-6'},
+  {label: 'علامة الرياضيات', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'math')[0]?.value || '', hidden: docType !== 3, col: 'col-xs-6'},
+  {label: 'علامة القبول في الفيزياء', value: candidate?.registerations[0]?.physics || '', hidden: docType === 1, col: 'col-xs-6'},
+  {label: 'علامة الفيزياء', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'physics')[0]?.value || '', hidden: docType !== 3, col: 'col-xs-6'},
+  {label: '', value: '', hidden: docType !== 3, col: 'col-xs-6'},
+  {label: 'علامة الكيمياء', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'chemestry')[0]?.value || '', hidden: docType !== 3, col: 'col-xs-6'},
+  {label: 'علامة الطالب التي يفاضل وفقها (من 3400)', value: candidate?.registerations[0]?.mark_3400 || '', hidden: docType === 1, col: 'col-xs-6'},
+  {label: 'علامة الطالب (من 3600)', value: candidate?.registerations[0]?.mark_3600 || '', hidden: docType !== 3, col: 'col-xs-6'},
   {label: 'علامة اللغة الانكليزية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'english')[0]?.value || ''},
   {label: 'علامة اللغة الفرنسية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'الفرنسية')[0]?.value || ''},
   {label: 'علامة اللغة الروسية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'الروسية')[0]?.value || ''},
@@ -73,15 +79,15 @@ export const getCandidateToPrint = (candidate, docType = 1) => {
                 </div>
             </div>
           </div>
-          <div class="text-center" style="margin: 60px 0;">
+          <div class="text-center" style="margin: 40px 0;">
             <h3>استمارة مفاضلة</h3>
             <p>دورة عام: ${candidate?.certificates[0].year}</p> 
           </div>
           
         <div class="container">
           <div class="row">
-            ${fields.filter(x => !x.hidden).map(({label, value}) => `<div class="col-xs-4 col-xs-pull" style="margin-bottom: 20px">
-              <p><strong>${label}:</strong> ${value}</p>
+            ${fields.filter(x => !x.hidden).map(({label, value, col}) => `<div class="${col || 'col-xs-4'} col-xs-pull" style="margin-bottom: 20px">
+              <p><strong>${label}${label ? ':' : ''}</strong> ${value}</p>
             </div>`
             ).join('')}
           </div>

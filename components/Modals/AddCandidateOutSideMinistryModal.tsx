@@ -142,7 +142,7 @@ const AddCandidateOutSideMinistryModal: React.FC<IAddCandidateOutSideMinistryMod
               </Grid>
             </CardHeader>
             <CardBody>
-              <CandidatePersonalInfo handleClose={handleClose} forAdd initValues={initValues}/>
+              <CandidatePersonalInfo external={1} handleClose={handleClose} forAdd initValues={initValues}/>
             </CardBody>
           </Card>
         </Box>

@@ -26,11 +26,13 @@ import {toast} from "react-toastify";
 
 interface ICandidatePersonalInfoProps {
   initValues: any;
+    external: number;
   forAdd: boolean;
   handleClose();
 }
 const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                                                                         initValues,
+                                                                        external = 0,
                                                                         forAdd = false,
                                                                         handleClose,
                                                                       }) => {
@@ -47,16 +49,17 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
 
   const submitForm = async (values: any, setSubmitting) => {
       setSubmitting(true);
-      values = {...values, permenant_address: 'permenant_address', temporary_address: 'temporary_address'}
+      values = {...values, external: external, permenant_address: 'permenant_address', temporary_address: 'temporary_address'}
       submitFunction(values)
           .then((res) => {
-              console.log("res", res);
-              if(forAdd) {
-                handleClose && handleClose();
-                dispatch(setCandidate({...res.result, certificates: [], person: values?.person}));
-                router.push(`/${router.locale}/students_affairs/affairs_officer/candidates/candidate-details`)
-              } else {
-                  toast(translate('Candidate updated.'), {type: 'success'});
+              if (res.success) {
+                  if(forAdd) {
+                      handleClose && handleClose();
+                      dispatch(setCandidate({...res.result, certificates: [], person: values?.person}));
+                      router.push(`/${router.locale}/students_affairs/affairs_officer/candidates/candidate-details`)
+                  } else {
+                      toast(translate('Candidate updated.'), {type: 'success'});
+                  }
               }
             })
           .catch((error) => {

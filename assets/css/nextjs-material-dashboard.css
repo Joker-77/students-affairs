@@ -556,15 +556,23 @@ footer ul li a:hover {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1!important; 
+  background: #f1f1f1!important;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3)!important; 
+  background: rgba(0, 0, 0, 0.3)!important;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5)!important; 
+  background: rgba(0, 0, 0, 0.5)!important;
+}
+
+.MuiTablePagination-toolbar {
+  direction: ltr!important;
+}
+
+.MuiTablePagination-toolbar .MuiTypography-caption {
+  direction: rtl!important;
 }

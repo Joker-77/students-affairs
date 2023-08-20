@@ -111,18 +111,6 @@ const CandidateDesireList: React.FC<IDesireListProps> = ({candidateId}) => {
 
   };
 
-    const getShortName = (code) => {
-        const shortNames = {
-            'se': 'معلوماتية',
-            'Elc': 'نظم',
-            'Mate': 'مواد',
-            'Telec': 'اتصالات',
-            'Avite': 'طيران',
-            'mec': 'ميكا',
-        };
-        return shortNames[code] || '';
-    }
-
   return (
       <div>
         <DragDropContext
@@ -193,7 +181,7 @@ const CandidateDesireList: React.FC<IDesireListProps> = ({candidateId}) => {
                                                   <Desire
                                                       id={item.id}
                                                       index={index}
-                                                      name={getShortName(item.code)}
+                                                      name={item.ar_short_name}
                                                       key={item.id}
                                                       type={column.type}
                                                   ></Desire>

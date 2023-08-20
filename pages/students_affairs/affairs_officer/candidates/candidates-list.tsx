@@ -99,7 +99,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
 
     const submitAddCandidate = async (values: any, setSubmitting) => {
         setSubmitting(true);
-        CandidateService.AddAfterSearch(values)
+        CandidateService.AddAfterSearch({...values, external: 0})
             .then((res) => {
                 const candidatesCopy = [res.result, ...Candidates];
                 setCandidates(candidatesCopy);
@@ -187,11 +187,14 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
             field: "certificates[0].round",
             filtering: false,
         },
-
         {
-            title: translate("Subscription number"),
-            field: "certificates[0].subscription_number",
-            hidden: true,
+            title: translate("Ministry External"),
+            field: "external_value",
+            filtering: false,
+        },
+        {
+            title: translate("Registration Year"),
+            field: "registeration_year",
             filtering: false,
         }
         // {
@@ -233,7 +236,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                 <ActionTable
                     Title={title || translate("Candidates List")}
                     Columns={customColumns || columns}
-                    Data={data.map(item => { return { ...item, full_name: `${item.person ?.first_name} ${item.father ?.first_name} ${item.person ?.last_name}` } })}
+                    Data={data.map(item => { return { ...item, external_value: item.external ? translate("Yes") : translate("No"), full_name: `${item.person ?.first_name} ${item.father ?.first_name} ${item.person ?.last_name}` } })}
                     Options={options}
                     Actions={actions}
                 />

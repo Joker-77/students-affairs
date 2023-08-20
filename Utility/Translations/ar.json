@@ -217,7 +217,9 @@
   "Edit Speciality": "تعديل الاختصاص",
   "Speciality Details": "تفاصيل الاختصاص",
   "English Name": "الاسم بالانكليزية",
+  "English Short Name": "الاسم المختصر بالانكليزية",
   "Arabic Name": "الاسم بالعربية",
+  "Arabic Short Name": "الاسم المختصر بالعربية",
   "Code": "الرمز",
 
   "Certificate List": "قائمة الشهادات",
@@ -233,6 +235,8 @@
   "Round": "الدورة",
   "Subscription number": "رقم الاكتتاب",
   "Candidate": "المرشح",
+  "Registration Year": "عام التسجيل",
+  "Ministry External": "خارج الوزارة",
 
   "Math": "الرياضيات",
   "Physics": "الفيزياء",
