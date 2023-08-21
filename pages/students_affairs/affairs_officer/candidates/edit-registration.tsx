@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Admin from "../../../../layouts/Admin";
 import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
 import { makeStyles } from "@material-ui/core/styles";
@@ -15,6 +15,9 @@ import {acceptPlaces, acceptStatus, governorates, registerationClasses, studyPla
 import SuiButton from "../../../../components/SuiButton";
 import SpecialityService from "../../../../Services/SpecialityService";
 import RegisterationService from "../../../../Services/RegisterationService";
+import {setCandidate, useAppDispatch} from "../../../../redux";
+import {getCandidateToPrint} from "../../../../Helpers/candidate-print";
+import DesireService from "../../../../Services/DesireService";
 
 interface IEditRegistrationProps {candidate: any}
 
@@ -25,7 +28,7 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
     const router = useRouter();
     const locale = router?.locale;
 
-    const candidate = props.candidate;
+    const [candidate, updateCandidate] = useState(props.candidate);
     const registeration = candidate?.registerations[0] || {};
 
     const [disabled, setDisabled] = React.useState<boolean>(false);
@@ -64,9 +67,42 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
             });
     };
 
-    return (
+    /************************** Data ****************************/
+    useEffect(() => {
+        DesireService.GetAll(candidate?.id)
+            .then((res) => {
+                console.log("Desire", res);
+                updateCandidate({...candidate, desires: res.result.map((item) => {return {...item.speciality, id: item.speciality_id.toString()}})});
+            })
+            .catch((error) => {
+                console.error("error", error);
+            });
+    }, []);
+    /************************** Finish Data ****************************/
 
+    const dispatch = useAppDispatch();
+    const goToPrint = (docType) => {
+        dispatch(setCandidate(candidate));
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(getCandidateToPrint(candidate, docType));
+        setTimeout(() => printWindow.print(), 1000);
+    };
+
+    return (
         <Box>
+            <SuiButton
+                style={{ margin: 5 }}
+                onClick={() => goToPrint(2)} // remove a friend from the list
+            >
+                طباعة استمارة القبول
+            </SuiButton>
+            <SuiButton
+                style={{ margin: 5 }}
+                onClick={() => goToPrint(3)} // remove a friend from the list
+            >
+                طباعة الاستمارة النهائية
+            </SuiButton>
+
             <Card>
                 <CardHeader>
                     <h4 style={{ fontWeight: "bold", color: "#01579b" }}>{translate("Edit Registration")} </h4>

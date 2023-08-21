@@ -32,7 +32,6 @@ module.exports = withPlugins([
     SITE_URL: "http://teststudent.hiast.edu.sy:3000",
     // SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
-    // BASE_URL: "http://172.25.1.71/student_affairs_backend/student_affairs/public",
     BASE_URL: "http://teststudent.hiast.edu.sy/backend/public",
     LIST_ROLES_URL: "/roles",
     ADD_ROLE_URL: "/roles/add",
@@ -62,10 +61,10 @@ module.exports = withPlugins([
     EDIT_TEACHER_URL: "/teacher/edit",
     DETAILS_TEACHER_URL: "/teacher",
     LIST_TEACHER_URL: "/teacher",
-    ADD_OBSERVER_URL: "/observer/add",
-    EDIT_OBSERVER_URL: "/observer/edit",
-    DETAILS_OBSERVER_URL: "/observer",
-    LIST_OBSERVER_URL: "/observer",
+    ADD_OBSERVER_URL: "/employee/add",
+    EDIT_OBSERVER_URL: "/employee/edit",
+    DETAILS_OBSERVER_URL: "/employee",
+    LIST_OBSERVER_URL: "/employee",
     ADD_SPECIALITY_URL: "/speciality/add",
     EDIT_SPECIALITY_URL: "/speciality/edit",
     DETAILS_SPECIALITY_URL: "/speciality/details",
@@ -88,8 +87,6 @@ module.exports = withPlugins([
     EDIT_COURSE_URL: "/course/edit",
     CREATE_COURSE_URL: "/course/add",
     ADD_DESC_TO_COURSE: "/course/add/description",
-    // Teachers
-    LIST_TEACHER_URL: "/teacher",
 
     // Years
     LIST_YEARS_URL: "/year",
@@ -119,8 +116,23 @@ module.exports = withPlugins([
 
     // Mark
     MARK_URL: '/mark',
-    // Login
 
+    // Login
     LOGIN_URL: "/login",
+
+    LIST_ACTIVITIES_URL:
+      "/employee/activities",
+    LIST_FUNCTIONAL_BODIES_URL:
+      "/employee/levels",
+    LIST_EXAM_HALLS_URL:
+      "/examhalls",
+    LIST_OBSERVATIONS_URL:
+      "/observation",
+    LIST_AVAILABLE_OBSERVERS_URL:
+      "/observation/employees",
+    ADD_OBSERVATION_URL:
+      "/observation/add",
+    DELETE_OBSERVATION_URL:
+      "/observation/delete",
   },
 });

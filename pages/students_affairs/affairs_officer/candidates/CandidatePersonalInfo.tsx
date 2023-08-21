@@ -22,14 +22,17 @@ import {
   useAppDispatch,
   setCandidate,
 } from "../../../../redux";
+import {toast} from "react-toastify";
 
 interface ICandidatePersonalInfoProps {
   initValues: any;
+    external: number;
   forAdd: boolean;
   handleClose();
 }
 const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                                                                         initValues,
+                                                                        external = 0,
                                                                         forAdd = false,
                                                                         handleClose,
                                                                       }) => {
@@ -45,16 +48,18 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
   const submitFunction = forAdd ? CandidateService.Add : CandidateService.Edit;
 
   const submitForm = async (values: any, setSubmitting) => {
-    console.log("values", values);
-
       setSubmitting(true);
+      values = {...values, external: external, permenant_address: 'permenant_address', temporary_address: 'temporary_address'}
       submitFunction(values)
           .then((res) => {
-              console.log("res", res);
-              if(forAdd) {
-                handleClose && handleClose();
-                dispatch(setCandidate({...res.result, certificates: [], person: values?.person}));
-                router.push(`/${router.locale}/students_affairs/affairs_officer/candidates/candidate-details`)
+              if (res.success) {
+                  if(forAdd) {
+                      handleClose && handleClose();
+                      dispatch(setCandidate({...res.result, certificates: [], person: values?.person}));
+                      router.push(`/${router.locale}/students_affairs/affairs_officer/candidates/candidate-details`)
+                  } else {
+                      toast(translate('Candidate updated.'), {type: 'success'});
+                  }
               }
             })
           .catch((error) => {
@@ -166,30 +171,7 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                                     </TextField>
                                 </Box>
                             </Grid>
-                            <Grid item md={4}>
-                                <Box mb={2}>
-                                    <Box mb={1} ml={0.5}>
-                                        <Typography component="label" variant="caption">
-                                            {translate("Registeration number")}
-                                        </Typography>
-                                    </Box>
-                                    <TextField
-                                        disabled={disabled}
-                                        onChange={handleChange}
-                                        variant="outlined"
-                                        size="small"
-                                        type="text"
-                                        id="registeration_number"
-                                        name="registeration_number"
-                                        value={values.registeration_number}
-                                        onBlur={handleBlur}
-                                        error={Boolean(touched.registeration_number && errors.registeration_number)}
-                                        helperText={touched.registeration_number && errors.registeration_number}
-                                        placeholder={translate("Registeration number")}
-                                        fullWidth
-                                    />
-                                </Box>
-                            </Grid>
+                            <Grid item md={4}></Grid>
                             <Grid item md={4}>
                                 <Box mb={2}>
                                     <Box mb={1} ml={0.5}>
@@ -367,8 +349,8 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                           </Box>
                         </Grid>
                       </Grid>
-                      <PersonInfoPartialForm prefix={"father"} title={translate("Father")} formik={formik} disabled={disabled} isGray/>
-                      <PersonInfoPartialForm prefix={"mother"} title={translate("Mother")} formik={formik} disabled={disabled} isGray/>
+                      {/*<PersonInfoPartialForm prefix={"father"} title={translate("Father")} formik={formik} disabled={disabled} isGray/>*/}
+                      {/*<PersonInfoPartialForm prefix={"mother"} title={translate("Mother")} formik={formik} disabled={disabled} isGray/>*/}
 
                       <Box mt={4} mb={1}>
                         {isSubmitting ? (

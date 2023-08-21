@@ -64,4 +64,38 @@ export default class ObserverService {
         throw error;
       });
   }
+
+  static async GetLevels(): Promise<ApiResponse> {
+    const listUrl = process.env.LIST_FUNCTIONAL_BODIES_URL as string;
+    console.clear();
+    console.log(listUrl);
+    return await apiConnector
+      .get(listUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  static async GetActivities(): Promise<ApiResponse> {
+    const listUrl = process.env.LIST_ACTIVITIES_URL as string;
+    console.clear();
+    console.log(listUrl);
+    return await apiConnector
+      .get(listUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }

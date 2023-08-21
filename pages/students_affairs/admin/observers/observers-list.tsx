@@ -19,6 +19,7 @@ import {
   Typography,
   AccordionSummary,
   AccordionDetails,
+  Checkbox,
 } from "@material-ui/core";
 import {
   FilterList,
@@ -45,6 +46,8 @@ import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
 import {
+  IActivityModel,
+  ILevelModel,
   IObserverModel,
 } from "../../../../Models/Observers/ObserverModel";
 import ObserverService from "../../../../Services/ObserverService";
@@ -53,9 +56,11 @@ import ObserverDetails from "./observer-details";
 import { ExportToCsv } from "export-to-csv";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import _ from "lodash";
+import { GetStaticProps } from "next";
 
 interface IObserversListProps {}
-const ObserversList: React.FC<IObserversListProps> = ({}) => {
+
+const ObserversList: React.FC<IObserversListProps> = () => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -84,6 +89,29 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
         console.error("error", error);
       });
   };
+
+  const [levels, setLevels] = useState([]);
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    ObserverService.GetLevels()
+      .then((res) => {
+        console.log("Levels", res.result);
+        setLevels(res.result as ILevelModel[]);
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
+
+    ObserverService.GetActivities()
+      .then((res) => {
+        console.log("activities", res.result);
+        setActivities(res.result as IActivityModel[]);
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
+  }, []);
 
   const [isCreate, setIsCreate] = useState<boolean>(true);
 
@@ -139,6 +167,11 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
     },*/
   ];
 
+  const [isExcluded, setExcluded] = React.useState(false);
+  const handleChangeExcluded = (event) => {
+    setExcluded(!isExcluded);
+    //filterData();
+  }
   const [Observers, setObservers] = React.useState<IObserverModel[]>(null);
   const [filteredObservers, setFilteredObservers] =
     React.useState<IObserverModel[]>(null);
@@ -148,71 +181,88 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
   const filterData = () => {
     let _filteredObservers = Observers;
     let _value = search;
-    if (filter == 0) {
-      _filteredObservers = Observers.filter((observer, index) => {
-        return (
-          observer?.person?.first_name.includes(_value) ||
-          observer?.person?.last_name.includes(_value) ||
-          observer?.number?.toString().includes(_value) ||
-          observer?.activity.includes(_value) ||
-          observer?.authority.includes(_value)
-        );
-      });
-      setFilteredObservers(_filteredObservers);
+
+    if (_filteredObservers != null) {
+      if (filter == 0) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          let level = levels.find(level => level.id == observer?.level_id).name;
+          let activity = activities.find(activity => activity.id == observer?.activity_id).name;
+          return (
+            observer?.first_name.includes(_value) ||
+            observer?.last_name.includes(_value) ||
+            observer?.number?.toString().includes(_value) ||
+            activity.includes(_value) ||
+            level.includes(_value)
+          );
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (filter == 1) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          return (
+            observer?.first_name.includes(_value) ||
+            observer?.last_name.includes(_value)
+          );
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (filter == 2) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          return observer?.number.toString().includes(_value);
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (filter == 3) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          let activity = activities.find(activity => activity.id == observer?.activity_id).name;
+          return activity.includes(_value)
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (filter == 4) {
+        _filteredObservers = Observers.filter((observer, index) => {
+          let level = levels.find(level => level.id == observer?.level_id).name;
+          return level.includes(_value)
+        });
+        //setFilteredObservers(_filteredObservers);
+      }
+      if (isExcluded) {
+        _filteredObservers = _filteredObservers.filter((observer, index) => {
+          return observer?.excluded
+        });
+      }
     }
-    if (filter == 1) {
-      _filteredObservers = Observers.filter((observer, index) => {
-        return (
-          observer?.person?.first_name.includes(_value) ||
-          observer?.person?.last_name.includes(_value)
-        );
-      });
-      setFilteredObservers(_filteredObservers);
-    }
-    if (filter == 2) {
-      _filteredObservers = Observers.filter((observer, index) => {
-        return observer?.number.toString().includes(_value);
-      });
-      setFilteredObservers(_filteredObservers);
-    }
-    if (filter == 3) {
-      _filteredObservers = Observers.filter((observer, index) => {
-        return observer?.activity.includes(_value)
-      });
-      setFilteredObservers(_filteredObservers);
-    }
-    if (filter == 4) {
-      _filteredObservers = Observers.filter((observer, index) => {
-        return observer?.authority.includes(_value)
-      });
-      setFilteredObservers(_filteredObservers);
-    }
+    setFilteredObservers(_filteredObservers);
   };
   const handleChangeFilter = (event) => {
     setFilter(event.target.value);
-    filterData();
+    //filterData();
   };
   const handleSearch = (event) => {
     let _value = event?.target?.value;
     setSearch(_value);
-    filterData();
+    //filterData();
   };
+
+  useEffect(() => {
+    filterData();
+  }, [filter, search, isExcluded]);
 
   const [sortBy, setSortBy] = React.useState(0);
   const handleSortBy = (event) => {
-    let _value = event?.target?.value;
+    let _value = event?.target?.value; 
     setSortBy(_value);
     let _filteredObservers = Observers;
     if (sortBy == 1) {
       _filteredObservers = Observers.sort((a, b) => {
-        if (a.person?.last_name > b.person?.last_name) {
+        if (a.last_name > b.last_name) {
           return 1;
-        } else if (a.person?.last_name < b.person?.last_name) {
+        } else if (a.last_name < b.last_name) {
           return -1;
         }
-        if (a.person?.first_name > b.person?.first_name) {
+        if (a.first_name > b.first_name) {
           return 1;
-        } else if (a.person?.first_name < b.person?.first_name) {
+        } else if (a.first_name < b.first_name) {
           return -1;
         }
         else {
@@ -241,9 +291,11 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
     }
     if (sortBy == 3) {
       _filteredObservers = Observers.sort((a, b) => {
-        if (a.activity > b.activity)
+        let a_activity = activities.find(activity => activity.id == a.activity_id).name;
+        let b_activity = activities.find(activity => activity.id == b.activity_id).name;
+        if (a_activity > b_activity)
           return 1;
-        if (a.activity < b.activity)
+        if (a_activity < b_activity)
           return -1;
         return 0;
       });
@@ -251,9 +303,11 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
     }
     if (sortBy == 4) {
       _filteredObservers = Observers.sort((a, b) => {
-        if (a.authority > b.authority)
+        let a_level = levels.find(level => level.id == a.level_id).name;
+        let b_level = levels.find(level => level.id == b.level_id).name;
+        if (a_level > b_level)
           return 1;
-        if (a.authority < b.authority)
+        if (a_level < b_level)
           return -1;
         return 0;
       });
@@ -309,8 +363,8 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
       field: "number",
     },
     {
-      title: translate("Full Name"),
-      field: "full_name",
+      title: translate("Name"),
+      field: "printing_name",
     },
     {
       title: translate("Functional Body"),
@@ -322,7 +376,7 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
     },
     {
       title: translate("Office Phone"),
-      field: "office_phone",
+      field: "office_number",
     },
     {
       title: translate("Excluded"),
@@ -364,11 +418,15 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
         let object = {};
         selectedColumns.forEach((item, index) => {
           if (item.field === 'full_name')
-            _.set(object, 'full_name', `${observer.person?.first_name} ${observer.person?.last_name}`);
-          else if (item.field === 'office_phone')
-            _.set(object, 'office_phone', observer.person.phones.find(phone => phone.type === "office")?.phone ?? "");
+            _.set(object, 'full_name', `${observer.nick_name} ${observer.first_name} ${observer.last_name}`);
+          //else if (item.field === 'office_phone')
+            //_.set(object, 'office_phone', observer.person.phones.find(phone => phone.type === "office")?.phone ?? "");
           else if (item.field === 'is_excluded')
             _.set(object, 'is_excluded', observer.excluded == 0 ? translate("No") : translate("Yes"));
+          else if (item.field === 'authority')
+            _.set(object, 'authority', levels.find(level => level.id == observer.level_id).name);
+          else if (item.field === 'activity')
+            _.set(object, 'activity', activities.find(activity => activity.id == observer.activity_id).name);           
           else
             _.set(object, `col ${index}`, _.get(observer, item.field) ?? "");
         });
@@ -450,6 +508,14 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
           ),
           onClick: (evt, data) => getObserver(data),
         },
+        {
+          icon: () => (
+            <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
+              {translate("Observing Assignments")}
+            </SuiButton>
+          ),
+          onClick: (evt, data) => {},
+        },
       ];
       return (
         <div ref={tableRef}>
@@ -457,9 +523,10 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
             Title={translate("Observers List")}
             Columns={columns}
             Data={data.map(item => { return {...item,
-              full_name: `${item.person?.first_name} ${item.person?.last_name}`,
-              office_phone: item.person.phones.find(phone => phone.type === "office")?.phone,
+              //full_name: `${item.nick_name} ${item.first_name} ${item.last_name}`,
               is_excluded: item.excluded == 0 ? translate("No") : translate("Yes"),
+              authority: levels?.find(level => level.id == item.level_id)?.name,
+              activity: activities?.find(activity => activity.id == item.activity_id)?.name,
               }})}
             Options={options}
             Actions={actions}
@@ -684,6 +751,29 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
                   ))}
                 </Select>
               </FormControl>
+              <FormControl 
+                size="small"
+                variant="outlined"
+                style={{ minWidth: 150, margin: "0 1em 0 1em" }}
+              >
+                <Checkbox
+                  disabled={!isEditable}
+                  onChange={handleChangeExcluded}
+                  id="excluded"
+                  name="excluded"
+                  checked={isExcluded} 
+                  //onBlur={handleBlur}
+                  placeholder={translate("Excluded")}
+                />
+                <InputLabel
+                  style={{ display: "flex" }}
+                  shrink
+                  //ref={inputExcludedLabel}
+                  htmlFor="outlined-sort"
+                >
+                  <span>{translate("Excluded")}</span>
+                </InputLabel>
+              </FormControl>
             </GridItem>
           </GridItem>
           <GridItem md={12}>{renderObservers()}</GridItem>
@@ -700,6 +790,8 @@ const ObserversList: React.FC<IObserversListProps> = ({}) => {
           //isEditable={isEditable}
           isEditable={true}
           //ref={observerDetailsRef}
+          levels={levels}
+          activities={activities}
         />
        //</div>
       )}

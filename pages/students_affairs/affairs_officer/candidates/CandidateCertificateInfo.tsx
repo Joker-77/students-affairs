@@ -42,35 +42,42 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({initValues}) => {
       id: 'physics',
       value: translate('Physics'),
     },
-    {
-      id: 'english',
-      value: translate('English'),
-    },
-    {
-      id: 'arabic',
-      value: translate('Arabic'),
-    },
+    // {
+    //   id: 'arabic',
+    //   value: translate('Arabic'),
+    // },
     {
       id: 'chemestry',
       value: translate('Chemistry'),
     },
     {
-      id: 'science',
-      value: translate('Science'),
+      id: 'sum',
+      value: translate('Sum'),
     },
-    {
-      id: 'الفرنسية',
-      value: translate('French'),
-    },
-    {
-      id: 'الروسية',
-      value: translate('Russian'),
-    },
-    {
-      id: 'nationality',
-      value: translate('Nationality Course'),
-    },
+    // {
+    //   id: 'science',
+    //   value: translate('Science'),
+    // },
+    // {
+    //   id: 'nationality',
+    //   value: translate('Nationality Course'),
+    // },
   ];
+
+  // const langCourses = [
+  //   {
+  //     id: 'english',
+  //     value: translate('English'),
+  //   },
+  //   {
+  //     id: 'الفرنسية',
+  //     value: translate('French'),
+  //   },
+  //   {
+  //     id: 'الروسية',
+  //     value: translate('Russian'),
+  //   },
+  // ];
 
   const [disabled, setDisabled] = React.useState<boolean>(true);
 
@@ -128,8 +135,9 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({initValues}) => {
                     dirty,
                   } = formik;
 
-                  const validCourses = values.details?.filter((item) => courses.map(c=>c.id).includes(item.key));
-
+                  let validCourses = values.details?.filter((item) => courses.map(c=>c.id).includes(item.key));
+                  // const sumValidCourses = validCourses.reduce((partialSum, a) => partialSum + +a.value, 0);
+                  // validCourses = [...validCourses, {key: 'sum', value: sumValidCourses + values.result}];
                   return (
                       <Form>
 
@@ -378,6 +386,15 @@ const AddCertificateModal: React.FC<ICusomModalProps> = ({initValues}) => {
                                           </SuiButton>}
                                         </React.Fragment>
                                     )}
+                                    <div></div>
+                                    <Grid container spacing={2}>
+                                      <Grid item xs={6}>
+                                        <p>{translate("Weighted mark")}</p>
+                                      </Grid>
+                                      <Grid item xs={6}>
+                                        <p><strong>{values.weighted_mark}</strong></p>
+                                      </Grid>
+                                    </Grid>
                                   </div>
                               )}
                           />

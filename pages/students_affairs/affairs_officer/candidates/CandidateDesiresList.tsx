@@ -181,7 +181,7 @@ const CandidateDesireList: React.FC<IDesireListProps> = ({candidateId}) => {
                                                   <Desire
                                                       id={item.id}
                                                       index={index}
-                                                      name={item.ar_name}
+                                                      name={item.ar_short_name}
                                                       key={item.id}
                                                       type={column.type}
                                                   ></Desire>

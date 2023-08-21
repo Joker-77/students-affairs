@@ -155,8 +155,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
           teacher?.person?.last_name.includes(_value) ||
           teacher?.father_name.includes(_value) ||
           teacher?.number?.toString().includes(_value) ||
-          teacher?.work_field.includes(_value) ||
-          teacher?.activity?.includes(_value) ||
+          teacher?.work_field.includes(_value) || teacher?.activity?.includes(_value) ||
           teacher?.authority.includes(_value)
         );
       });
@@ -180,16 +179,13 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     }
     if (filter == 3) {
       _filteredTeachers = Teachers.filter((teacher, index) => {
-        return (
-          teacher?.work_field.includes(_value) ||
-          teacher?.activity?.includes(_value)
-        );
+        return teacher?.work_field.includes(_value) || teacher?.activity?.includes(_value)
       });
       setFilteredTeachers(_filteredTeachers);
     }
     if (filter == 4) {
       _filteredTeachers = Teachers.filter((teacher, index) => {
-        return teacher?.authority.includes(_value);
+        return teacher?.authority.includes(_value)
       });
       setFilteredTeachers(_filteredTeachers);
     }
@@ -233,9 +229,15 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     }
     if (sortBy == 2) {
       _filteredTeachers = Teachers.sort((a, b) => {
-        if (parseInt(a.number, 10) > parseInt(b.number, 10)) {
+        if (
+          parseInt(a.number, 10) >
+          parseInt(b.number, 10)
+        ) {
           return 1;
-        } else if (parseInt(a.number, 10) < parseInt(b.number, 10)) {
+        } else if (
+          parseInt(a.number, 10) <
+          parseInt(b.number, 10)
+        ) {
           return -1;
         } else {
           return 0;
@@ -245,16 +247,20 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     }
     if (sortBy == 3) {
       _filteredTeachers = Teachers.sort((a, b) => {
-        if (a.work_field > b.work_field) return 1;
-        if (a.work_field < b.work_field) return -1;
+        if (a.work_field > b.work_field)
+          return 1;
+        if (a.work_field < b.work_field)
+          return -1;
         return 0;
       });
       setFilteredTeachers(_filteredTeachers);
     }
     if (sortBy == 4) {
       _filteredTeachers = Teachers.sort((a, b) => {
-        if (a.authority > b.authority) return 1;
-        if (a.authority < b.authority) return -1;
+        if (a.authority > b.authority)
+          return 1;
+        if (a.authority < b.authority)
+          return -1;
         return 0;
       });
       setFilteredTeachers(_filteredTeachers);
@@ -263,7 +269,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
   /************************** Data ****************************/
 
   //const [teachersRefs, setTeachersRefs] = React.useState([]);
-
+  
   useEffect(() => {
     TeacherService.GetAll()
       .then((res) => {
@@ -359,22 +365,12 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
       filteredTeachers.map((teacher, idx) => {
         let object = {};
         selectedColumns.forEach((item, index) => {
-          if (item.field === "full_name")
-            _.set(
-              object,
-              "full_name",
-              `${teacher.person?.first_name} ${teacher.father_name ?? ""} ${
-                teacher.person?.last_name
-              }`
-            );
-          else if (item.field === "office_phone")
-            _.set(
-              object,
-              "office_phone",
-              teacher.person.phones.find((phone) => phone.type === "office")
-                ?.phone ?? ""
-            );
-          else _.set(object, `col ${index}`, _.get(teacher, item.field) ?? "");
+          if (item.field === 'full_name')
+            _.set(object, 'full_name', `${teacher.person?.first_name} ${teacher.father_name ?? ''} ${teacher.person?.last_name}`);
+          else if (item.field === 'office_phone')
+            _.set(object, 'office_phone', teacher.person.phones.find(phone => phone.type === "office")?.phone ?? "");
+          else
+            _.set(object, `col ${index}`, _.get(teacher, item.field) ?? "");
         });
         console.log(object);
         return object;
@@ -476,12 +472,12 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
                   </span>
                   <Print />
                 </SuiButton>*/
-            <SuiButton style={{ minWidth: 80, width: 80 }} color={"primary"}>
-              <span style={{ padding: "0px 0px 0px 10px" }}>
+              <SuiButton style={{ minWidth: 80, width: 80 }} color={"primary"}>
+                <span style={{ padding: "0px 0px 0px 10px" }}>
                 {translate("Print")}
-              </span>
-              <Print />
-            </SuiButton>
+                </span>
+                <Print />
+              </SuiButton>
           ),
           onClick: (evt, data) => {
             TeacherService.Get(data.id)
@@ -509,15 +505,10 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
           <ActionTable
             Title={translate("Teachers List")}
             Columns={columns}
-            Data={data.map((item) => {
-              return {
-                ...item,
-                full_name: `${item.person?.first_name} ${item.father_name} ${item.person?.last_name}`,
-                office_phone: item.person.phones.find(
-                  (phone) => phone.type === "office"
-                )?.phone,
-              };
-            })}
+            Data={data.map(item => { return {...item,
+              full_name: `${item.person?.first_name} ${item.father_name} ${item.person?.last_name}`,
+              office_phone: item.person.phones.find(phone => phone.type === "office")?.phone,
+              }})}
             Options={options}
             Actions={actions}
           />
@@ -746,7 +737,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
           <GridItem md={12}>{renderTeachers()}</GridItem>
         </>
       )}
-      {showTeacherDetail ? (
+      {showTeacherDetail ? ( 
         //<div ref={teacherDetailsRef}>
         <TeacherDetails
           isCreate={isCreate}
@@ -758,9 +749,10 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
           isEditable={true}
           //ref={teacherDetailsRef}
         />
-      ) : (
-        //</div>
-        <div style={{ display: "none" }}>
+       //</div>
+      ) :
+        
+        <div style={{display: 'none'}}>
           {/*
           <TeacherDetails
             isCreate={isCreate}
@@ -774,11 +766,11 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
             ref={teacherDetailsRef}
           />
         */}
-          <div ref={teacherDetailsRef}>
-            <TeacherDetailsPrint teacher={teacher} />
-          </div>
+        <div ref={teacherDetailsRef}> 
+          <TeacherDetailsPrint teacher={teacher} />
         </div>
-      )}
+        </div>
+      }
       <ConfirmDialog />
     </GridContainer>
   );

@@ -81,6 +81,8 @@ const SpecialityList: React.FC<ISpecialityListProps> = ({}) => {
       id: data.id,
       ar_name: data.ar_name,
       en_name: data.en_name,
+      ar_name: data.ar_short_name,
+      en_name: data.en_short_name,
       code: data.code,
     } as ISpecialityModel);
     setOpenUpdateSpeciality(true);
@@ -94,6 +96,8 @@ const SpecialityList: React.FC<ISpecialityListProps> = ({}) => {
     id: 0,
     ar_name: "",
     en_name: "",
+    ar_short_name: "",
+    en_short_name: "",
     code: "",
   });
 
@@ -139,6 +143,14 @@ const SpecialityList: React.FC<ISpecialityListProps> = ({}) => {
         {
           title: translate("English Name"),
           field: "en_name",
+        },
+        {
+          title: translate("Arabic Short Name"),
+          field: "ar_short_name",
+        },
+        {
+          title: translate("English Short Name"),
+          field: "en_short_name",
         },
         {
           title: translate("Code"),

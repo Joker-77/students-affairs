@@ -118,6 +118,89 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           </Box>
         </Grid>
 
+        <Grid item md={3}>
+          <Box mb={2}>
+            <Box mb={1} ml={0.5}>
+              <Typography component="label" variant="caption">
+                {translate("Father")}
+              </Typography>
+            </Box>
+            <TextField
+                disabled={disabled}
+                onChange={handleChange}
+                variant="outlined"
+                size="small"
+                type="text"
+                id={`father.first_name`}
+                name={`father.first_name`}
+                value={values.father?.first_name}
+                onBlur={handleBlur}
+                error={Boolean(
+                    touched.father?.first_name && errors.father?.first_name
+                )}
+                helperText={
+                    touched.father?.first_name && errors.father?.first_name
+                }
+                placeholder={translate("Father")}
+                fullWidth
+            />
+          </Box>
+        </Grid>
+
+        <Grid item md={3}>
+          <Box mb={2}>
+            <Box mb={1} ml={0.5}>
+              <Typography component="label" variant="caption">
+                {translate("Mother")}
+              </Typography>
+            </Box>
+            <TextField
+                disabled={disabled}
+                onChange={handleChange}
+                variant="outlined"
+                size="small"
+                type="text"
+                id={`mother.first_name`}
+                name={`mother.first_name`}
+                value={values.mother?.first_name}
+                onBlur={handleBlur}
+                error={Boolean(
+                    touched.mother?.first_name && errors.mother?.first_name
+                )}
+                helperText={
+                    touched.mother?.first_name && errors.mother?.first_name
+                }
+                placeholder={translate("Mother")}
+                fullWidth
+            />
+          </Box>
+        </Grid>
+
+        <Grid item md={3}>
+          <Box mb={2}>
+            <Box mb={1} ml={0.5}>
+              <Typography component="label" variant="caption">
+                {translate("Registeration number")}
+              </Typography>
+            </Box>
+            <TextField
+                disabled={disabled}
+                onChange={handleChange}
+                variant="outlined"
+                size="small"
+                type="text"
+                id="registeration_number"
+                name="registeration_number"
+                value={values.registeration_number}
+                onBlur={handleBlur}
+                error={Boolean(touched.registeration_number && errors.registeration_number)}
+                helperText={touched.registeration_number && errors.registeration_number}
+                placeholder={translate("Registeration number")}
+                fullWidth
+            />
+          </Box>
+        </Grid>
+
         <Grid item md={3} style={prefix != "person" ? { display: "none" } : {}}>
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
@@ -209,7 +292,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           </Box>
         </Grid>
 
-        <Grid item md={3}>
+        <Grid item md={4}>
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
@@ -240,7 +323,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           </Box>
         </Grid>
 
-        <Grid item md={3}>
+        <Grid item md={4}>
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">
@@ -271,7 +354,7 @@ const PersonInfoPartialForm: React.FC<IPersonInfoPartialProps> = ({
           </Box>
         </Grid>
 
-        <Grid item md={3}>
+        <Grid item md={4}>
           <Box mb={2}>
             <Box mb={1} ml={0.5}>
               <Typography component="label" variant="caption">

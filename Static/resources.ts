@@ -1,9 +1,11 @@
-export const years = [
+export const years = (translate) => [
     {
-        value: new Date().getFullYear() - 1,
+        name: translate('Current Year'),
+        value: new Date().getFullYear(),
     },
     {
-        value: new Date().getFullYear(),
+        name: translate('Last Year'),
+        value: new Date().getFullYear() - 1,
     },
 ];
 export const rounds = (translate) => [
@@ -102,7 +104,8 @@ export const examPlaces = (translate) => [
 export const registerationClasses = (translate) => [
     translate('Internal'),
     translate('Private Study'),
-    // translate('Institutions'),
+    translate('Employees Sons'),
+    translate('Special'),
 ];
 export const yesNo = (translate) => [
     {

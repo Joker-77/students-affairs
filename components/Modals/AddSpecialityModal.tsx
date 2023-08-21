@@ -177,6 +177,52 @@ const AddSpecialityModal: React.FC<ICusomModalProps> = ({
                         fullWidth
                       />
                     </Box>
+
+                    <Box mb={2}>
+                      <Box mb={1} ml={0.5}>
+                        <Typography component="label" variant="caption">
+                          {translate("Arabic Short Name")}
+                        </Typography>
+                      </Box>
+                      <TextField
+                          disabled={disabled}
+                          onChange={handleChange}
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="ar_short_name"
+                          name="ar_short_name"
+                          value={values.ar_short_name}
+                          onBlur={handleBlur}
+                          error={Boolean(touched.ar_short_name && errors.ar_short_name)}
+                          helperText={touched.ar_short_name && errors.ar_short_name}
+                          placeholder={translate("Arabic Short Name")}
+                          fullWidth
+                      />
+                    </Box>
+                    <Box mb={2}>
+                      <Box mb={1} ml={0.5}>
+                        <Typography component="label" variant="caption">
+                          {translate("English Short Name")}
+                        </Typography>
+                      </Box>
+                      <TextField
+                          disabled={disabled}
+                          onChange={handleChange}
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="en_short_name"
+                          name="en_short_name"
+                          value={values.en_short_name}
+                          onBlur={handleBlur}
+                          error={Boolean(touched.en_short_name && errors.en_short_name)}
+                          helperText={touched.en_name && errors.en_short_name}
+                          placeholder={translate("English Short Name")}
+                          fullWidth
+                      />
+                    </Box>
+
                     <Box mb={2}>
                       <Box mb={1} ml={0.5}>
                         <Typography component="label" variant="caption">

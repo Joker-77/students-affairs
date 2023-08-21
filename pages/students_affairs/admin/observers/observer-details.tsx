@@ -4,6 +4,8 @@ import {
   IObserverModel,
   ICreateObserverModel,
   IEditObserverModel,
+  ILevelModel,
+  IActivityModel,
   //IEditObserverBasicInfo,
   //IEvaluationMethod,
 } from "../../../../Models/Observers/ObserverModel";
@@ -46,6 +48,8 @@ interface IObserverDetailProps {
   isEditable: boolean;
   setShow(): void;
   activateEdit(): void;
+  levels: ILevelModel[];
+  activities: IActivityModel[];
 }
 
 const ObserverDetail: FC<IObserverDetailProps> = ({
@@ -54,6 +58,8 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
   isEditable,
   setShow,
   activateEdit,
+  levels,
+  activities,
 }) => {
   const { translate } = useTranslation();
   const router = useRouter();
@@ -72,18 +78,22 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         number: yup
           .number(translate("ID Number"))
           .required(translate("Field is required")),
-        gender: yup
-          .string(translate("Gender"))
+        //bulding: yup
+          //.string(translate("Building")),
+          //.required(translate("Field is required")),
+        level_id: yup
+          .number(translate("Functional Body"))
           .required(translate("Field is required")),
-        authority: yup
-          .string(translate("Functional Body")),
-        activity: yup
-          .string(translate("Activity"))
+        nick_name: yup
+          .string(translate("Title"))
+          .required(translate("Field is required")),
+        activity_id: yup
+          .number(translate("Activity"))
           .required(translate("Field is required")),
         office_number: yup
           .number(translate("Office number"))
           .required(translate("Field is required")),
-        mobile: yup
+        mobile_number: yup
           .number(translate("Mobile"))
           .required(translate("Field is required")),
         excluded: yup
@@ -91,26 +101,27 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
           .required(translate("Field is required")),
         status: yup
           .string(translate("Status")),
-          //.required(translate("Field is required")),        
+          //.required(translate("Field is required")),
+        printing_name: yup
+          .string(translate("Printing name"))
+          .required(translate("Field is required")),        
       });
 
   let initialValues = 
   //isCreate ?
    {
-        first_name: observer?.person?.first_name,
-        last_name: observer?.person?.last_name,
+        first_name: observer?.first_name,
+        last_name: observer?.last_name,
         number: observer?.number,
-        gender: observer?.person?.sex,
-        authority: observer?.authority,
-        activity: observer?.activity,
-        office_number: observer?.person?.phones?.find(
-          (phone) => phone?.type === "office"
-        )?.phone,
-        mobile: observer?.person?.phones?.find(
-          (phone) => phone?.type === "personal"
-        )?.phone,
+        //bulding: observer?.bulding,
+        level_id: observer?.level_id,
+        activity_id: observer?.activity_id,
+        office_number: observer?.office_number,
+        mobile_number: observer?.mobile_number,
         excluded: observer ? observer.excluded : 0,
         status: observer?.status,
+        nick_name: observer?.nick_name,
+        printing_name: observer?.printing_name,
       };
     
   /************************* Handle Edit Observer ************/
@@ -127,20 +138,22 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         first_name: values.first_name,
         last_name: values.last_name,
         number: values.number,
-        gender: values.gender,
-        authority: values.authority,
-        activity: values.activity,
+        //bulding: values.bulding,
+        level_id: values.level_id,
+        activity_id: values.activity_id,
         office_number: values.office_number,
-        mobile: values.mobile,
+        mobile_number: values.mobile_number,
         excluded: values.excluded,
         status: values.status,
+        nick_name: values.nick_name,
+        printing_name: values.printing_name,
       };
       //console.clear();
       console.log(payload);
       ObserverService.Add(payload)
         .then((response) => {
           if (response.success) {
-            toast.success("Observer Added Successfully");
+            toast.success(translate("Observer Added Successfully"));
             setShow();
           } else {
             console.log(response.error);
@@ -159,19 +172,21 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
         first_name: values.first_name,
         last_name: values.last_name,
         number: values.number,
-        gender: values.gender,
-        authority: values.authority,
-        activity: values.activity,
+        //bulding: values.bulding,
+        level_id: values.level_id,
+        activity_id: values.activity_id,
         office_number: values.office_number,
-        mobile: values.mobile,
+        mobile_number: values.mobile_number,
         excluded: values.excluded,
         status: values.status,
+        nick_name: values.nick_name,
+        printing_name: values.printing_name,
       };
       console.log(payload);
       ObserverService.Edit(payload)
         .then((response) => {
           if (response.success) {
-            toast.success("Observer Edited Successfully");
+            toast.success(translate("Observer Edited Successfully"));
             setShow();
           } else {
             console.log(response.error);
@@ -197,7 +212,7 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                 <>
                   <Typography variant="h5" component="div">
                     {translate("Observer Name")}:{" "}
-                    {`${details?.person?.first_name} ${details?.person.last_name}`}
+                    {`${details?.first_name} ${details?.last_name}`}
                   </Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {translate("Observer Details")}
@@ -287,7 +302,24 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                         </GridItem>
                     </Grid>
                     <Grid item xs={6} md={6}>
-                        {/* Intentionally empty */}
+                      <GridItem>
+                        <TextField
+                          disabled={!isEditable}
+                          onChange={handleChange}
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="nick_name"
+                          name="nick_name"
+                          value={values.nick_name}
+                          onBlur={handleBlur}
+                          error={Boolean(touched.nick_name && errors.nick_name)}
+                          helperText={touched.nick_name && errors.nick_name}
+                          placeholder={translate("Title")}
+                          label={translate("Title")}
+                          fullWidth
+                        />
+                      </GridItem>
                     </Grid>
                   </Grid>
                     <Grid container md={12} xs={12} style={{ margin: "1em 0em" }}>
@@ -336,33 +368,22 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                     <Grid container md={12} xs={12} style={{ margin: "1em 0em" }}>
                       <Grid item xs={6} md={6}>
                         <GridItem>
-                          <TextField
-                            disabled={!isEditable}
-                            onChange={handleChange}
-                            variant="outlined"
-                            size="small"
-                            type="select"
-                            id="gender"
-                            name="gender"
-                            select={true}
-                            value={values.gender}
-                            onBlur={handleBlur}
-                            error={Boolean(
-                              touched.gender && errors.gender
-                            )}
-                            helperText={
-                              touched.gender && errors.gender
-                            }
-                            placeholder={translate("Gender")}
-                            label={translate("Gender")}
-                            fullWidth
-                          >
-                            {genders(translate).map((gender) => (
-                              <MenuItem key={gender.id} value={gender.id}>
-                                {gender.value}
-                              </MenuItem>
-                            ))}
-                          </TextField>
+                        <TextField
+                          disabled={!isEditable}
+                          onChange={handleChange}
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          id="printing_name"
+                          name="printing_name"
+                          value={values.printing_name}
+                          onBlur={handleBlur}
+                          error={Boolean(touched.printing_name && errors.printing_name)}
+                          helperText={touched.printing_name && errors.printing_name}
+                          placeholder={translate("Printing name")}
+                          label={translate("Printing name")}
+                          fullWidth
+                        />
                         </GridItem>
                       </Grid>
                       <Grid item xs={6} md={6}>
@@ -373,24 +394,24 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                             variant="outlined"
                             size="small"
                             type="select"
-                            id="authority"
-                            name="authority"
+                            id="level_id"
+                            name="level_id"
                             select={true}
-                            value={values.authority}
+                            value={values.level_id}
                             onBlur={handleBlur}
                             error={Boolean(
-                              touched.authority && errors.authority
+                              touched.level_id && errors.level_id
                             )}
                             helperText={
-                              touched.authority && errors.authority
+                              touched.level_id && errors.level_id
                             }
                             placeholder={translate("Functional Body")}
                             label={translate("Functional Body")}
                             fullWidth
                           >
-                            {authorities(translate).map((authority) => (
-                              <MenuItem key={authority.id} value={authority.id}>
-                                {authority.value}
+                            {levels?.map((level) => (
+                              <MenuItem key={level.id} value={level.id}>
+                                {level.name}
                               </MenuItem>
                             ))}
                           </TextField>
@@ -408,24 +429,24 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                                 variant="outlined"
                                 size="small"
                                 type="select"
-                                id="activity"
-                                name="activity"
+                                id="activity_id"
+                                name="activity_id"
                                 select={true}
-                                value={values.activity}
+                                value={values.activity_id}
                                 onBlur={handleBlur}
                                 error={Boolean(
-                                  touched.activity && errors.activity
+                                  touched.activity_id && errors.activity_id
                                 )}
                                 helperText={
-                                  touched.activity && errors.activity
+                                  touched.activity_id && errors.activity_id
                                 }
                                 placeholder={translate("Activity in HIAST")}
                                 label={translate("Activity in HIAST")}
                                 fullWidth
                             >
-                                {work_fields(translate)[0].activities?.map((activity) => (
+                                {activities?.map((activity) => (
                                     <MenuItem key={activity.id} value={activity.id}>
-                                      {activity.value}
+                                      {activity.name}
                                     </MenuItem>
                                 ))}
                             </TextField>
@@ -496,12 +517,12 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                             variant="outlined"
                             size="small"
                             type="text"
-                            id="mobile"
-                            name="mobile"
-                            value={values.mobile}
+                            id="mobile_number"
+                            name="mobile_number"
+                            value={values.mobile_number}
                             onBlur={handleBlur}
-                            error={Boolean(touched.mobile && errors.mobile)}
-                            helperText={touched.mobile && errors.mobile}
+                            error={Boolean(touched.mobile_number && errors.mobile_number)}
+                            helperText={touched.mobile_number && errors.mobile_number}
                             placeholder={translate("Mobile")}
                             label={translate("Mobile")}
                             fullWidth
@@ -532,9 +553,11 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
                         </GridItem>
                       </Grid>
                       <Grid item xs={6} md={6}>
+                      <GridItem>
                         {/* Intentionally empty */}
-                      </Grid>
+                      </GridItem>
                     </Grid>
+                  </Grid>
                   //)
                 }
                 

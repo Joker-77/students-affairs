@@ -2,30 +2,35 @@ import { IPersonModel } from "../ApiResponse/PersonModel";
 
 export interface IObserverModel {
   id: number;
-  authority: string;
-  activity: string;
+  first_name: string;
+  last_name: string;
+  level_id: number;
+  activity_id: number;
   number: string;
-  person_id: string;
   created_at: string;
   updated_at: string;
-  person: IPersonModel;
   office_number: string;
-  mobile: string;
+  mobile_number: string;
   status: string;
   excluded: number;
+  bulding: string;
+  nick_name: string;
+  printing_name: string;
 }
 
 export interface ICreateObserverModel {
   number: string;
   first_name: string;
   last_name: string;
-  gender: string;
-  authority: string;
-  activity: string;
+  bulding: string;
+  level_id: number;
+  activity_id: number;
   office_number: string;
-  mobile: string;
+  mobile_number: string;
   excluded: number;
   status: string;
+  nick_name: string;
+  printing_name: string;
 }
 
 export interface IEditObserverModel {
@@ -33,11 +38,23 @@ export interface IEditObserverModel {
   number: string;
   first_name: string;
   last_name: string;
-  gender: string;
-  authority: string;
-  activity: string;
+  bulding: string;
+  level_id: number;
+  activity_id: number;
   office_number: string;
-  mobile: string;
+  mobile_number: string;
   excluded: number;
   status: string;
+  nick_name: string;
+  printing_name: string;
+}
+
+export interface ILevelModel {
+  id: number;
+  name: string;
+}
+
+export interface IActivityModel {
+  id: number;
+  name: string;
 }

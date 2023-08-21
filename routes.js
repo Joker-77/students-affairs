@@ -1,6 +1,7 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
+
 import {
   People,
   School,
@@ -48,6 +49,9 @@ const dashboardRoutes = [{
     path: "/admin/teachers/teachers-list",
     name: "Teachers",
     rtlName: "المدرسون",
+    path: "/admin/teachers/teachers-list",
+    name: "Teachers",
+    rtlName: "المدرسون",
     icon: School,
     layout: "/students_affairs",
   },
@@ -73,19 +77,26 @@ const dashboardRoutes = [{
     layout: "/students_affairs",
   },
   {
+    path: "/admin/observers/observations",
+    name: "Observations",
+    rtlName: "المراقبات الامتحانية",
+    icon: SupervisorAccount,
+    layout: "/students_affairs",
+  },
+  {
     path: "/admin/students_courses",
     name: "Observers",
     rtlName: "مقررات الطالب",
     icon: EditAttributesSharp,
     layout: "/students_affairs",
   },
-  {
-    path: "/admin/marks",
-    name: "Observers",
-    rtlName: "علامات الطالب",
-    icon: EditAttributesSharp,
-    layout: "/students_affairs",
-  },
+  // {
+  //   path: "/admin/marks",
+  //   name: "Observers",
+  //   rtlName: "علامات الطالب",
+  //   icon: EditAttributesSharp,
+  //   layout: "/students_affairs",
+  // },
   {
     path: '/admin/course_result',
     name: "CourseResult",
