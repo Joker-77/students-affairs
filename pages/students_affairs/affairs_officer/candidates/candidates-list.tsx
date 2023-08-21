@@ -34,7 +34,6 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
     title,
     customColumns,
 }) => {
-
     const router = useRouter();
     const { translate } = useTranslation();
     const useStyles = makeStyles(styles);
@@ -44,6 +43,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
     const [loading, setLoading] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const [searchResult, setSearchResult] = React.useState(null);
+    const [items, setItems] = React.useState([]);
     const handleOpen = () => {
         setOpen(true);
     };
@@ -119,44 +119,45 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
     };
 
     /************************** Data ****************************/
-    useEffect(() => {
-        setLoading(true);
-        CandidateService.GetAll()
+    const getCandidates = async () => {
+        var result = await CandidateService.GetAll()
             .then((res) => {
-                console.log("Candidates", res);
-                var list = forRegistrations ? res.result ?.filter(item => item.registerations ?.length > 0) : res.result;
-                // if(forRegistrations) {
-                //     list = list.map(item => {
-                //         return {
-                //             ...item,
-                //             class_id: registerations[0].status,//registerations[0].status
-                //             status_id: registerations[0].status,
-                //         }
-                //     });
-                // }
-                setCandidates(list);
+                return forRegistrations ? res.result ?.filter(item => item.registerations ?.length > 0) : res.result;
             })
             .catch((error) => {
                 console.error("error", error);
-            }).finally(() => {
-                setLoading(false);
-            });
-    }, []);
-
+            })
+        return result;
+    }
     useEffect(() => {
-        Candidates != null && Candidates.length > 0 && Candidates.forEach((element, index) => {
+        setLoading(true);
+        setItems([]);
+        getCandidates().then(res => {
+            setItems(res);
+        })
+    }, []);
+    useEffect(() => {
+        setLoading(true);
+        setCandidates([]);
+        items ?.length > 0 && items.forEach(element => {
             DesireService.GetAll(element.id)
                 .then((res) => {
                     const desires = res.result;
+                    console.log(desires);
                     if (desires.length > 0) {
                         element['desires'] = desires;
                     }
+                    else
+                        element['desires'] = [];
                 })
                 .catch((error) => {
                     console.error("error", error);
                 });
-        });
-    }, [Candidates])
+        })
+        setCandidates(items);
+        setLoading(false);
+    }, [items])
+
     /************************** Finish Data ****************************/
     let columns = [
         {
@@ -357,12 +358,12 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                 filtering: false,
             },
             {
-                title: "الرياضيات",
+                title: "امتحان قبول الرياضيات",
                 field: "registerations[0].math",
                 filtering: false,
             },
             {
-                title: "الفيزياء",
+                title: "امتحان قبول الفيزياء",
                 field: "registerations[0].physics",
                 filtering: false,
             },
@@ -401,6 +402,21 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                 field: "desires[5].speciality.ar_name",
                 filtering: false,
             },
+            {
+                title: "مثبتة",
+                field: "",
+                filtering: false,
+            },
+            {
+                title: "مكان القبول",
+                field: "registerations[0].accept_place",
+                filtering: false,
+            },
+            {
+                title: "حالة القبول",
+                field: "registerations[0].status",
+                filtering: false,
+            },
         ];
         let localCsvOptions = {
             fieldSeparator: ",",
@@ -412,21 +428,32 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
             headers: allColumns.map((c) => c.title),
         };
         let localCsvExporter = new ExportToCsv(localCsvOptions);
-
-        localCsvExporter.generateCsv(
-            Candidates.map((ct) => {
-                let object = {};
-                allColumns.forEach((item, index) => {
-                    console.log(ct)
-                    console.log(item)
-                    if (item.field == "full_name")
-                        _.set(object, `col ${index}`, `${ct.person ?.first_name} ${ct.father ?.first_name} ${ct.person ?.last_name}`);
-                    else
-                        _.set(object, `col ${index}`, _.get(ct, item.field) ?? "");
-                });
-                return object;
-            })
-        );
+        setTimeout(() => {
+            localCsvExporter.generateCsv(
+                Candidates.map((ct) => {
+                    let object = {};
+                    allColumns.forEach((item, index) => {
+                        if (item.field == "full_name")
+                            _.set(object, `col ${index}`, `${ct.person ?.first_name} ${ct.father ?.first_name} ${ct.person ?.last_name}`);
+                        else if (item.field == "registerations[0].mark_3600") {
+                            let value = parseInt(ct ?.certificates[0] ?.result) + parseInt(ct.certificates[0] ?.details[4] ?.value) + parseInt(ct.certificates[0] ?.details[5] ?.value) + parseInt(ct.certificates[0] ?.details[6] ?.value);
+                            _.set(object, `col ${index}`, `${value}`);
+                        }
+                        else if (item.field == "registerations[0].mark_3400") {
+                            if (ct ?.registerations ?.length > 0) {
+                                let value = parseInt(ct ?.certificates[0] ?.result) + parseInt(ct ?.registerations[0] ?.math) + parseInt(ct ?.registerations[0] ?.physics);
+                                _.set(object, `col ${index}`, `${value}`);
+                            }
+                            else
+                                _.set(object, `col ${index}`, "");
+                        }
+                        else
+                            _.set(object, `col ${index}`, _.get(ct, item.field) ?? "");
+                    });
+                    return object;
+                })
+            );
+        }, 2000);
     }
     return (
         <GridContainer>
@@ -475,6 +502,14 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                         </SuiButton>
                     </React.Fragment>
                 )}
+                <SuiButton style={{ marginLeft: 10 }}
+                    disabled={false}
+                    variant="gradient"
+                    onClick={handleAllExportData}
+                    color={'dark'}
+                >
+                    {translate("تصدير كامل المعلومات")}
+                </SuiButton>
                 {showExportColumns && (
                     <GridItem style={{ marginBottom: "1em" }}>
                         <Accordion>
