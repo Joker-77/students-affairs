@@ -134,33 +134,9 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
         setItems([]);
         getCandidates().then(res => {
             setCandidates(res);
-            console.clear();
-            console.log(res);
             setLoading(false);
         })
     }, []);
-    // useEffect(() => {
-    //     setLoading(true);
-    //     setCandidates([]);
-    //     items ?.length > 0 && items.forEach(element => {
-    //         DesireService.GetAll(element.id)
-    //             .then((res) => {
-    //                 const desires = res.result;
-    //                 console.log(desires);
-    //                 if (desires.length > 0) {
-    //                     element['desires'] = desires;
-    //                 }
-    //                 else
-    //                     element['desires'] = [];
-    //             })
-    //             .catch((error) => {
-    //                 console.error("error", error);
-    //             });
-    //     })
-    //     setCandidates(items);
-    //     setLoading(false);
-    // }, [items])
-
     /************************** Finish Data ****************************/
     let columns = [
         {
