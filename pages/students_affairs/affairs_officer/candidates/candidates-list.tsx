@@ -22,6 +22,7 @@ import AddTestResultsFileModal from "../../../../components/Modals/AddTestResult
 import AddCandidateOutSideMinistryModal from "../../../../components/Modals/AddCandidateOutSideMinistryModal";
 import _ from "lodash";
 import { Description } from "@material-ui/icons";
+import DesireService from '../../../../Services/DesireService';
 
 interface ICandidatesListProps {
     forRegistrations: boolean;
@@ -33,15 +34,16 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
     title,
     customColumns,
 }) => {
-
     const router = useRouter();
     const { translate } = useTranslation();
     const useStyles = makeStyles(styles);
     const classes = useStyles();
     const dispatch = useAppDispatch();
-
+    const [Candidates, setCandidates] = React.useState<ICandidateModel[]>(null);
+    const [loading, setLoading] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const [searchResult, setSearchResult] = React.useState(null);
+    const [items, setItems] = React.useState([]);
     const handleOpen = () => {
         setOpen(true);
     };
@@ -99,7 +101,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
 
     const submitAddCandidate = async (values: any, setSubmitting) => {
         setSubmitting(true);
-        CandidateService.AddAfterSearch({...values, external: 0})
+        CandidateService.AddAfterSearch({ ...values, external: 0 })
             .then((res) => {
                 const candidatesCopy = [res.result, ...Candidates];
                 setCandidates(candidatesCopy);
@@ -116,30 +118,24 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
         ;
     };
 
-    const [loading, setLoading] = React.useState(false);
     /************************** Data ****************************/
-    useEffect(() => {
-        setLoading(true);
-        CandidateService.GetAll()
+    const getCandidates = async () => {
+        var result = await CandidateService.GetAll()
             .then((res) => {
-                console.log("Candidates", res);
-                var list = forRegistrations ? res.result ?.filter(item => item.registerations ?.length > 0) : res.result;
-                // if(forRegistrations) {
-                //     list = list.map(item => {
-                //         return {
-                //             ...item,
-                //             class_id: registerations[0].status,//registerations[0].status
-                //             status_id: registerations[0].status,
-                //         }
-                //     });
-                // }
-                setCandidates(list);
+                return forRegistrations ? res.result ?.filter(item => item.registerations ?.length > 0) : res.result;
             })
             .catch((error) => {
                 console.error("error", error);
-            }).finally(() => {
-                setLoading(false);
-            });
+            })
+        return result;
+    }
+    useEffect(() => {
+        setLoading(true);
+        setItems([]);
+        getCandidates().then(res => {
+            setCandidates(res);
+            setLoading(false);
+        })
     }, []);
     /************************** Finish Data ****************************/
     let columns = [
@@ -202,7 +198,6 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
         //     field: "certificates[0].result",
         // },
     ];
-    const [Candidates, setCandidates] = React.useState<ICandidateModel[]>(null);
     const renderCandidates = () => {
         if (loading) return <Placeholder loading />
         if (Candidates != null && Candidates.length > 0) {
@@ -276,6 +271,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
             })
         );
     };
+
     const handleCheck = (event) => {
         var updatedList = [...checked];
         if (event.target.checked) {
@@ -290,6 +286,164 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
             })
         );
     };
+    const handleAllExportData = () => {
+        let allColumns = [
+            {
+                title: "رقم التسجيل",
+                field: "registeration_number",
+                hidden: true,
+                filtering: false,
+            },
+            {
+                title: "الاسم الثلاثي",
+                field: "full_name",
+                filtering: false,
+            },
+            {
+                title: "رقم الاكتتاب",
+                field: "certificates[0].subscription_number",
+                hidden: true,
+                filtering: false,
+            },
+            {
+                title: "المحافظة",
+                field: "certificates[0].city",
+                filtering: false,
+                type: "string",
+            },
+            {
+                title: "الدورة",
+                field: "certificates[0].round",
+                filtering: false,
+            },
+            {
+                title: "2400",
+                field: "certificates[0].result",
+                filtering: false,
+            },
+            {
+                title: "رياضيات",
+                field: "certificates[0].details[4].value",
+                filtering: false,
+            },
+            {
+                title: "فيزياء",
+                field: "certificates[0].details[5].value",
+                filtering: false,
+            },
+            {
+                title: "كيمياء",
+                field: "certificates[0].details[6].value",
+                filtering: false,
+            },
+            {
+                title: "3600",
+                field: "registerations[0].mark_3600",
+                filtering: false,
+            },
+            {
+                title: "الهاتف",
+                field: "person.phones[0].phone",
+                filtering: false,
+            },
+            {
+                title: "امتحان قبول الرياضيات",
+                field: "registerations[0].math",
+                filtering: false,
+            },
+            {
+                title: "امتحان قبول الفيزياء",
+                field: "registerations[0].physics",
+                filtering: false,
+            },
+            {
+                title: "3400",
+                field: "registerations[0].mark_3400",
+                filtering: false,
+            },
+            {
+                title: "أولى",
+                field: "desires[0].speciality.ar_name",
+                filtering: false,
+            },
+            {
+                title: "ثانية",
+                field: "desires[1].speciality.ar_name",
+                filtering: false,
+            },
+            {
+                title: "ثالثة",
+                field: "desires[2].speciality.ar_name",
+                filtering: false,
+            },
+            {
+                title: "رابعة",
+                field: "desires[3].speciality.ar_name",
+                filtering: false,
+            },
+            {
+                title: "خامسة",
+                field: "desires[4].speciality.ar_name",
+                filtering: false,
+            },
+            {
+                title: "سادسة",
+                field: "desires[5].speciality.ar_name",
+                filtering: false,
+            },
+            {
+                title: "مثبتة",
+                field: "selected_desire?.speciality_name",
+                filtering: false,
+            },
+            {
+                title: "مكان القبول",
+                field: "registerations[0].accept_place",
+                filtering: false,
+            },
+            {
+                title: "حالة القبول",
+                field: "registerations[0].status",
+                filtering: false,
+            },
+        ];
+        let localCsvOptions = {
+            fieldSeparator: ",",
+            quoteStrings: '"',
+            decimalSeparator: ".",
+            showLabels: true,
+            useBom: true,
+            useKeysAsHeaders: false,
+            headers: allColumns.map((c) => c.title),
+        };
+        let localCsvExporter = new ExportToCsv(localCsvOptions);
+        setTimeout(() => {
+            localCsvExporter.generateCsv(
+                Candidates.map((ct) => {
+                    let object = {};
+                    allColumns.forEach((item, index) => {
+                        if (item.field == "full_name")
+                            _.set(object, `col ${index}`, `${ct.person ?.first_name} ${ct.father ?.first_name} ${ct.person ?.last_name}`);
+                        else if (item.field == "registerations[0].mark_3600") {
+                            let value = parseInt(ct ?.certificates[0] ?.result) + parseInt(ct.certificates[0] ?.details[4] ?.value) + parseInt(ct.certificates[0] ?.details[5] ?.value) + parseInt(ct.certificates[0] ?.details[6] ?.value);
+                            _.set(object, `col ${index}`, `${value}`);
+                        }
+                        else if (item.field == "registerations[0].mark_3400") {
+                            if (ct ?.registerations ?.length > 0) {
+                                let value = parseInt(ct ?.certificates[0] ?.result) + parseInt(ct ?.registerations[0] ?.math) + parseInt(ct ?.registerations[0] ?.physics);
+                                _.set(object, `col ${index}`, `${value}`);
+                            }
+                            else
+                                _.set(object, `col ${index}`, "");
+                        }
+                        else
+                            _.set(object, `col ${index}`, _.get(ct, item.field) ?? "");
+                    });
+                    return object;
+                })
+            );
+        }, 2000);
+    }
     return (
         <GridContainer>
             <GridItem md={12}>
@@ -329,8 +483,16 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                         </SuiButton>
                     </React.Fragment>
                 )}
+                <SuiButton style={{ marginLeft: 10 }}
+                    disabled={false}
+                    variant="gradient"
+                    onClick={handleAllExportData}
+                    color={'dark'}
+                >
+                    {translate("تصدير كامل المعلومات")}
+                </SuiButton>
                 {showExportColumns && (
-                    <GridItem>
+                    <GridItem style={{ marginBottom: "1em" }}>
                         <Accordion>
                             <AccordionDetails>
                                 <GridItem container>
