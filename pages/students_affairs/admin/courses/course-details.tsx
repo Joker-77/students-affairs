@@ -55,160 +55,163 @@ const CourseDetail: FC<ICourseDetailProps> = ({
       name: "مذاكرة",
     },
     {
-      name: "عملي",
+      name: "أعمال",
     },
     {
       name: "امتحان",
     },
+    {
+      name: "آخر",
+    }
   ];
   const router = useRouter();
   const { translate } = useTranslation();
   const [course, setDetails] = useState<ICourseModel>(details);
   const [fileName, setFileName] = useState<string>(
-    course?.current_description?.attachement
+    course ?.current_description ?.attachement
   );
   const [addDescription, setAddDescription] = useState(isCreate);
   let courseSchema = isCreate
     ? yup.object({
-        en_name: yup
-          .string(translate("English Name"))
-          .required(translate("Field is required")),
-        ar_name: yup
-          .string(translate("Arabic Name"))
-          .required(translate("Field is required")),
-        fr_name: yup
-          .string(translate("French Name"))
-          .required(translate("Field is required")),
-        code: yup
-          .string(translate("Course Code"))
-          .required(translate("Field is required")),
-        theoretical_hours: yup
-          .number("Theoretical Hours")
-          .min(0, translate("Field must be greater than 0"))
-          .required(translate("Field is required")),
-        practical_hours: yup
-          .number("Practical Hours")
-          .min(0, translate("Field must be greater than 0"))
-          .required(translate("Field is required")),
-        mixed_hours: yup
-          .number("Practical Hours")
-          .min(0, translate("Field must be greater than 0"))
-          .required(translate("Field is required")),
-        evaluation_methods: yup
-          .array()
-          .of(
-            yup.object().shape({
-              name: yup.string(),
-              percentage: yup
-                .number()
-                .min(0, translate("Field must be greater than 0"))
-                .max(100, translate("Field must be less than 100"))
-                .transform((value) => (isNaN(value) ? undefined : value))
-                .required("Percentage is required"),
-            })
-          )
-          .min(1, translate("Need at least one evaluation method"))
-          .test((methods: Array<{ percentage: number }>) => {
-            const sum = methods?.reduce(
-              (acc, curr) => acc + curr.percentage,
-              0
-            );
-            if (sum != 100) {
-              isNaN(sum)
-                ? setErrorPercentageMsg(
-                    translate("Percentage should be 100%, but you have:") + "0%"
-                  )
-                : setErrorPercentageMsg(
-                    translate("Percentage should be 100%, but you have:") +
-                      sum +
-                      "%"
-                  );
-              return new yup.ValidationError(
-                translate(
-                  `Percentage should be 100%, but you have ${sum}%`,
-                  undefined,
-                  translate("Evaluation Methods")
-                )
+      en_name: yup
+        .string(translate("English Name"))
+        .required(translate("Field is required")),
+      ar_name: yup
+        .string(translate("Arabic Name"))
+        .required(translate("Field is required")),
+      fr_name: yup
+        .string(translate("French Name"))
+        .required(translate("Field is required")),
+      code: yup
+        .string(translate("Course Code"))
+        .required(translate("Field is required")),
+      theoretical_hours: yup
+        .number("Theoretical Hours")
+        .min(0, translate("Field must be greater than 0"))
+        .required(translate("Field is required")),
+      practical_hours: yup
+        .number("Practical Hours")
+        .min(0, translate("Field must be greater than 0"))
+        .required(translate("Field is required")),
+      mixed_hours: yup
+        .number("Practical Hours")
+        .min(0, translate("Field must be greater than 0"))
+        .required(translate("Field is required")),
+      evaluation_methods: yup
+        .array()
+        .of(
+          yup.object().shape({
+            name: yup.string(),
+            percentage: yup
+              .number()
+              .min(0, translate("Field must be greater than 0"))
+              .max(100, translate("Field must be less than 100"))
+              .transform((value) => (isNaN(value) ? undefined : value))
+              .required("Percentage is required"),
+          })
+        )
+        .min(1, translate("Need at least one evaluation method"))
+        .test((methods: Array<{ percentage: number }>) => {
+          const sum = methods ?.reduce(
+            (acc, curr) => acc + curr.percentage,
+            0
+          );
+          if (sum != 100) {
+            isNaN(sum)
+              ? setErrorPercentageMsg(
+                translate("Percentage should be 100%, but you have:") + "0%"
+              )
+              : setErrorPercentageMsg(
+                translate("Percentage should be 100%, but you have:") +
+                sum +
+                "%"
               );
-            } else {
-              setErrorPercentageMsg("");
-              return true;
-            }
-          }),
-        attachement: yup
-          .mixed()
-          .required(translate("Need an attachement for this course")),
-      })
+            return new yup.ValidationError(
+              translate(
+                `Percentage should be 100%, but you have ${sum}%`,
+                undefined,
+                translate("Evaluation Methods")
+              )
+            );
+          } else {
+            setErrorPercentageMsg("");
+            return true;
+          }
+        }),
+      attachement: yup
+        .mixed()
+        .required(translate("Need an attachement for this course")),
+    })
     : yup.object({
-        en_name: yup
-          .string(translate("English Name"))
-          .required(translate("Field is required")),
-        ar_name: yup
-          .string(translate("Arabic Name"))
-          .required(translate("Field is required")),
-        fr_name: yup
-          .string(translate("French Name"))
-          .required(translate("Field is required")),
-        code: yup
-          .string(translate("Course Code"))
-          .required(translate("Field is required")),
-        attachement: yup
-          .mixed()
-          .required(translate("Need an attachement for this course")),
-      });
+      en_name: yup
+        .string(translate("English Name"))
+        .required(translate("Field is required")),
+      ar_name: yup
+        .string(translate("Arabic Name"))
+        .required(translate("Field is required")),
+      fr_name: yup
+        .string(translate("French Name"))
+        .required(translate("Field is required")),
+      code: yup
+        .string(translate("Course Code"))
+        .required(translate("Field is required")),
+      attachement: yup
+        .mixed()
+        .required(translate("Need an attachement for this course")),
+    });
 
   let initialValues = isCreate
     ? {
-        en_name: course?.en_name,
-        ar_name: course?.ar_name,
-        fr_name: course?.fr_name,
-        code: course?.code,
-        credit: course?.current_description?.credit,
-        theoretical_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "theoretic"
-        )?.hours,
-        practical_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "practical"
-        )?.hours,
-        mixed_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "mixed"
-        )?.hours,
-        evaluation_methods:
-          course?.current_description?.evaluation_methods?.map((ev, idx) => {
-            return {
-              id: ev.id,
-              name: ev.name,
-              percentage: ev.percentage,
-            };
-          }),
-        attachement: course?.current_description?.attachement,
-      }
+      en_name: course ?.en_name,
+      ar_name: course ?.ar_name,
+      fr_name: course ?.fr_name,
+      code: course ?.code,
+      credit: course ?.current_description ?.credit,
+      theoretical_hours: course ?.current_description ?.hours ?.find(
+        (hour) => hour ?.type == "theoretic"
+        ) ?.hours,
+      practical_hours: course ?.current_description ?.hours ?.find(
+        (hour) => hour ?.type == "practical"
+        ) ?.hours,
+      mixed_hours: course ?.current_description ?.hours ?.find(
+        (hour) => hour ?.type == "mixed"
+        ) ?.hours,
+      evaluation_methods:
+        course ?.current_description ?.evaluation_methods ?.map((ev, idx) => {
+          return {
+            id: ev.id,
+            name: ev.name,
+            percentage: ev.percentage,
+          };
+        }),
+      attachement: course ?.current_description ?.attachement,
+    }
     : {
-        id: course.id,
-        en_name: course.en_name,
-        ar_name: course.ar_name,
-        fr_name: course.fr_name,
-        code: course.code,
-        credit: course?.current_description?.credit,
-        theoretical_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "theoretic"
-        )?.hours,
-        practical_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "practical"
-        )?.hours,
-        mixed_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "mixed"
-        )?.hours,
-        evaluation_methods:
-          course?.current_description?.evaluation_methods?.map((ev, idx) => {
-            return {
-              id: ev.id,
-              name: ev.name,
-              percentage: ev.percentage,
-            };
-          }),
-        attachement: course?.current_description?.attachement,
-      };
+      id: course.id,
+      en_name: course.en_name,
+      ar_name: course.ar_name,
+      fr_name: course.fr_name,
+      code: course.code,
+      credit: course ?.current_description ?.credit,
+      theoretical_hours: course ?.current_description ?.hours ?.find(
+        (hour) => hour ?.type == "theoretic"
+        ) ?.hours,
+      practical_hours: course ?.current_description ?.hours ?.find(
+        (hour) => hour ?.type == "practical"
+        ) ?.hours,
+      mixed_hours: course ?.current_description ?.hours ?.find(
+        (hour) => hour ?.type == "mixed"
+        ) ?.hours,
+      evaluation_methods:
+        course ?.current_description ?.evaluation_methods ?.map((ev, idx) => {
+          return {
+            id: ev.id,
+            name: ev.name,
+            percentage: ev.percentage,
+          };
+        }),
+      attachement: course ?.current_description ?.attachement,
+    };
   /************************* Handle Edit Course ************/
   const handleEditCourse = (event) => {
     event.preventDefault();
@@ -261,20 +264,20 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           )
           .min(1, translate("Need at least one evaluation method"))
           .test((methods: Array<{ percentage: number }>) => {
-            const sum = methods?.reduce(
+            const sum = methods ?.reduce(
               (acc, curr) => acc + curr.percentage,
               0
             );
             if (sum != 100) {
               isNaN(sum)
                 ? setErrorPercentageMsg(
-                    translate("Percentage should be 100%, but you have:") + "0%"
-                  )
+                  translate("Percentage should be 100%, but you have:") + "0%"
+                )
                 : setErrorPercentageMsg(
-                    translate("Percentage should be 100%, but you have:") +
-                      sum +
-                      "%"
-                  );
+                  translate("Percentage should be 100%, but you have:") +
+                  sum +
+                  "%"
+                );
               return new yup.ValidationError(
                 translate(
                   `Percentage should be 100%, but you have ${sum}%`,
@@ -316,29 +319,29 @@ const CourseDetail: FC<ICourseDetailProps> = ({
     setAddDescription(!addDescription);
     if (addDescription) {
       initialValues = {
-        en_name: course?.en_name,
-        ar_name: course?.ar_name,
-        fr_name: course?.fr_name,
-        code: course?.code,
-        credit: course?.current_description?.credit,
-        theoretical_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "theoretic"
-        )?.hours,
-        practical_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "practical"
-        )?.hours,
-        mixed_hours: course?.current_description?.hours?.find(
-          (hour) => hour?.type == "mixed"
-        )?.hours,
+        en_name: course ?.en_name,
+        ar_name: course ?.ar_name,
+        fr_name: course ?.fr_name,
+        code: course ?.code,
+        credit: course ?.current_description ?.credit,
+        theoretical_hours: course ?.current_description ?.hours ?.find(
+          (hour) => hour ?.type == "theoretic"
+        ) ?.hours,
+        practical_hours: course ?.current_description ?.hours ?.find(
+          (hour) => hour ?.type == "practical"
+        ) ?.hours,
+        mixed_hours: course ?.current_description ?.hours ?.find(
+          (hour) => hour ?.type == "mixed"
+        ) ?.hours,
         evaluation_methods:
-          course?.current_description?.evaluation_methods?.map((ev, idx) => {
+          course ?.current_description ?.evaluation_methods ?.map((ev, idx) => {
             return {
               id: ev.id,
               name: ev.name,
               percentage: ev.percentage * 100,
             };
           }),
-        attachement: course?.current_description?.attachement,
+        attachement: course ?.current_description ?.attachement,
       };
     } else {
       initialValues = {
@@ -347,7 +350,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         ar_name: course.ar_name,
         fr_name: course.fr_name,
         code: course.code,
-        attachement: course?.current_description?.attachement,
+        attachement: course ?.current_description ?.attachement,
       };
     }
   };
@@ -452,14 +455,14 @@ const CourseDetail: FC<ICourseDetailProps> = ({
 
   const hiddenInput = React.useRef(null);
   const handleClick = (event) => {
-    hiddenInput.current?.click();
+    hiddenInput.current ?.click();
   };
   const [changed, setChanged] = useState(false);
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsDataURL(file);
-      setFileName(file?.name);
+      setFileName(file ?.name);
       fileReader.onload = () => {
         resolve(fileReader.result);
       };
@@ -473,7 +476,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
     const file = e.target.files[0];
     setChanged(true);
     //check the size of image
-    if (file?.size / 1024 / 1024 < 2) {
+    if (file ?.size / 1024 / 1024 < 2) {
       const base64 = await convertToBase64(file);
       setFieldValue("attachement", base64);
     } else {
@@ -488,7 +491,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
             <GridItem item md={9} xs={12} sm={12}>
               <Typography variant="h5" component="div">
                 {translate("Course Name")}:{" "}
-                {details?.ar_name ?? "التحليل الرياضي"}
+                {details ?.ar_name ?? "التحليل الرياضي"}
               </Typography>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {translate("Course Details")}
@@ -537,8 +540,8 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                         color: "red",
                         display:
                           errors && // 👈 null and undefined check
-                          Object.keys(errors).length === 0 &&
-                          Object.getPrototypeOf(errors) === Object.prototype
+                            Object.keys(errors).length === 0 &&
+                            Object.getPrototypeOf(errors) === Object.prototype
                             ? "none"
                             : "block",
                       }}
@@ -644,7 +647,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                             onBlur={handleBlur}
                             error={Boolean(
                               touched.theoretical_hours &&
-                                errors.theoretical_hours
+                              errors.theoretical_hours
                             )}
                             helperText={
                               touched.theoretical_hours &&
@@ -752,148 +755,148 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                         name={"evaluation_methods"}
                         render={(arrayHelpers) => (
                           <div>
-                            {values?.evaluation_methods &&
-                            values?.evaluation_methods.length > 0 ? (
-                              values?.evaluation_methods.map(
-                                (method, index) => (
-                                  <div key={index}>
-                                    <Grid container spacing={2}>
-                                      <Grid item xs={4}>
-                                        <TextField
-                                          disabled={!isEditable}
-                                          variant="outlined"
-                                          size="small"
-                                          type="select"
-                                          id={`evaluation_methods.${index}.name`}
-                                          name={`evaluation_methods.${index}.name`}
-                                          select={true}
-                                          value={method.name}
-                                          onChange={handleChange(
-                                            `evaluation_methods.${index}.name`
-                                          )}
-                                          onBlur={handleBlur}
-                                          fullWidth
+                            {values ?.evaluation_methods &&
+                              values ?.evaluation_methods.length > 0 ? (
+                                values ?.evaluation_methods.map(
+                                  (method, index) => (
+                                    <div key={index}>
+                                      <Grid container spacing={2}>
+                                        <Grid item xs={4}>
+                                          <TextField
+                                            disabled={!isEditable}
+                                            variant="outlined"
+                                            size="small"
+                                            type="select"
+                                            id={`evaluation_methods.${index}.name`}
+                                            name={`evaluation_methods.${index}.name`}
+                                            select={true}
+                                            value={method.name}
+                                            onChange={handleChange(
+                                              `evaluation_methods.${index}.name`
+                                            )}
+                                            onBlur={handleBlur}
+                                            fullWidth
+                                          >
+                                            {methodTypes ?.map((type) => (
+                                              <MenuItem
+                                                key={type.name}
+                                                value={type.name}
+                                              >
+                                                {type.name}
+                                              </MenuItem>
+                                            ))}
+                                          </TextField>
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          xs={4}
+                                          style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                          }}
                                         >
-                                          {methodTypes?.map((type) => (
-                                            <MenuItem
-                                              key={type.name}
-                                              value={type.name}
-                                            >
-                                              {type.name}
-                                            </MenuItem>
-                                          ))}
-                                        </TextField>
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        xs={4}
-                                        style={{
-                                          display: "flex",
-                                          flexDirection: "column",
-                                        }}
-                                      >
-                                        <TextField
-                                          disabled={!isEditable}
-                                          onChange={handleChange(
-                                            `evaluation_methods.${index}.percentage`
-                                          )}
-                                          variant="outlined"
-                                          size="small"
-                                          type="number"
-                                          id={`$evaluation_methods.${index}.percentage`}
-                                          name={`evaluation_methods.${index}.percentage`}
-                                          value={method.percentage}
-                                          onBlur={handleBlur}
-                                          error={Boolean(
-                                            errors &&
+                                          <TextField
+                                            disabled={!isEditable}
+                                            onChange={handleChange(
+                                              `evaluation_methods.${index}.percentage`
+                                            )}
+                                            variant="outlined"
+                                            size="small"
+                                            type="number"
+                                            id={`$evaluation_methods.${index}.percentage`}
+                                            name={`evaluation_methods.${index}.percentage`}
+                                            value={method.percentage}
+                                            onBlur={handleBlur}
+                                            error={Boolean(
+                                              errors &&
                                               errors.evaluation_methods &&
                                               errors.evaluation_methods[
-                                                index
+                                              index
                                               ] &&
                                               errors.evaluation_methods[index]
                                                 .percentage &&
                                               touched &&
                                               touched.evaluation_methods &&
                                               touched.evaluation_methods[
-                                                index
+                                              index
                                               ] &&
                                               touched.evaluation_methods[index]
                                                 .percentage
-                                          )}
-                                          helperText={
-                                            errors &&
-                                            errors.evaluation_methods &&
-                                            errors.evaluation_methods[index] &&
-                                            errors.evaluation_methods[index]
-                                              .percentage &&
-                                            touched &&
-                                            touched.evaluation_methods &&
-                                            touched.evaluation_methods[index] &&
-                                            touched.evaluation_methods[index]
-                                              .percentage
-                                          }
-                                          placeholder={translate("Percentage")}
+                                            )}
+                                            helperText={
+                                              errors &&
+                                              errors.evaluation_methods &&
+                                              errors.evaluation_methods[index] &&
+                                              errors.evaluation_methods[index]
+                                                .percentage &&
+                                              touched &&
+                                              touched.evaluation_methods &&
+                                              touched.evaluation_methods[index] &&
+                                              touched.evaluation_methods[index]
+                                                .percentage
+                                            }
+                                            placeholder={translate("Percentage")}
                                           //fullWidth
-                                        />
-                                        <label
-                                          style={{ color: "rgb(234, 6, 6)" }}
-                                        >
-                                          <ErrorMessage
-                                            name={`evaluation_methods.${index}.percentage`}
                                           />
-                                        </label>
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        xs={4}
-                                        style={{
-                                          display: isEditable ? "" : "none",
-                                        }}
-                                      >
-                                        <SuiButton
-                                          style={{ margin: 5 }}
-                                          color="error"
-                                          onClick={() =>
-                                            arrayHelpers.remove(index)
-                                          } // remove a friend from the list
+                                          <label
+                                            style={{ color: "rgb(234, 6, 6)" }}
+                                          >
+                                            <ErrorMessage
+                                              name={`evaluation_methods.${index}.percentage`}
+                                            />
+                                          </label>
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          xs={4}
+                                          style={{
+                                            display: isEditable ? "" : "none",
+                                          }}
                                         >
-                                          -
+                                          <SuiButton
+                                            style={{ margin: 5 }}
+                                            color="error"
+                                            onClick={() =>
+                                              arrayHelpers.remove(index)
+                                            } // remove a friend from the list
+                                          >
+                                            -
                                         </SuiButton>
-                                        <SuiButton
-                                          style={{ margin: 5 }}
-                                          color="primary"
-                                          onClick={() =>
-                                            arrayHelpers.push({
-                                              name: "",
-                                              percentage: 0,
-                                            })
-                                          } // insert an empty string at a position
-                                        >
-                                          +
+                                          <SuiButton
+                                            style={{ margin: 5 }}
+                                            color="primary"
+                                            onClick={() =>
+                                              arrayHelpers.push({
+                                                name: "",
+                                                percentage: 0,
+                                              })
+                                            } // insert an empty string at a position
+                                          >
+                                            +
                                         </SuiButton>
+                                        </Grid>
                                       </Grid>
-                                    </Grid>
-                                  </div>
+                                    </div>
+                                  )
                                 )
-                              )
                             ) : (
-                              <React.Fragment>
-                                <SuiButton
-                                  style={{ display: isEditable ? "" : "none" }}
-                                  color="primary"
-                                  onClick={() =>
-                                    arrayHelpers.push({
-                                      name: "",
-                                      percentage: 0,
-                                    })
-                                  }
-                                >
-                                  {/* show this when user has removed all phones from the list */}
-                                  {translate("Add an evaluation method")}
-                                  <Add />
-                                </SuiButton>
-                              </React.Fragment>
-                            )}
+                                  <React.Fragment>
+                                    <SuiButton
+                                      style={{ display: isEditable ? "" : "none" }}
+                                      color="primary"
+                                      onClick={() =>
+                                        arrayHelpers.push({
+                                          name: "",
+                                          percentage: 0,
+                                        })
+                                      }
+                                    >
+                                      {/* show this when user has removed all phones from the list */}
+                                      {translate("Add an evaluation method")}
+                                      <Add />
+                                    </SuiButton>
+                                  </React.Fragment>
+                                )}
                           </div>
                         )}
                       />
@@ -928,9 +931,9 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                     <Grid md={6} style={{ marginTop: "1em" }}>
                       <TextField
                         fullWidth
-                        helperText={touched?.attachement && errors?.attachement}
+                        helperText={touched ?.attachement && errors ?.attachement}
                         error={Boolean(
-                          errors?.attachement && touched?.attachement
+                          errors ?.attachement && touched ?.attachement
                         )}
                         variant="outlined"
                         type="text"
@@ -981,27 +984,27 @@ const CourseDetail: FC<ICourseDetailProps> = ({
                           {translate("Processing ...")}
                         </SuiButton>
                       ) : (
-                        <SuiButton
-                          style={{
-                            color: "rgb(255, 255, 255)",
-                            background: "rgb(23, 193, 232)",
-                          }}
-                          disabled={!isValid && isSubmitting}
-                          type="submit"
-                        >
-                          {translate("Save")}
-                        </SuiButton>
-                      )
+                          <SuiButton
+                            style={{
+                              color: "rgb(255, 255, 255)",
+                              background: "rgb(23, 193, 232)",
+                            }}
+                            disabled={!isValid && isSubmitting}
+                            type="submit"
+                          >
+                            {translate("Save")}
+                          </SuiButton>
+                        )
                     ) : (
-                      <SuiButton
-                        onClick={handleEditCourse}
-                        type="button"
-                        variant="gradient"
-                        color="info"
-                      >
-                        {translate("Edit Course")}
-                      </SuiButton>
-                    )}
+                        <SuiButton
+                          onClick={handleEditCourse}
+                          type="button"
+                          variant="gradient"
+                          color="info"
+                        >
+                          {translate("Edit Course")}
+                        </SuiButton>
+                      )}
                     {isEditable && !(addDescription && isEditable) && (
                       <SuiButton
                         onClick={handleActivateAddDesc}
