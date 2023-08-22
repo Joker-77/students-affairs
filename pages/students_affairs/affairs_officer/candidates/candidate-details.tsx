@@ -64,12 +64,15 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
         setTimeout(() => printWindow.print(), 1000);
     };
 
+    const getCandidateWithDesires = (desires) => {
+        return {...candidate, desires: desires.map((item) => {return {...item.speciality, id: item.speciality_id.toString()}})}
+    }
     /************************** Data ****************************/
     useEffect(() => {
         DesireService.GetAll(candidate.id)
             .then((res) => {
                 console.log("Desire", res);
-                updateCandidate({...candidate, desires: res.result.map((item) => {return {...item.speciality, id: item.speciality_id.toString()}})});
+                updateCandidate(getCandidateWithDesires(res.result));
             })
             .catch((error) => {
                 console.error("error", error);
@@ -97,12 +100,12 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
                 </SuiButton>
             </div>
             <div style={{marginRight: 220}} id={'personal'}>
-                <CandidatePersonalInfo initValues={candidate ? {...candidate, residance: candidate?.residance || yesNo(translate)[0].value} : {}}/>
+                <CandidatePersonalInfo callback={(candidate) => updateCandidate(candidate)} initValues={candidate ? {...candidate, residance: candidate?.residance || yesNo(translate)[0].value} : {}}/>
                 <div id={'certificate'} style={spacer}/>
                 {candidate?.certificates?.length > 0 &&
                   <CandidateCertificateInfo initValues={candidate?.certificates[0]}/>}
                 <div id={'desires'} style={spacer}/>
-                {candidate && <CandidateDesireList candidateId={candidate?.id}/>}
+                {candidate && <CandidateDesireList callback={(desires) => updateCandidate(getCandidateWithDesires(desires))} candidateId={candidate?.id}/>}
                 <div id={'attachments'} style={spacer}/>
                 <CandidateAttachmentsList attachments={candidate?.attachements} candidateId={candidate?.id} />
             </div>

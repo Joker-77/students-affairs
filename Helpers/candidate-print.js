@@ -20,8 +20,8 @@ const getFields = (candidate, docType = 1) => [
         month: 'numeric',
         day: 'numeric',
       }) : '')},
-  {label: 'الجنسية', value: candidate?.nationality || ''},
-  {label: 'الرقم الوطني', value: candidate?.national_number || ''},
+  {label: 'الجنسية', value: candidate?.person?.nationality || ''},
+  {label: 'الرقم الوطني', value: candidate?.person?.national_number || ''},
   {label: 'الرغبات', value: candidate?.desires?.map(item => item.ar_name).join(' / ') || '', col: 'col-xs-12'},
   {label: 'أرقام الهواتف', value: candidate?.person?.phones?.map(item => item.phone).join(' / ') || ''},
   {label: 'الرغبة المعتمدة', value: candidate?.registerations[0]?.speciality || '', hidden: docType === 1},
@@ -39,7 +39,8 @@ const getFields = (candidate, docType = 1) => [
   {label: 'علامة اللغة الانكليزية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'english')[0]?.value || ''},
   {label: 'علامة اللغة الفرنسية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'الفرنسية')[0]?.value || ''},
   {label: 'علامة اللغة الروسية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'الروسية')[0]?.value || ''},
-  {label: 'الفئة', value: candidate?.registerations[0]?.class || ''},
+  {label: 'فئة التسجيل', value: candidate?.registeration_class || '', hidden: docType !== 1},
+  {label: 'فئة القبول', value: candidate?.registerations[0]?.class || '', hidden: docType === 1},
   {label: 'سكن جامعي', value: candidate?.residance == 1 ? 'نعم' : 'لا'},
 ];
 
