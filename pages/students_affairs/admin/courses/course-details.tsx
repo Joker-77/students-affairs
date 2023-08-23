@@ -37,7 +37,7 @@ interface ICourseDetailProps {
   isCreate: boolean;
   details: ICourseModel;
   isEditable: boolean;
-  setShow(val): void;
+  handleBack(): void;
   activateEdit(): void;
 }
 
@@ -45,7 +45,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
   isCreate,
   details,
   isEditable,
-  setShow,
+  handleBack,
   activateEdit,
 }) => {
   console.clear();
@@ -498,7 +498,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
               </Typography>
             </GridItem>
             <GridItem md={3} xs={12} sm={12}>
-              <SuiButton onClick={() => setShow(false)} color={"warning"}>
+              <SuiButton onClick={() => handleBack()} color={"warning"}>
                 <ArrowBack />
                 {translate("Back To Previous Page")}
               </SuiButton>

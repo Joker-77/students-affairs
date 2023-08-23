@@ -57,8 +57,8 @@ import { ExportToCsv } from "export-to-csv";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import _ from "lodash";
 
-interface ICoursesListProps {}
-const CoursesList: React.FC<ICoursesListProps> = ({}) => {
+interface ICoursesListProps { }
+const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -74,7 +74,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   };
 
   const getCourse = (data: any) => {
-    let _course = Courses.find((item, index) => item.id === data?.id);
+    let _course = Courses.find((item, index) => item.id === data ?.id);
     CourseService.Get(data.id)
       .then((res) => {
         let _course = res.result as ICourseModel;
@@ -107,13 +107,13 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setLabelWidth(inputLabel?.current?.offsetWidth);
+    setLabelWidth(inputLabel ?.current ?.offsetWidth);
   }, []);
 
   const inputSortLabel = React.useRef(null);
   const [sortLabelWidth, setSortLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setSortLabelWidth(inputSortLabel?.current?.offsetWidth);
+    setSortLabelWidth(inputSortLabel ?.current ?.offsetWidth);
   }, []);
 
   const filters = [
@@ -148,10 +148,10 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       _filteredCourses = Courses.filter((course, index) => {
         return (
           course.ar_name.includes(_value) ||
-          course.en_name.includes(_value) ||
-          course.fr_name.includes(_value) ||
-          course.current_description?.total_hours.toString().includes(_value) ||
-          course.current_description?.credit.toString().includes(_value)
+            course.en_name.includes(_value) ||
+            course.fr_name.includes(_value) ||
+            course.current_description ?.total_hours.toString().includes(_value) ||
+              course.current_description ?.credit.toString().includes(_value)
         );
       });
       setFilteredCourses(_filteredCourses);
@@ -168,7 +168,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     }
     if (filter == 2) {
       _filteredCourses = Courses.filter((course, index) => {
-        return course.current_description?.total_hours
+        return course.current_description ?.total_hours
           .toString()
           .includes(_value);
       });
@@ -176,24 +176,22 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     }
     if (filter == 3) {
       _filteredCourses = Courses.filter((course, index) => {
-        return course.current_description?.credit.toString().includes(_value);
+        return course.current_description ?.credit.toString().includes(_value);
       });
       setFilteredCourses(_filteredCourses);
     }
   };
   const handleChangeFilter = (event) => {
     setFilter(event.target.value);
-    filterData();
   };
   const handleSearch = (event) => {
-    let _value = event?.target?.value;
+    let _value = event ?.target ?.value;
     setSearch(_value);
-    filterData();
   };
 
   const [sortBy, setSortBy] = React.useState(0);
   const handleSortBy = (event) => {
-    let _value = event?.target?.value;
+    let _value = event ?.target ?.value;
     setSortBy(_value);
     let _filteredCourses = Courses;
     if (sortBy == 1) {
@@ -221,13 +219,13 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     if (sortBy == 2) {
       _filteredCourses = Courses.sort((a, b) => {
         if (
-          a.current_description?.total_hours >
-          b.current_description?.total_hours
+          a.current_description ?.total_hours >
+            b.current_description ?.total_hours
         ) {
           return 1;
         } else if (
-          a.current_description?.total_hours <
-          b.current_description?.total_hours
+          a.current_description ?.total_hours <
+            b.current_description ?.total_hours
         ) {
           return -1;
         } else {
@@ -238,10 +236,10 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     }
     if (sortBy == 3) {
       _filteredCourses = Courses.sort((a, b) => {
-        if (a.current_description?.credit > b.current_description?.credit) {
+        if (a.current_description ?.credit > b.current_description ?.credit) {
           return 1;
         } else if (
-          a.current_description?.credit < b.current_description?.credit
+          a.current_description ?.credit < b.current_description ?.credit
         ) {
           return -1;
         } else {
@@ -359,14 +357,16 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   /************************** Finish Handle Export Data ****************************/
   const [confirm, setConfirm] = React.useState(false);
   const [deleteCourse, setDeleteCourse] = React.useState(false);
-  const handleConfirmOpen = () => {
+  const handleConfirmOpen = (data) => {
+    setDeleteCourse(data.id);
     setConfirm(true);
   };
 
   const handleConfirmClose = () => {
     setConfirm(false);
   };
-  const handleDeleteCourse = () => {};
+  const handleDeleteCourse = () => {
+  };
 
   const ConfirmDialog = () => (
     <div>
@@ -420,22 +420,22 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
         tableLayout: "auto",
       };
       let actions = [
-        // {
-        //   icon: () => (
-        //     <SuiButton
-        //       style={{
-        //         minWidth: 80,
-        //         color: "#dc3545",
-        //         backgroundColor: "transparent",
-        //         border: "1px solid #dc3545",
-        //       }}
-        //       color={"danger"}
-        //     >
-        //       {translate("Delete")}
-        //     </SuiButton>
-        //   ),
-        //   onClick: (evt, data) => {},
-        // },
+        {
+          icon: () => (
+            <SuiButton
+              style={{
+                minWidth: 80,
+                color: "#dc3545",
+                backgroundColor: "transparent",
+                border: "1px solid #dc3545",
+              }}
+              color={"danger"}
+            >
+              {translate("Delete")}
+            </SuiButton>
+          ),
+          onClick: (evt, data) => handleConfirmOpen(data),
+        },
         {
           icon: () => (
             <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
@@ -459,6 +459,10 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
       );
     } else return <Placeholder loading={false} />;
   };
+
+  const handleBack = () => {
+    setshowCourseDetail(false)
+  }
   return (
     <GridContainer>
       {!showCourseDetail && (
@@ -635,6 +639,18 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
                   }}
                 ></TextField>
               </FormControl>
+              <Button
+                  style={{ margin: "0px 5px" }}
+                  disabled={false}
+                  variant="contained"
+                  className={classes.submitBtn}
+                  onClick={filterData}
+                >
+                  <span style={{ padding: "0px 0px 0px 10px" }}>
+                    {translate("Search")}
+                  </span>
+                  <Search />
+                </Button>
               <FormControl
                 size="small"
                 variant="outlined"
@@ -684,7 +700,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
           isCreate={isCreate}
           details={course}
           activateEdit={activateEdit}
-          setShow={setShow}
+          handleBack={handleBack}
           show={showCourseDetail}
           isEditable={isEditable}
         />

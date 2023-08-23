@@ -60,8 +60,8 @@ export default function RTLNavbarLinks() {
   const handleSignOut = (e) => {
     localStorage.removeItem("sa_access_token");
     dispatchSessionKey(setSessionKey(""));
-    router.push("/");
-    signOut();
+    router.push("/authentication/sign-in");
+    // signOut();
   };
   return (
     <div>

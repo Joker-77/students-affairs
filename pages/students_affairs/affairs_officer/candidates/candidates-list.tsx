@@ -122,6 +122,8 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
     const getCandidates = async () => {
         var result = await CandidateService.GetAll()
             .then((res) => {
+                console.clear();
+                console.log(res);
                 return forRegistrations ? res.result ?.filter(item => item.registerations ?.length > 0) : res.result;
             })
             .catch((error) => {
@@ -347,6 +349,11 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                 filtering: false,
             },
             {
+                title: "مكان امتحان القبول",
+                field: "exam_place",
+                filtering: false,
+            },
+            {
                 title: "امتحان قبول الرياضيات",
                 field: "registerations[0].math",
                 filtering: false,
@@ -359,6 +366,16 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
             {
                 title: "3400",
                 field: "registerations[0].mark_3400",
+                filtering: false,
+            },
+            {
+                title: "حالة القبول",
+                field: "registerations[0].status",
+                filtering: false,
+            },
+            {
+                title: translate("Ministry External"),
+                field: "external",
                 filtering: false,
             },
             {
@@ -396,16 +413,22 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                 field: "selected_desire?.speciality_name",
                 filtering: false,
             },
+
             {
-                title: "مكان القبول",
-                field: "registerations[0].accept_place",
+                title: translate("Registration Year"),
+                field: "registeration_year",
                 filtering: false,
             },
             {
-                title: "حالة القبول",
-                field: "registerations[0].status",
+                title: "فئة التسجيل",
+                field: "registeration_class",
                 filtering: false,
             },
+            {
+                title: "مكان الدراسة",
+                field: "study_place",
+                filtering: false,
+            }
         ];
         let localCsvOptions = {
             fieldSeparator: ",",
@@ -435,6 +458,10 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                             }
                             else
                                 _.set(object, `col ${index}`, "");
+                        }
+                        else if (item.field == "external") {
+                            let value = ct.external == 0 ? "وزارة" : "خارج الوزارة";
+                            _.set(object, `col ${index}`, `${value}`);
                         }
                         else
                             _.set(object, `col ${index}`, _.get(ct, item.field) ?? "");
