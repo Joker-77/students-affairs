@@ -192,7 +192,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
         },
         {
             title: translate("Registration Year"),
-            field: "registeration_year",
+            field: "registeration_year_name",
             filtering: false,
         }
         // {
@@ -233,7 +233,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
                 <ActionTable
                     Title={title || translate("Candidates List")}
                     Columns={customColumns || columns}
-                    Data={data.map(item => { return { ...item, external_value: item.external ? translate("Yes") : translate("No"), full_name: `${item.person ?.first_name} ${item.father ?.first_name} ${item.person ?.last_name}` } })}
+                    Data={data.map(item => { return { ...item, registeration_year_name: item.registeration_year == new Date().getFullYear() ? 'الحالي' : 'السابق', external_value: item.external ? translate("Yes") : translate("No"), full_name: `${item.person ?.first_name} ${item.father ?.first_name} ${item.person ?.last_name}` } })}
                     Options={options}
                     Actions={actions}
                 />

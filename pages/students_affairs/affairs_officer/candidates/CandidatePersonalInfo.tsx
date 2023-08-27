@@ -28,6 +28,7 @@ interface ICandidatePersonalInfoProps {
   initValues: any;
     external: number;
   forAdd: boolean;
+  callback(candidate);
   handleClose();
 }
 const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
@@ -35,6 +36,7 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                                                                         external = 0,
                                                                         forAdd = false,
                                                                         handleClose,
+                                                                          callback,
                                                                       }) => {
   const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
@@ -60,6 +62,7 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                   } else {
                       toast(translate('Candidate updated.'), {type: 'success'});
                   }
+                  callback && callback(res.result);
               }
             })
           .catch((error) => {

@@ -19,9 +19,10 @@ import SpecialityService from "../../../../Services/SpecialityService";
 import DesireService from "../../../../Services/DesireService";
 import {IDesireModel} from "../../../../Models/ApiResponse/DesireModel";
 import SuiButton from "../../../../components/SuiButton";
+import {toast} from "react-toastify";
 
-interface IDesireListProps {candidateId: number}
-const CandidateDesireList: React.FC<IDesireListProps> = ({candidateId}) => {
+interface IDesireListProps {candidateId: number; callback(candidate);}
+const CandidateDesireList: React.FC<IDesireListProps> = ({candidateId, callback}) => {
   resetServerContext();
   const {translate} = useTranslation();
   const useStyles = makeStyles(styles);
@@ -81,6 +82,8 @@ const CandidateDesireList: React.FC<IDesireListProps> = ({candidateId}) => {
       DesireService.Save(values)
           .then((res) => {
               console.log("Desire", res);
+              toast(translate('Desires updated.'), {type: 'success'});
+              callback && callback(res.result);
           })
           .catch((error) => {
               console.error("error", error);

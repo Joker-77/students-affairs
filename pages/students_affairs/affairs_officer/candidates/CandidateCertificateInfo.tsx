@@ -23,8 +23,9 @@ import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlSt
 
 interface ICusomModalProps {
   initValues: any;
+  callback();
 }
-const AddCertificateModal: React.FC<ICusomModalProps> = ({initValues}) => {
+const AddCertificateModal: React.FC<ICusomModalProps> = ({initValues, callback}) => {
   const {locale} = useRouter();
   const {translate} = useTranslation();
   const useStyles = makeStyles(styles);

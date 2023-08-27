@@ -24,6 +24,10 @@ export const governorates = (translate) => [
         value: translate('Damascus'),
     },
     {
+        id: 'Reif-Damascus',
+        value: translate('Reif-Damascus'),
+    },
+    {
         id: 'Homs',
         value: translate('Homs'),
     },

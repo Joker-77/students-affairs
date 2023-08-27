@@ -60,12 +60,13 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
         //     }
         // }`;
         // printWindow.document.head.appendChild(styleElement);
-        console.clear()
-        console.log(candidate);
         printWindow.document.write(getCandidateToPrint(candidate, docType));
         setTimeout(() => printWindow.print(), 1000);
     };
 
+    const getCandidateWithDesires = (desires) => {
+        return {...candidate, desires: desires.map((item) => {return {...item.speciality, id: item.speciality_id.toString()}})}
+    }
     /************************** Data ****************************/
     useEffect(() => {
         DesireService.GetAll(candidate.id)

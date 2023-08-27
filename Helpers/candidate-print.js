@@ -39,7 +39,8 @@ const getFields = (candidate, docType = 1) => [
   {label: 'علامة اللغة الانكليزية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'english')[0]?.value || ''},
   {label: 'علامة اللغة الفرنسية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'الفرنسية')[0]?.value || ''},
   {label: 'علامة اللغة الروسية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'الروسية')[0]?.value || ''},
-  {label: 'الفئة', value: candidate?.registerations[0]?.class || ''},
+  {label: 'فئة التسجيل', value: candidate?.registeration_class || '', hidden: docType !== 1},
+  {label: 'فئة القبول', value: candidate?.registerations[0]?.class || '', hidden: docType === 1},
   {label: 'سكن جامعي', value: candidate?.residance == 1 ? 'نعم' : 'لا'},
 ];
 
