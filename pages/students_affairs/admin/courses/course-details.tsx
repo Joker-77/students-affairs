@@ -491,8 +491,8 @@ const CourseDetail: FC<ICourseDetailProps> = ({
           <Grid container>
             <GridItem item md={9} xs={12} sm={12}>
               <Typography variant="h5" component="div">
-                {translate("Course Name")}:{" "}
-                {details ?.ar_name ?? "التحليل الرياضي"}
+                {/* {translate("Course Name")}:{" "}
+                {details ?.ar_name ?? "التحليل الرياضي"} */}
               </Typography>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {translate("Course Details")}
