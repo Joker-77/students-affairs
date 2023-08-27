@@ -71,14 +71,14 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
 
   // Year
   const router = useRouter();
-  const [year, setYear] = useState(router.query?.year) as string;
-  const [eduYear, setEduYear] = useState(router.query?.eduYear) as string;
+  const [year, setYear] = useState(router.query ?.year) as string;
+  const [eduYear, setEduYear] = useState(router.query ?.eduYear) as string;
 
   // handle component route data
   useEffect(() => {
-    setYear(router?.query?.year);
-    setEduYear(router?.query?.eduYear);
-  }, [router.query?.year, router.query?.eduYear]);
+    setYear(router ?.query ?.year);
+    setEduYear(router ?.query ?.eduYear);
+  }, [router.query ?.year, router.query ?.eduYear]);
 
   // handle component api data
   useEffect(() => {
@@ -94,9 +94,9 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
                 setSpecialities(specs.result as ISpecialityModel[]);
                 courses.result.length > 0 && setCourse(course.result[0].id);
               })
-              .catch((err) => {});
+              .catch((err) => { });
           })
-          .catch((err) => {});
+          .catch((err) => { });
       })
       .catch((err) => {
         console.error("Error", err);
@@ -155,7 +155,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
                 setProgramCourses(resp.result);
               }
             })
-            .catch((err) => {});
+            .catch((err) => { });
         }
       })
       .catch((error) => {
@@ -237,7 +237,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
               label="programs"
               onChange={(e) => changeProgram(e.target.value)}
             >
-              {programs?.map((program) => (
+              {programs ?.map((program) => (
                 <MenuItem key={program.id} value={program.id}>
                   {program.name}
                 </MenuItem>
@@ -283,24 +283,6 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
         </GridItem>
         <GridItem md={2}>
           <FormControl fullWidth variant="filled" size="small">
-            <InputLabel id="demo-simple-select-label">الفصل</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={semester}
-              label="speciality"
-              onChange={(e) => setSemester(e.target.value)}
-            >
-              {semesters.map((sem) => (
-                <MenuItem key={sem.id} value={sem.id}>
-                  {sem.value}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </GridItem>
-        <GridItem md={2}>
-          <FormControl fullWidth variant="filled" size="small">
             <InputLabel id="demo-simple-select-label">السنة</InputLabel>
             <Select
               disabled={loadSpecYear}
@@ -315,6 +297,24 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
               {specYears.map((spYear) => (
                 <MenuItem key={spYear.id} value={spYear.id}>
                   {spYear.ar_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </GridItem>
+        <GridItem md={2}>
+          <FormControl fullWidth variant="filled" size="small">
+            <InputLabel id="demo-simple-select-label">الفصل</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={semester}
+              label="speciality"
+              onChange={(e) => setSemester(e.target.value)}
+            >
+              {semesters.map((sem) => (
+                <MenuItem key={sem.id} value={sem.id}>
+                  {sem.value}
                 </MenuItem>
               ))}
             </Select>

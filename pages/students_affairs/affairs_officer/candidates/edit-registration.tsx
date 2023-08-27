@@ -1,35 +1,35 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Admin from "../../../../layouts/Admin";
 import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
 import { makeStyles } from "@material-ui/core/styles";
-import {useTranslation} from "../../../../Utility/Translations/useTranslation";
-import {connect} from "react-redux";
-import {useRouter} from "next/router";
+import { useTranslation } from "../../../../Utility/Translations/useTranslation";
+import { connect } from "react-redux";
+import { useRouter } from "next/router";
 import * as Yup from "yup";
-import {Box, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, TextField, Typography} from "@material-ui/core";
+import { Box, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
 import Card from "../../../../components/Card/Card";
 import CardHeader from "../../../../components/Card/CardHeader";
 import CardBody from "../../../../components/Card/CardBody";
-import {Form, Formik} from "formik";
-import {acceptPlaces, acceptStatus, governorates, registerationClasses, studyPlaces} from "../../../../Static/resources";
+import { Form, Formik } from "formik";
+import { acceptPlaces, acceptStatus, governorates, registerationClasses, studyPlaces } from "../../../../Static/resources";
 import SuiButton from "../../../../components/SuiButton";
 import SpecialityService from "../../../../Services/SpecialityService";
 import RegisterationService from "../../../../Services/RegisterationService";
-import {setCandidate, useAppDispatch} from "../../../../redux";
-import {getCandidateToPrint} from "../../../../Helpers/candidate-print";
+import { setCandidate, useAppDispatch } from "../../../../redux";
+import { getCandidateToPrint } from "../../../../Helpers/candidate-print";
 import DesireService from "../../../../Services/DesireService";
 
-interface IEditRegistrationProps {candidate: any}
+interface IEditRegistrationProps { candidate: any }
 
 const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
     const useStyles = makeStyles(styles);
     const classes = useStyles();
-    const {translate} = useTranslation();
+    const { translate } = useTranslation();
     const router = useRouter();
-    const locale = router?.locale;
+    const locale = router ?.locale;
 
     const [candidate, updateCandidate] = useState(props.candidate);
-    const registeration = candidate?.registerations[0] || {};
+    const registeration = candidate ?.registerations[0] || {};
 
     const [disabled, setDisabled] = React.useState<boolean>(false);
     const [specialities, setSpecialities] = React.useState([]);
@@ -54,7 +54,7 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
     const submitForm = async (values: any, setSubmitting) => {
         setSubmitting(true);
         console.log("values", values);
-        RegisterationService.Edit({...values, id: registeration?.id})
+        RegisterationService.Edit({ ...values, id: registeration ?.id})
             .then((res) => {
                 console.log("Registeration", res);
                 router.back();
@@ -69,10 +69,10 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
 
     /************************** Data ****************************/
     useEffect(() => {
-        DesireService.GetAll(candidate?.id)
+        DesireService.GetAll(candidate ?.id)
             .then((res) => {
                 console.log("Desire", res);
-                updateCandidate({...candidate, desires: res.result.map((item) => {return {...item.speciality, id: item.speciality_id.toString()}})});
+                updateCandidate({ ...candidate, desires: res.result.map((item) => { return { ...item.speciality, id: item.speciality_id.toString() } }) });
             })
             .catch((error) => {
                 console.error("error", error);
@@ -84,6 +84,8 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
     const goToPrint = (docType) => {
         dispatch(setCandidate(candidate));
         const printWindow = window.open('', '_blank');
+        console.clear()
+        console.log(candidate)
         printWindow.document.write(getCandidateToPrint(candidate, docType));
         setTimeout(() => printWindow.print(), 1000);
     };
@@ -121,7 +123,7 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
                                     disabled={true}
                                     variant="outlined"
                                     size="small"
-                                    value={`${candidate?.person.first_name} ${candidate?.father?.first_name} ${candidate?.person.last_name}`}
+                                    value={`${candidate ?.person.first_name} ${candidate ?.father ?.first_name} ${candidate ?.person.last_name}`}
                                     fullWidth
                                 />
                             </Box>
@@ -137,7 +139,7 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
                                     disabled={true}
                                     variant="outlined"
                                     size="small"
-                                    value={candidate?.certificates[0]?.subscription_number}
+                                    value={candidate ?.certificates[0] ?.subscription_number}
                                     fullWidth
                                 />
                             </Box>
@@ -154,7 +156,7 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
                                     variant="outlined"
                                     size="small"
                                     type="number"
-                                    value={candidate?.registeration_number}
+                                    value={candidate ?.registeration_number}
                                     fullWidth
                                 />
                             </Box>
@@ -328,8 +330,8 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
                                                         {translate("Acceptance Status")}
                                                     </Typography>
                                                 </Box>
-                                                <RadioGroup id={'status'} name={'status'} value={values?.status} onChange={handleChange}
-                                                            defaultValue={acceptStatus(translate)[0]}>
+                                                <RadioGroup id={'status'} name={'status'} value={values ?.status} onChange={handleChange}
+                                                    defaultValue={acceptStatus(translate)[0]}>
                                                     {acceptStatus(translate).map((place) => (
                                                         <FormControlLabel value={place} control={<Radio />} label={place} />
                                                     ))}
@@ -344,8 +346,8 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
                                                         {translate("Acceptance Class")}
                                                     </Typography>
                                                 </Box>
-                                                <RadioGroup id={'class'} name={'class'} value={values?.class} onChange={handleChange}
-                                                            defaultValue={registerationClasses(translate)[0]}>
+                                                <RadioGroup id={'class'} name={'class'} value={values ?.class} onChange={handleChange}
+                                                    defaultValue={registerationClasses(translate)[0]}>
                                                     {registerationClasses(translate).map((place) => (
                                                         <FormControlLabel value={place} control={<Radio />} label={place} />
                                                     ))}
@@ -360,8 +362,8 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
                                                         {translate("Acceptance Place")}
                                                     </Typography>
                                                 </Box>
-                                                <RadioGroup id={'accept_place'} name={'accept_place'} value={values?.accept_place} onChange={handleChange}
-                                                            defaultValue={acceptPlaces(translate)[0]}>
+                                                <RadioGroup id={'accept_place'} name={'accept_place'} value={values ?.accept_place} onChange={handleChange}
+                                                    defaultValue={acceptPlaces(translate)[0]}>
                                                     {acceptPlaces(translate).map((place) => (
                                                         <FormControlLabel value={place} control={<Radio />} label={place} />
                                                     ))}
@@ -390,7 +392,7 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
                                                     placeholder={translate("Acceptance Speciality")}
                                                     fullWidth
                                                 >
-                                                    {specialities.filter(item => values?.accept_place === translate('Aleppo') ? item.ar_name === 'هندسة طيران' : item.ar_name !== 'هندسة طيران').map((speciality) => (
+                                                    {specialities.filter(item => values ?.accept_place === translate('Aleppo') ? item.ar_name === 'هندسة طيران' : item.ar_name !== 'هندسة طيران').map((speciality) => (
                                                         <MenuItem key={speciality.id} value={speciality.id}>
                                                             {locale === 'ar' ? speciality.ar_name : speciality.en_name}
                                                         </MenuItem>
@@ -429,26 +431,26 @@ const EditRegistration: React.FC<IEditRegistrationProps> = (props) => {
                                     </Grid>
 
                                     <Box mt={4} mb={1}>
-                                      {isSubmitting ? (
-                                          <SuiButton
-                                              disabled={true}
-                                              variant="gradient"
-                                              color="info"
-                                              fullWidth
-                                          >
-                                            {translate('Processing ...')}
-                                          </SuiButton>
-                                      ) : (
-                                          <SuiButton
-                                              disabled={!(dirty && isValid)}
-                                              type="submit"
-                                              variant="gradient"
-                                              color="info"
-                                              fullWidth
-                                          >
-                                            {translate("Save")}
-                                          </SuiButton>
-                                      )}
+                                        {isSubmitting ? (
+                                            <SuiButton
+                                                disabled={true}
+                                                variant="gradient"
+                                                color="info"
+                                                fullWidth
+                                            >
+                                                {translate('Processing ...')}
+                                            </SuiButton>
+                                        ) : (
+                                                <SuiButton
+                                                    disabled={!(dirty && isValid)}
+                                                    type="submit"
+                                                    variant="gradient"
+                                                    color="info"
+                                                    fullWidth
+                                                >
+                                                    {translate("Save")}
+                                                </SuiButton>
+                                            )}
                                     </Box>
                                 </Form>
                             );

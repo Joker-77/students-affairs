@@ -1,22 +1,22 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Admin from "../../../../layouts/Admin";
 import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
 import { makeStyles } from "@material-ui/core/styles";
 import UserCard from "../../../../components/UserCard/UserCard.js";
 import CandidatePersonalInfo from "./CandidatePersonalInfo";
-import {useTranslation} from "../../../../Utility/Translations/useTranslation";
-import {setCandidate, useAppDispatch, useAppSelector} from "../../../../redux";
+import { useTranslation } from "../../../../Utility/Translations/useTranslation";
+import { setCandidate, useAppDispatch, useAppSelector } from "../../../../redux";
 import CandidateCertificateInfo from "./CandidateCertificateInfo";
 import CandidateDesireList from "./CandidateDesiresList";
 import CandidateAttachmentsList from "./CandidateAttachmentsList";
 import TabsMenu from "../../../../components/TabsMenu/TabsMenu";
-import {connect} from "react-redux";
-import {yesNo} from "../../../../Static/resources";
+import { connect } from "react-redux";
+import { yesNo } from "../../../../Static/resources";
 import SuiButton from "../../../../components/SuiButton";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
-interface ICandidateDetailsProps {candidate: any}
-import {getCandidateToPrint} from "../../../../Helpers/candidate-print.js";
+interface ICandidateDetailsProps { candidate: any }
+import { getCandidateToPrint } from "../../../../Helpers/candidate-print.js";
 import DesireService from "../../../../Services/DesireService";
 
 const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
@@ -24,7 +24,7 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const classes = useStyles();
-    const {translate} = useTranslation();
+    const { translate } = useTranslation();
     const tabs = [
         {
             id: 'personal',
@@ -49,7 +49,7 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
     };
 
     const [candidate, updateCandidate] = useState(props.candidate);
-
+   
     const goToPrint = (docType) => {
         dispatch(setCandidate(candidate));
         const printWindow = window.open('', '_blank');
@@ -60,7 +60,9 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
         //     }
         // }`;
         // printWindow.document.head.appendChild(styleElement);
-        printWindow.document .write(getCandidateToPrint(candidate, docType));
+        console.clear()
+        console.log(candidate);
+        printWindow.document.write(getCandidateToPrint(candidate, docType));
         setTimeout(() => printWindow.print(), 1000);
     };
 
@@ -69,7 +71,7 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
         DesireService.GetAll(candidate.id)
             .then((res) => {
                 console.log("Desire", res);
-                updateCandidate({...candidate, desires: res.result.map((item) => {return {...item.speciality, id: item.speciality_id.toString()}})});
+                updateCandidate({ ...candidate, desires: res.result.map((item) => { return { ...item.speciality, id: item.speciality_id.toString() } }) });
             })
             .catch((error) => {
                 console.error("error", error);
@@ -80,15 +82,15 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
 
     return (
         <div>
-            <div style={{position: 'fixed', width: 200}}>
+            <div style={{ position: 'fixed', width: 200 }}>
                 <UserCard
-                    name={candidate ? `${candidate?.person?.first_name} ${candidate?.person?.last_name}` : null}
-                    id={candidate?.certificates.length > 0 ? candidate?.certificates[0]?.subscription_number : ''}
-                    year={candidate?.certificates.length > 0 ? candidate?.certificates[0]?.year : ''}
+                    name={candidate ? `${candidate ?.person ?.first_name} ${candidate ?.person ?.last_name}` : null}
+                    id={candidate ?.certificates.length > 0 ? candidate ?.certificates[0] ?.subscription_number : ''}
+                    year={candidate ?.certificates.length > 0 ? candidate ?.certificates[0] ?.year : ''}
                 />
-                <div style={spacer}/>
-                <TabsMenu tabs={tabs}/>
-                <br/>
+                <div style={spacer} />
+                <TabsMenu tabs={tabs} />
+                <br />
                 <SuiButton
                     style={{ margin: 5 }}
                     onClick={() => goToPrint(1)} // remove a friend from the list
@@ -96,15 +98,15 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
                     طباعة استمارة التسجيل الأولي
                 </SuiButton>
             </div>
-            <div style={{marginRight: 220}} id={'personal'}>
-                <CandidatePersonalInfo initValues={candidate ? {...candidate, residance: candidate?.residance || yesNo(translate)[0].value} : {}}/>
-                <div id={'certificate'} style={spacer}/>
-                {candidate?.certificates?.length > 0 &&
-                  <CandidateCertificateInfo initValues={candidate?.certificates[0]}/>}
-                <div id={'desires'} style={spacer}/>
-                {candidate && <CandidateDesireList candidateId={candidate?.id}/>}
-                <div id={'attachments'} style={spacer}/>
-                <CandidateAttachmentsList attachments={candidate?.attachements} candidateId={candidate?.id} />
+            <div style={{ marginRight: 220 }} id={'personal'}>
+                <CandidatePersonalInfo initValues={candidate ? { ...candidate, residance: candidate ?.residance || yesNo(translate)[0].value} : {}} />
+                <div id={'certificate'} style={spacer} />
+                {candidate ?.certificates ?.length > 0 &&
+                    <CandidateCertificateInfo initValues={candidate ?.certificates[0]} />}
+                <div id={'desires'} style={spacer} />
+                {candidate && <CandidateDesireList candidateId={candidate ?.id} />}
+                <div id={'attachments'} style={spacer} />
+                <CandidateAttachmentsList attachments={candidate ?.attachements} candidateId={candidate ?.id} />
             </div>
         </div>
     );
