@@ -378,6 +378,7 @@ const CourseDetail: FC<ICourseDetailProps> = ({
         .then((response) => {
           if (response.success) {
             toast.success("Course Added Successfully");
+            handleBack();
           } else {
             console.log(response.error);
             toast.error(response.error.message);

@@ -66,6 +66,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
   const [showCourseDetail, setshowCourseDetail] = React.useState(false);
   const [course, setCourse] = React.useState<ICourseModel>();
   const [searchResult, setSearchResult] = React.useState(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const setShow = () => {
     setshowCourseDetail(!showCourseDetail);
   };
@@ -74,6 +75,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
   };
 
   const getCourse = (data: any) => {
+    setLoading(true)
     let _course = Courses.find((item, index) => item.id === data ?.id);
     CourseService.Get(data.id)
       .then((res) => {
@@ -83,6 +85,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
         setIsCreate(false);
         setIsEditable(false);
         setshowCourseDetail(true);
+        setLoading(false)
       })
       .catch((error) => {
         console.error("error", error);
@@ -142,6 +145,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
   const [search, setSearch] = React.useState("");
 
   const filterData = () => {
+    setLoading(true);
     let _filteredCourses = Courses;
     let _value = search;
     if (filter == 0) {
@@ -180,6 +184,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
       });
       setFilteredCourses(_filteredCourses);
     }
+    setLoading(false);
   };
   const handleChangeFilter = (event) => {
     setFilter(event.target.value);
@@ -190,33 +195,42 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
   };
 
   const [sortBy, setSortBy] = React.useState(0);
-  const handleSortBy = (event) => {
-    let _value = event ?.target ?.value;
+  const handleSortBy = (_value) => {
     setSortBy(_value);
+  };
+  const applySorting = () => {
+    setLoading(true);
+    setFilteredCourses([]);
     let _filteredCourses = Courses;
-    if (sortBy == 1) {
+    let _value = sortBy;
+    if (_value == 0)
+      _filteredCourses = Courses;
+    if (_value == 1) {
       _filteredCourses = Courses.sort((a, b) => {
         if (a.ar_name > b.ar_name) {
           return 1;
-        } else if (a.ar_name < b.ar_name) {
+        }
+        else if (a.ar_name < b.ar_name) {
           return -1;
         }
         if (a.en_name > b.en_name) {
           return 1;
-        } else if (a.en_name < b.en_name) {
+        }
+        else if (a.en_name < b.en_name) {
           return -1;
         }
         if (a.fr_name > b.fr_name) {
           return 1;
-        } else if (a.fr_name < b.fr_name) {
+        }
+        else if (a.fr_name < b.fr_name) {
           return -1;
-        } else {
+        }
+        else {
           return 0;
         }
       });
-      setFilteredCourses(_filteredCourses);
     }
-    if (sortBy == 2) {
+    if (_value == 2) {
       _filteredCourses = Courses.sort((a, b) => {
         if (
           a.current_description ?.total_hours >
@@ -232,9 +246,8 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
           return 0;
         }
       });
-      setFilteredCourses(_filteredCourses);
     }
-    if (sortBy == 3) {
+    if (_value == 3) {
       _filteredCourses = Courses.sort((a, b) => {
         if (a.current_description ?.credit > b.current_description ?.credit) {
           return 1;
@@ -246,20 +259,30 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
           return 0;
         }
       });
-      setFilteredCourses(_filteredCourses);
     }
-  };
+    setFilteredCourses([]);
+    setTimeout(() => {
+      setFilteredCourses(_filteredCourses)
+    }, 100);
+    setLoading(false);
+  }
   /************************** Data ****************************/
-  useEffect(() => {
+  const getCourses = () => {
     CourseService.GetAll()
       .then((res) => {
         console.log("Courses", res.result);
-        setFilteredCourses(res.result as ICourseModel[]);
-        setCourses(res.result as ICourseModel[]);
+        let courses = res.result.sort((a, b) => b.id - a.id);
+        console.log(courses);
+        setFilteredCourses(courses as ICourseModel[]);
+        setCourses(courses as ICourseModel[]);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("error", error);
       });
+  }
+  useEffect(() => {
+    getCourses();
   }, []);
   /************************** Finish Data ****************************/
   /************************** Handle edit data ****************************/
@@ -446,21 +469,25 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
           onClick: (evt, data) => getCourse(data),
         },
       ];
-      return (
-        <div ref={tableRef}>
-          <ActionTable
-            Title={translate("Courses List")}
-            Columns={columns}
-            Data={data}
-            Options={options}
-            Actions={actions}
-          />
-        </div>
-      );
+      if (!loading)
+        return (
+          <div ref={tableRef}>
+            <ActionTable
+              Title={translate("Courses List")}
+              Columns={columns}
+              Data={data}
+              Options={options}
+              Actions={actions}
+            />
+          </div>
+        );
+      else
+        return <Placeholder loading={loading} />;
     } else return <Placeholder loading={false} />;
   };
 
   const handleBack = () => {
+    getCourses();
     setshowCourseDetail(false)
   }
   return (
@@ -640,17 +667,17 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
                 ></TextField>
               </FormControl>
               <Button
-                  style={{ margin: "0px 5px" }}
-                  disabled={false}
-                  variant="contained"
-                  className={classes.submitBtn}
-                  onClick={filterData}
-                >
-                  <span style={{ padding: "0px 0px 0px 10px" }}>
-                    {translate("Search")}
-                  </span>
-                  <Search />
-                </Button>
+                style={{ margin: "0px 5px" }}
+                disabled={false}
+                variant="contained"
+                className={classes.submitBtn}
+                onClick={filterData}
+              >
+                <span style={{ padding: "0px 0px 0px 10px" }}>
+                  {translate("Search")}
+                </span>
+                <Search />
+              </Button>
               <FormControl
                 size="small"
                 variant="outlined"
@@ -671,7 +698,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
                   labelId="autowidth-label"
                   id="select-sort"
                   value={sortBy}
-                  onChange={handleSortBy}
+                  onChange={(e) => handleSortBy(e.target.value)}
                   autoWidth
                   input={
                     <OutlinedInput
@@ -690,6 +717,18 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
                   ))}
                 </Select>
               </FormControl>
+              <Button
+                style={{ margin: "0px 5px" }}
+                disabled={false}
+                variant="contained"
+                className={classes.submitBtn}
+                onClick={applySorting}
+              >
+                <span style={{ padding: "0px 0px 0px 10px" }}>
+                  {translate("ترتيب")}
+                </span>
+                <Sort />
+              </Button>
             </GridItem>
           </GridItem>
           <GridItem md={12}>{renderCourses()}</GridItem>
