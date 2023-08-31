@@ -320,7 +320,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
             },
             {
                 title: "2400",
-                field: "certificates[0].result",
+                field: "certificates[0].details[9].value",
                 filtering: false,
             },
             {
