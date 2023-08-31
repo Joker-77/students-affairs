@@ -249,7 +249,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
         setShowExportColumns(!showExportColumns);
     };
     const csvOptions = {
-        fieldSeparator: ",",
+        fieldSeparator: ";",
         quoteStrings: '"',
         decimalSeparator: ".",
         showLabels: true,
@@ -431,7 +431,7 @@ const CandidatesList: React.FC<ICandidatesListProps> = ({
             }
         ];
         let localCsvOptions = {
-            fieldSeparator: ",",
+            fieldSeparator: ";",
             quoteStrings: '"',
             decimalSeparator: ".",
             showLabels: true,

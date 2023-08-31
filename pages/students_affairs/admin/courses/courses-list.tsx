@@ -353,7 +353,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
     );
   };
   const csvOptions = {
-    fieldSeparator: ",",
+    fieldSeparator: ";",
     quoteStrings: '"',
     decimalSeparator: ".",
     showLabels: true,

@@ -95,13 +95,13 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setLabelWidth(inputLabel?.current?.offsetWidth);
+    setLabelWidth(inputLabel ?.current ?.offsetWidth);
   }, []);
 
   const inputSortLabel = React.useRef(null);
   const [sortLabelWidth, setSortLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setSortLabelWidth(inputSortLabel?.current?.offsetWidth);
+    setSortLabelWidth(inputSortLabel ?.current ?.offsetWidth);
   }, []);
 
   const filters = [
@@ -145,10 +145,10 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
       _filteredCourses = Courses.filter((course, index) => {
         return (
           course.ar_name.includes(_value) ||
-          course.en_name.includes(_value) ||
-          course.fr_name.includes(_value) ||
-          course.current_description?.total_hours.toString().includes(_value) ||
-          course.current_description?.credit.toString().includes(_value)
+            course.en_name.includes(_value) ||
+            course.fr_name.includes(_value) ||
+            course.current_description ?.total_hours.toString().includes(_value) ||
+              course.current_description ?.credit.toString().includes(_value)
         );
       });
       setFilteredCourses(_filteredCourses);
@@ -165,7 +165,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     }
     if (filter == 2) {
       _filteredCourses = Courses.filter((course, index) => {
-        return course.current_description?.total_hours
+        return course.current_description ?.total_hours
           .toString()
           .includes(_value);
       });
@@ -173,7 +173,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     }
     if (filter == 3) {
       _filteredCourses = Courses.filter((course, index) => {
-        return course.current_description?.credit.toString().includes(_value);
+        return course.current_description ?.credit.toString().includes(_value);
       });
       setFilteredCourses(_filteredCourses);
     }
@@ -183,14 +183,14 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     filterData();
   };
   const handleSearch = (event) => {
-    let _value = event?.target?.value;
+    let _value = event ?.target ?.value;
     setSearch(_value);
     filterData();
   };
   // ---- Handle Sort --------------------------------
   const [sortBy, setSortBy] = React.useState(0);
   const handleSortBy = (event) => {
-    let _value = event?.target?.value;
+    let _value = event ?.target ?.value;
     setSortBy(_value);
     let _filteredCourses = Courses;
     if (sortBy == 1) {
@@ -218,13 +218,13 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     if (sortBy == 2) {
       _filteredCourses = Courses.sort((a, b) => {
         if (
-          a.current_description?.total_hours >
-          b.current_description?.total_hours
+          a.current_description ?.total_hours >
+            b.current_description ?.total_hours
         ) {
           return 1;
         } else if (
-          a.current_description?.total_hours <
-          b.current_description?.total_hours
+          a.current_description ?.total_hours <
+            b.current_description ?.total_hours
         ) {
           return -1;
         } else {
@@ -235,10 +235,10 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     }
     if (sortBy == 3) {
       _filteredCourses = Courses.sort((a, b) => {
-        if (a.current_description?.credit > b.current_description?.credit) {
+        if (a.current_description ?.credit > b.current_description ?.credit) {
           return 1;
         } else if (
-          a.current_description?.credit < b.current_description?.credit
+          a.current_description ?.credit < b.current_description ?.credit
         ) {
           return -1;
         } else {
@@ -267,7 +267,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     );
   };
   const csvOptions = {
-    fieldSeparator: ",",
+    fieldSeparator: ";",
     quoteStrings: '"',
     decimalSeparator: ".",
     showLabels: true,
@@ -347,7 +347,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
             setConfirmDelete(false);
           }
         })
-        .catch((err) => {});
+        .catch((err) => { });
     } else toast.success("يجب تحديد معرّف المقرّر ضمن البرنامج");
   };
   // Handle Show Confirm Dialog
@@ -483,11 +483,11 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     console.clear();
     console.log(data);
     const _title = `تكليف مدرّس ضمن المقرّر: 
-    (${data?.edu_course?.course?.code}) 
-    (${data?.edu_course?.course?.ar_name}) 
-    (${data?.edu_year?.year}) 
-    (${data?.year?.speciality?.ar_name})
-    (${data?.year?.ar_name})
+    (${data ?.edu_course ?.course ?.code}) 
+    (${data ?.edu_course ?.course ?.ar_name}) 
+    (${data ?.edu_year ?.year}) 
+    (${data ?.year ?.speciality ?.ar_name})
+    (${data ?.year ?.ar_name})
     `;
     setTitle(_title);
     setPdata(data);

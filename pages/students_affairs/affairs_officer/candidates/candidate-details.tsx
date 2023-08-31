@@ -55,8 +55,6 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
     const goToPrint = (docType) => {
         dispatch(setCandidate(candidate));
         const printWindow = window.open('', '_blank');
-        console.clear();
-        console.log(candidate)
         // const styleElement = window.document.createElement('style');
         // styleElement.textContent = `@media print {
         //     header, footer {
