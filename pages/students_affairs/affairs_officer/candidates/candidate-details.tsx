@@ -49,10 +49,14 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
     };
 
     const [candidate, updateCandidate] = useState(props.candidate);
-   
+    const setUpdate = (candidate: any) => {
+        updateCandidate(candidate);
+    }
     const goToPrint = (docType) => {
         dispatch(setCandidate(candidate));
         const printWindow = window.open('', '_blank');
+        console.clear();
+        console.log(candidate)
         // const styleElement = window.document.createElement('style');
         // styleElement.textContent = `@media print {
         //     header, footer {
@@ -61,11 +65,11 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
         // }`;
         // printWindow.document.head.appendChild(styleElement);
         printWindow.document.write(getCandidateToPrint(candidate, docType));
-        setTimeout(() => printWindow.print(), 1000);
+        setTimeout(() => printWindow.print(), 2000);
     };
 
     const getCandidateWithDesires = (desires) => {
-        return {...candidate, desires: desires.map((item) => {return {...item.speciality, id: item.speciality_id.toString()}})}
+        return { ...candidate, desires: desires.map((item) => { return { ...item.speciality, id: item.speciality_id.toString() } }) }
     }
     /************************** Data ****************************/
     useEffect(() => {
@@ -100,12 +104,12 @@ const CandidateDetails: React.FC<ICandidateDetailsProps> = (props) => {
                 </SuiButton>
             </div>
             <div style={{ marginRight: 220 }} id={'personal'}>
-                <CandidatePersonalInfo initValues={candidate ? { ...candidate, residance: candidate ?.residance || yesNo(translate)[0].value} : {}} />
+                <CandidatePersonalInfo updateCandidate={setUpdate} initValues={candidate ? { ...candidate, residance: candidate ?.residance || yesNo(translate)[0].value} : {}} />
                 <div id={'certificate'} style={spacer} />
                 {candidate ?.certificates ?.length > 0 &&
                     <CandidateCertificateInfo initValues={candidate ?.certificates[0]} />}
                 <div id={'desires'} style={spacer} />
-                {candidate && <CandidateDesireList candidateId={candidate ?.id} />}
+                {candidate && <CandidateDesireList updateCandidate={setUpdate} candidate={candidate} candidateId={candidate ?.id} />}
                 <div id={'attachments'} style={spacer} />
                 <CandidateAttachmentsList attachments={candidate ?.attachements} candidateId={candidate ?.id} />
             </div>
