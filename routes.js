@@ -90,6 +90,13 @@ const dashboardRoutes = [{
     icon: EditAttributesSharp,
     layout: "/students_affairs",
   },
+  {
+    path: "/admin/users_management",
+    name: "Observers",
+    rtlName: "إدارة المستخدمين",
+    icon: EditAttributesSharp,
+    layout: "/students_affairs",
+  },
   // {
   //   path: "/admin/marks",
   //   name: "Observers",

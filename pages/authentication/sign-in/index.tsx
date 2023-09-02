@@ -29,6 +29,7 @@ import LoginService from "../../../Services/LoginService";
 import { ApiResponse } from "../../../Models/ApiResponse/ApiResponse";
 import { YearsModel } from "../../../Models/ApiResponse/YearsModel";
 import { useTranslation } from "../../../Utility/Translations/useTranslation";
+import { toast } from "react-toastify";
 // Images
 const bg7 = require("./../../../assets/img/curved-images/HIAST.jpg");
 
@@ -51,7 +52,6 @@ function SignIn(props) {
       let key = localStorage.getItem("sa_access_token");
       if (!!key && key !== "undefined") {
         // dispatch(setSessionKey(key));
-        console.log("key", key);
         router.push("/students_affairs/dashboard");
       }
     }
@@ -71,7 +71,6 @@ function SignIn(props) {
 
   async function fetchApi() {
     let data = (await LoginService.GetYears()) as ApiResponse;
-    console.log("years", data);
     return data;
   }
 
@@ -101,13 +100,11 @@ function SignIn(props) {
       ),
   });
   const submitForm = async (values: any, setSubmitting) => {
-    console.log("values", values);
     LoginService.Login({
       email: values.username,
       password: values.password,
     })
       .then((response) => {
-        console.log(response);
         if (response.success) {
           localStorage.setItem("sa_access_token", response.result.token);
           localStorage.setItem(
@@ -118,20 +115,14 @@ function SignIn(props) {
           dispatch(setSessionKey(response.result.token));
           router.push("/students_affairs/dashboard");
         }
+        else {
+          toast.error(response);
+          setSubmitting(false);
+        }
       })
       .catch((e) => {
-        throw new Error(e);
+        throw new Error(e)
       });
-    // const resp = await signIn("credentials", {
-    //   email: values.username,
-    //   password: values.password,
-    //   redirect: false,
-    // });
-    // console.log(resp);
-    // if (resp.ok) {
-    //   router.push("/student_affairs/dashboard");
-    // } else {
-    // }
   };
   return (
     !sessionKey && (
@@ -254,8 +245,8 @@ function SignIn(props) {
                         cursor: "pointer",
                         userSelect: "none",
                       }}
-                      // onClick={handleSetRememberMe}
-                      // sx={{ cursor: "pointer", userSelect: "none" }}
+                    // onClick={handleSetRememberMe}
+                    // sx={{ cursor: "pointer", userSelect: "none" }}
                     >
                       &nbsp;&nbsp;{translate("Remember me")}
                     </Typography>
@@ -271,16 +262,16 @@ function SignIn(props) {
                         {translate("Signing in...")}
                       </SuiButton>
                     ) : (
-                      <SuiButton
-                        disabled={!(dirty && isValid)}
-                        type="submit"
-                        variant="gradient"
-                        color="info"
-                        fullWidth
-                      >
-                        {translate("Sign in")}
-                      </SuiButton>
-                    )}
+                        <SuiButton
+                          disabled={!(dirty && isValid)}
+                          type="submit"
+                          variant="gradient"
+                          color="info"
+                          fullWidth
+                        >
+                          {translate("Sign in")}
+                        </SuiButton>
+                      )}
                   </Box>
                 </Form>
               );

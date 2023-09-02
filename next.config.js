@@ -120,19 +120,13 @@ module.exports = withPlugins([
     // Login
     LOGIN_URL: "/login",
 
-    LIST_ACTIVITIES_URL:
-      "/employee/activities",
-    LIST_FUNCTIONAL_BODIES_URL:
-      "/employee/levels",
-    LIST_EXAM_HALLS_URL:
-      "/examhalls",
-    LIST_OBSERVATIONS_URL:
-      "/observation",
-    LIST_AVAILABLE_OBSERVERS_URL:
-      "/observation/employees",
-    ADD_OBSERVATION_URL:
-      "/observation/add",
-    DELETE_OBSERVATION_URL:
-      "/observation/delete",
+    LIST_ACTIVITIES_URL: "/employee/activities",
+    LIST_FUNCTIONAL_BODIES_URL: "/employee/levels",
+    LIST_EXAM_HALLS_URL: "/examhalls",
+    LIST_OBSERVATIONS_URL: "/observation",
+    LIST_AVAILABLE_OBSERVERS_URL: "/observation/employees",
+    ADD_OBSERVATION_URL: "/observation/add",
+    DELETE_OBSERVATION_URL: "/observation/delete",
+    LIST_User_URL: "/users"
   },
 });

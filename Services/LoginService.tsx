@@ -2,18 +2,20 @@ import apiConnector from "./ApiClient";
 import { ApiResponse } from "../Models/ApiResponse/ApiResponse";
 
 export default class LoginService {
-  static async Login(payload): Promise<ApiResponse> {
+  static async Login(payload): Promise<any> {
     const _url = process.env.LOGIN_URL as string;
     return await apiConnector
       .post(_url, payload)
       .then((response) => {
-        if (response.data.success) {
+        if (response?.data?.success) {
           let result = response.data;
           return result;
         }
+        else {
+          return response.error ?.message;
+        }
       })
       .catch((error) => {
-        console.log("Api Error:", error);
         throw error;
       });
   }
@@ -27,7 +29,6 @@ export default class LoginService {
         }
       })
       .catch((error) => {
-        console.log("Api Error:", error);
         throw error;
       });
   }
