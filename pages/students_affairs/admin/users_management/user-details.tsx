@@ -11,6 +11,7 @@ import SuiButton from "../../../../components/SuiButton";
 import { toast } from "react-toastify";
 import UserService from "../../../../Services/UserService";
 import { useRouter } from "next/router";
+import { MenuProps, useStyles } from "./utils";
 import {
   Add,
   ArrowBack,
@@ -27,6 +28,11 @@ import {
   MenuItem,
   TextField,
   Typography,
+  InputLabel,
+  Select,
+  ListItemIcon,
+  Checkbox,
+  ListItemText,
 } from "@material-ui/core";
 import GridItem from "../../../../components/Grid/GridItem";
 
@@ -48,9 +54,10 @@ const UserDetails: FC<IUserDetailsProps> = ({
   const [roles, setRoles] = React.useState<any>([]);
   const [permissions, setPermissions] = React.useState<any>([]);
   const [role, setRole] = React.useState<number>(0);
-  const [permission, setPermission] = React.useState<any>([]);
-
-  const router = useRouter();
+  const [selected, setSelected] = useState([]);
+  useEffect(() => {
+    console.log(User);
+  }, [])
   const { translate } = useTranslation();
   const [User, setDetails] = useState<IUserModel>(details);
   let UserSchema = yup.object({
@@ -141,26 +148,37 @@ const UserDetails: FC<IUserDetailsProps> = ({
       }).catch(e => {
         throw new Error(e)
       })
+    UserService.GetPermissions().then(response => {
+      setPermissions(response.result);
+    }).catch(e => {
+      throw new Error(e)
+    })
   }, [])
   const submitRole = () => {
-    let payload = {
-      user_id: User.id,
-      role_id: role
+    if (!!role) {
+      let payload = {
+        user_id: User.id,
+        role_id: role
+      }
+      UserService.AssignUserToRole(payload)
+        .then((response) => {
+          if (response.success) {
+            toast.success("تم إسناد الدور بنجاح");
+          } else {
+            console.log(response.error);
+            toast.error(response.error.message);
+          }
+        })
+        .catch((error) => {
+          console.log(error.message);
+          toast.error(error.message);
+          throw new Error(error);
+        });
     }
-    UserService.AssignUserToRole(payload)
-      .then((response) => {
-        if (response.success) {
-          toast.success("تم إسناد الدور بنجاح");
-        } else {
-          console.log(response.error);
-          toast.error(response.error.message);
-        }
-      })
-      .catch((error) => {
-        console.log(error.message);
-        toast.error(error.message);
-        throw new Error(error);
-      });
+    else {
+      toast.error("الرجاء اختيار دور");
+    }
+
   }
   const changeRole = (value) => {
     setRole(value);
@@ -172,25 +190,46 @@ const UserDetails: FC<IUserDetailsProps> = ({
       })
   }
   const submitPermission = () => {
-    let payload = {
-      user_id: User.id,
-      permission_id: permission
-    }
-    UserService.AssignUserToPermission(payload)
-      .then((response) => {
-        if (response.success) {
-          toast.success("تم إسناد الصلاحية بنجاح");
-        } else {
-          console.log(response.error);
-          toast.error(response.error.message);
+    let trues: boolean[] = []
+    if (selected.length > 0) {
+      selected.forEach(e => {
+        let payload = {
+          user_id: User.id,
+          permission_id: e
         }
+        UserService.AssignUserToPermission(payload)
+          .then((response) => {
+            if (response.success) {
+              trues.push(true);
+            } else {
+              console.log(response.error);
+              trues.push(false);
+              // toast.error(response.error.message);
+            }
+          })
+          .catch((error) => {
+            console.log(error.message);
+            toast.error(error.message);
+            throw new Error(error);
+          });
       })
-      .catch((error) => {
-        console.log(error.message);
-        toast.error(error.message);
-        throw new Error(error);
-      });
+      if (selected.length > 0 && trues.map(e => true).length == selected.length) {
+        toast.success("تم إسناد الصلاحيات بنجاح");
+      }
+    }
+    else {
+      toast.error("الرجاء اختيار صلاحية واحدة على الأقل");
+    }
   }
+  const handleChange = (event) => {
+    const value = event.target.value;
+    if (value[value.length - 1] === "all") {
+      setSelected(selected.length === permissions.length ? [] : permissions.map(e => e.id));
+      return;
+    }
+    setSelected(value);
+  };
+
   return (
     <Grid container md={12} sm={12}>
       <Grid md={12} sm={12} xs={12}>
@@ -367,7 +406,46 @@ const UserDetails: FC<IUserDetailsProps> = ({
                 </SuiButton>
               </GridItem>
               <GridItem item md={6} xs={12} sm={12}>
-                <TextField
+                <Select
+                  labelId="mutiple-select-label"
+                  multiple
+                  value={selected}
+                  onChange={handleChange}
+                  renderValue={(selected) => {
+                    return `${selected.map(e => e.name).length} صلاحية مختارة`
+                  }}
+                  MenuProps={MenuProps}
+                >
+                  {/* <MenuItem
+                    value="all"
+                    classes={{
+                      root: isAllSelected ? classes.selectedAll : ""
+                    }}
+                  >
+                    <ListItemIcon>
+                      <Checkbox
+                        classes={{ indeterminate: classes.indeterminateColor }}
+                        checked={isAllSelected}
+                        indeterminate={
+                          selected.length > 0 && selected.length < permissions.length
+                        }
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      classes={{ primary: classes.selectAllText }}
+                      primary="Select All"
+                    />
+                  </MenuItem> */}
+                  {permissions.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      <ListItemIcon>
+                        <Checkbox checked={selected.indexOf(option.id) > -1} />
+                      </ListItemIcon>
+                      <ListItemText primary={option.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+                {/* <TextField
                   id="outlined-select-currency-native"
                   select
                   label=""
@@ -381,6 +459,16 @@ const UserDetails: FC<IUserDetailsProps> = ({
                     </option>
                   ))}
                 </TextField>
+                <SuiButton
+                  style={{
+                    color: "rgb(255, 255, 255)",
+                    background: "rgb(23, 193, 232)",
+                    margin: "0 10px 0 10px"
+                  }}
+                  onClick={submitPermission}
+                >
+                  {translate("Save")}
+                </SuiButton> */}
                 <SuiButton
                   style={{
                     color: "rgb(255, 255, 255)",

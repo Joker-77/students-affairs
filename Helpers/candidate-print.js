@@ -87,7 +87,7 @@ export const getCandidateToPrint = (candidate, docType = 1) => {
           
         <div class="container">
           <div class="row">
-            ${fields.filter(x => !x.hidden).map(({label, value, col}) => `<div class="${col || 'col-xs-4'} col-xs-pull" style="margin-bottom: 20px">
+            ${fields.filter(x => !x.hidden).map(({label, value, col}) => `<div class="${col || 'col-xs-4'} col-xs-pull" style="margin-bottom: 10px">
               <p><strong>${label}${label ? ':' : ''}</strong> ${value}</p>
             </div>`
             ).join('')}

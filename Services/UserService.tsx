@@ -96,8 +96,10 @@ export default class UserService {
       });
   }
 
-  static async GetPermissions(roleId: string): Promise<ApiResponse> {
-    const detailUrl = "/permissions?role_id=" + roleId;
+  static async GetPermissions(roleId?: string): Promise<ApiResponse> {
+    let detailUrl = "/permissions";
+    if (!!roleId)
+      detailUrl += "?role_id=" + roleId;
     return await apiConnector
       .get(detailUrl)
       .then((response) => {

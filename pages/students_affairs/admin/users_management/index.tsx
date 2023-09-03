@@ -234,22 +234,22 @@ const UsersList: React.FC<IUsersListProps> = ({ }) => {
                 tableLayout: "auto",
             };
             let actions = [
-                {
-                    icon: () => (
-                        <SuiButton
-                            style={{
-                                minWidth: 80,
-                                color: "#dc3545",
-                                backgroundColor: "transparent",
-                                border: "1px solid #dc3545",
-                            }}
-                            color={"danger"}
-                        >
-                            {translate("Delete")}
-                        </SuiButton>
-                    ),
-                    onClick: (evt, data) => handleConfirmOpen(data),
-                },
+                // {
+                //     icon: () => (
+                //         <SuiButton
+                //             style={{
+                //                 minWidth: 80,
+                //                 color: "#dc3545",
+                //                 backgroundColor: "transparent",
+                //                 border: "1px solid #dc3545",
+                //             }}
+                //             color={"danger"}
+                //         >
+                //             {translate("Delete")}
+                //         </SuiButton>
+                //     ),
+                //     onClick: (evt, data) => handleConfirmOpen(data),
+                // },
                 {
                     icon: () => (
                         <SuiButton style={{ minWidth: 140, width: 140 }} color={"primary"}>
