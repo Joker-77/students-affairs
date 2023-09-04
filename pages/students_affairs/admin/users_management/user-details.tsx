@@ -51,15 +51,19 @@ const UserDetails: FC<IUserDetailsProps> = ({
   activateEdit,
   isEditable
 }) => {
-  const [roles, setRoles] = React.useState<any>([]);
+  const [assignedRoles, setAssignedRoles] = React.useState<any>([]);
+  const [unassignedRoles, setUnAssignedRoles] = React.useState<any>([]);
   const [permissions, setPermissions] = React.useState<any>([]);
+  const [unassignedPermissions, setUnAssignedPermissions] = React.useState<any>([]);
+
   const [role, setRole] = React.useState<number>(0);
-  const [selected, setSelected] = useState([]);
-  useEffect(() => {
-    console.log(User);
-  }, [])
-  const { translate } = useTranslation();
+  const [assignedRole, setAssignedRole] = React.useState(0);
+  const [selected, setSelected] = React.useState([]);
+  const [selectedUnAssigned, setSelectedUnAssigned] = React.useState([]);
+
   const [User, setDetails] = useState<IUserModel>(details);
+
+  const { translate } = useTranslation();
   let UserSchema = yup.object({
     email: yup
       .string(translate("الإيميل"))
@@ -140,21 +144,45 @@ const UserDetails: FC<IUserDetailsProps> = ({
     }
     setSubmitting(false);
   };
-
-  useEffect(() => {
-    UserService.GetRoles()
-      .then(response => {
-        setRoles(response.result);
-      }).catch(e => {
-        throw new Error(e)
-      })
-    UserService.GetPermissions().then(response => {
-      setPermissions(response.result);
+  const getData = async () => {
+    setAssignedRoles([]);
+    setUnAssignedRoles([]);
+    setUnAssignedPermissions([]);
+    setPermissions([]);
+    setSelected([]);
+    setSelectedUnAssigned([]);
+    let user = null;
+    let permissions = [];
+    await UserService.GetPermissions().then(response => {
+      permissions = response.result;
     }).catch(e => {
       throw new Error(e)
     })
+    await UserService.Get(User.id.toString())
+      .then(response => {
+        user = response.result;
+        setDetails(user);
+        setAssignedRoles(user.roles);
+      }).catch(e => {
+        throw new Error(e)
+      })
+    await UserService.GetRoles()
+      .then(response => {
+        let roles = response.result.filter(e => !user.roles.map(c => c.id).includes(e.id));
+        setUnAssignedRoles(roles);
+        let userPerm: object[] = user ?.user_permissions ?.map(e => e.permission) || [];
+        let unAssignedPerms = permissions.filter(e => !userPerm.map(c => c.id).includes(e.id));
+        setPermissions(userPerm);
+        setUnAssignedPermissions(unAssignedPerms);
+      }).catch(e => {
+        throw new Error(e)
+      })
+  }
+  useEffect(() => {
+    getData();
   }, [])
-  const submitRole = () => {
+
+  const assignRole = () => {
     if (!!role) {
       let payload = {
         user_id: User.id,
@@ -163,6 +191,7 @@ const UserDetails: FC<IUserDetailsProps> = ({
       UserService.AssignUserToRole(payload)
         .then((response) => {
           if (response.success) {
+            getData();
             toast.success("تم إسناد الدور بنجاح");
           } else {
             console.log(response.error);
@@ -178,7 +207,30 @@ const UserDetails: FC<IUserDetailsProps> = ({
     else {
       toast.error("الرجاء اختيار دور");
     }
+  }
 
+  const unAssignRole = () => {
+    if (!!assignedRole) {
+      let payload = {
+        user_id: User.id,
+        role_id: assignedRole
+      }
+      UserService.RevokeRole(payload)
+        .then((response) => {
+          if (response.success) {
+            getData();
+            toast.success("تم إلغاء إسناد الدور بنجاح");
+          } else {
+            toast.error(response.error.message);
+          }
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
+    }
+    else {
+      toast.error("الرجاء اختيار دور");
+    }
   }
   const changeRole = (value) => {
     setRole(value);
@@ -189,21 +241,24 @@ const UserDetails: FC<IUserDetailsProps> = ({
         throw new Error(e)
       })
   }
+  const changeAssignedRole = (value) => {
+    setAssignedRole(value);
+  }
   const submitPermission = () => {
-    let trues: boolean[] = []
-    if (selected.length > 0) {
-      selected.forEach(e => {
+    if (selectedUnAssigned.length > 0) {
+      let trues = selectedUnAssigned.map(e => {
         let payload = {
           user_id: User.id,
           permission_id: e
         }
         UserService.AssignUserToPermission(payload)
           .then((response) => {
+            console.clear();
             if (response.success) {
-              trues.push(true);
+              console.log(response);
+              return e;
             } else {
               console.log(response.error);
-              trues.push(false);
               // toast.error(response.error.message);
             }
           })
@@ -213,8 +268,39 @@ const UserDetails: FC<IUserDetailsProps> = ({
             throw new Error(error);
           });
       })
-      if (selected.length > 0 && trues.map(e => true).length == selected.length) {
+      if (selectedUnAssigned.length > 0 && trues.length == selectedUnAssigned.length) {
+        getData();
         toast.success("تم إسناد الصلاحيات بنجاح");
+      }
+    }
+    else {
+      toast.error("الرجاء اختيار صلاحية واحدة على الأقل");
+    }
+  }
+
+  const revokePermission = () => {
+    if (selected.length > 0) {
+      let trues = selected.map(e => {
+        let payload = {
+          user_id: User.id,
+          permission_id: e
+        }
+        UserService.RevokePermission(payload)
+          .then((response) => {
+            if (response.success) {
+              console.log(response);
+              return e;
+            } else {
+            }
+          })
+          .catch((error) => {
+            toast.error(error.message);
+            throw new Error(error);
+          });
+      })
+      if (selected.length > 0 && trues.length == selected.length) {
+        getData();
+        toast.success("تم إلغاء إسناد الصلاحيات بنجاح");
       }
     }
     else {
@@ -223,12 +309,17 @@ const UserDetails: FC<IUserDetailsProps> = ({
   }
   const handleChange = (event) => {
     const value = event.target.value;
-    if (value[value.length - 1] === "all") {
-      setSelected(selected.length === permissions.length ? [] : permissions.map(e => e.id));
-      return;
-    }
+    console.clear();
+    console.log(value);
     setSelected(value);
   };
+
+  const handleChangeUnAssign = (event) => {
+    const value = event.target.value;
+    console.clear();
+    console.log(value);
+    setSelectedUnAssigned(value);
+  }
 
   return (
     <Grid container md={12} sm={12}>
@@ -369,17 +460,27 @@ const UserDetails: FC<IUserDetailsProps> = ({
         {
           isEditable && <Card style={{ padding: "3em 3em", margin: "5px 0px" }}>
             <Grid container md={12}>
-              <GridItem item md={6} xs={12} sm={6}>
+              <GridItem item md={3} xs={12} sm={6}>
                 <Typography variant="h5" component="div">
-                  الأدوار
+                  الأدوار غير المسندة
               </Typography>
               </GridItem>
-              <GridItem item md={6} xs={12} sm={6}>
+              <GridItem item md={3} xs={12} sm={6}>
                 <Typography variant="h5" component="div">
-                  الصلاحيات
+                  الأدوار المسندة
               </Typography>
               </GridItem>
-              <GridItem item md={6} xs={12} sm={12}>
+              <GridItem item md={3} xs={12} sm={6}>
+                <Typography variant="h5" component="div">
+                  الصلاحيات غير المسندة
+              </Typography>
+              </GridItem>
+              <GridItem item md={3} xs={12} sm={6}>
+                <Typography variant="h5" component="div">
+                  الصلاحيات المسندة
+              </Typography>
+              </GridItem>
+              <GridItem item md={3} xs={12} sm={12}>
                 <TextField
                   id="outlined-select-currency-native"
                   select
@@ -388,7 +489,7 @@ const UserDetails: FC<IUserDetailsProps> = ({
                   onChange={e => changeRole(e.target.value)}
                   helperText="الرجاء اختيار دور لهذا المستخدم"
                 >
-                  {roles.map((option) => (
+                  {unassignedRoles.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.name}
                     </option>
@@ -400,12 +501,69 @@ const UserDetails: FC<IUserDetailsProps> = ({
                     background: "rgb(23, 193, 232)",
                     margin: "0 10px 0 10px"
                   }}
-                  onClick={submitRole}
+                  onClick={assignRole}
                 >
-                  {translate("Save")}
+                  {translate("إسناد")}
                 </SuiButton>
               </GridItem>
-              <GridItem item md={6} xs={12} sm={12}>
+              <GridItem item md={3} xs={12} sm={12}>
+                <TextField
+                  id="outlined-select-currency-native"
+                  select
+                  label=""
+                  defaultValue=""
+                  onChange={e => changeAssignedRole(e.target.value)}
+                  helperText="الرجاء اختيار دور لهذا المستخدم"
+                >
+                  {assignedRoles.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
+                <SuiButton
+                  style={{
+                    color: "rgb(255, 255, 255)",
+                    background: "rgb(23, 193, 232)",
+                    margin: "0 10px 0 10px"
+                  }}
+                  onClick={unAssignRole}
+                >
+                  {translate("إلغاء الإسناد")}
+                </SuiButton>
+              </GridItem>
+              <GridItem item md={3} xs={12} sm={12}>
+                <Select
+                  labelId="mutiple-select-label"
+                  multiple
+                  value={selectedUnAssigned}
+                  onChange={handleChangeUnAssign}
+                  renderValue={(selected) => {
+                    return `${selected.map(e => e.name).length} صلاحية مختارة`
+                  }}
+                  MenuProps={MenuProps}
+                >
+                  {unassignedPermissions.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      <ListItemIcon>
+                        <Checkbox checked={selectedUnAssigned.indexOf(option.id) > -1} />
+                      </ListItemIcon>
+                      <ListItemText primary={option.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+                <SuiButton
+                  style={{
+                    color: "rgb(255, 255, 255)",
+                    background: "rgb(23, 193, 232)",
+                    margin: "0 10px 0 10px"
+                  }}
+                  onClick={submitPermission}
+                >
+                  {translate("إسناد")}
+                </SuiButton>
+              </GridItem>
+              <GridItem item md={3} xs={12} sm={12}>
                 <Select
                   labelId="mutiple-select-label"
                   multiple
@@ -416,26 +574,6 @@ const UserDetails: FC<IUserDetailsProps> = ({
                   }}
                   MenuProps={MenuProps}
                 >
-                  {/* <MenuItem
-                    value="all"
-                    classes={{
-                      root: isAllSelected ? classes.selectedAll : ""
-                    }}
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        classes={{ indeterminate: classes.indeterminateColor }}
-                        checked={isAllSelected}
-                        indeterminate={
-                          selected.length > 0 && selected.length < permissions.length
-                        }
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      classes={{ primary: classes.selectAllText }}
-                      primary="Select All"
-                    />
-                  </MenuItem> */}
                   {permissions.map((option) => (
                     <MenuItem key={option.id} value={option.id}>
                       <ListItemIcon>
@@ -445,39 +583,15 @@ const UserDetails: FC<IUserDetailsProps> = ({
                     </MenuItem>
                   ))}
                 </Select>
-                {/* <TextField
-                  id="outlined-select-currency-native"
-                  select
-                  label=""
-                  defaultValue=""
-                  onChange={e => setPermission(e.target.value)}
-                  helperText="الرجاء اختيار صلاحية لهذا المستخدم"
-                >
-                  {permissions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.name}
-                    </option>
-                  ))}
-                </TextField>
                 <SuiButton
                   style={{
                     color: "rgb(255, 255, 255)",
                     background: "rgb(23, 193, 232)",
                     margin: "0 10px 0 10px"
                   }}
-                  onClick={submitPermission}
+                  onClick={revokePermission}
                 >
-                  {translate("Save")}
-                </SuiButton> */}
-                <SuiButton
-                  style={{
-                    color: "rgb(255, 255, 255)",
-                    background: "rgb(23, 193, 232)",
-                    margin: "0 10px 0 10px"
-                  }}
-                  onClick={submitPermission}
-                >
-                  {translate("Save")}
+                  {translate("إلغاء الإسناد")}
                 </SuiButton>
               </GridItem>
             </Grid>

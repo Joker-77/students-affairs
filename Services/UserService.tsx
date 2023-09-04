@@ -96,6 +96,22 @@ export default class UserService {
       });
   }
 
+  static async RevokeRole(payload): Promise<ApiResponse> {
+    const detailUrl = "/user/revoke-role";
+    return await apiConnector
+      .post(detailUrl, payload)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        console.log("Api Error:", error);
+        throw error;
+      });
+  }
+
   static async GetPermissions(roleId?: string): Promise<ApiResponse> {
     let detailUrl = "/permissions";
     if (!!roleId)
@@ -116,6 +132,21 @@ export default class UserService {
 
   static async AssignUserToPermission(payload): Promise<ApiResponse> {
     const detailUrl = "/user/assign-permission";
+    return await apiConnector
+      .post(detailUrl, payload)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        console.log("Api Error:", error);
+        throw error;
+      });
+  }
+  static async RevokePermission(payload): Promise<ApiResponse> {
+    const detailUrl = "/user/revoke-permission";
     return await apiConnector
       .post(detailUrl, payload)
       .then((response) => {
