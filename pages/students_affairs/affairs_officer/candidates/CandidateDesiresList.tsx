@@ -57,9 +57,10 @@ const CandidateDesireList: React.FC<IDesireListProps> = ({ candidateId, callback
             system: {
               type: 1,
               name: translate('Desires'),
-              items: desires.map((item) => { return { ...item.speciality, id: item.speciality_id.toString() } }),
+              items: desires.filter(e => e.speciality_id != 1).map((item) => { return { ...item.speciality, id: item.speciality_id.toString() } }),
             },
           });
+          console.log("desires", desires.filter(e => e.id != 1));
         } else {
           getSpecialities();
         }
