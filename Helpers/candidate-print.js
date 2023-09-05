@@ -22,7 +22,7 @@ const getFields = (candidate, docType = 1) => [
       }) : '')},
   {label: 'الجنسية', value: candidate?.person?.nationality || ''},
   {label: 'الرقم الوطني', value: candidate?.person?.national_number || ''},
-  {label: 'الرغبات', value: candidate?.desires?.map(item => item.ar_name).join(' / ') || '', col: 'col-xs-12'},
+  {label: 'الرغبات', value: candidate?.desires?.map(item => item.ar_short_name).join(' / ') || '', col: 'col-xs-12'},
   {label: 'أرقام الهواتف', value: candidate?.person?.phones?.map(item => item.phone).join(' / ') || ''},
   {label: 'الرغبة المعتمدة', value: candidate?.selected_desire?.speciality_name || '', hidden: docType === 1},
   {label: 'مكان تقديم امتحان القبول', value: candidate?.exam_place},

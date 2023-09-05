@@ -31,4 +31,20 @@ export default class EduYearService {
         throw error;
       });
   }
+  static async checkYear(entity): Promise<ApiResponse> {
+    const listUrl = "/checkyear" as string;
+    let data = new FormData();
+    data.append('year', entity);
+    return await apiConnector
+      .post(listUrl, data)
+      .then((response) => {
+        if (response && response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }
