@@ -11,7 +11,7 @@ import SuiButton from "../../../../components/SuiButton";
 import { toast } from "react-toastify";
 import UserService from "../../../../Services/UserService";
 import { useRouter } from "next/router";
-import { MenuProps, useStyles } from "./utils";
+import { MenuProps, useStyles } from "../../../../Helpers/utils";
 import {
   Add,
   ArrowBack,
