@@ -23,6 +23,9 @@ import {
     setCandidate,
 } from "../../../../redux";
 import { toast } from "react-toastify";
+import DatePicker from 'react-datepicker';
+import { format, getYear, getMonth } from "date-fns";
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface ICandidatePersonalInfoProps {
     initValues: any;
@@ -89,7 +92,24 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
         // sex: Yup.string().required(translate("{0} is required", "Gender")),
         // nationality: Yup.string().required(translate("{0} is required", "Nationality")),
     });
+    const range = (start, stop, step) => 
+            Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step))
 
+    const years = range(1990, getYear(new Date()) + 1, 1);
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
     return (
         <Box>
             <Card>
@@ -115,11 +135,11 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                                 isSubmitting,
                                 isValid,
                                 dirty,
+                                setFieldValue,
                             } = formik;
                             return (
                                 <Form>
                                     <PersonInfoPartialForm prefix={"person"} formik={formik} disabled={disabled} />
-
                                     <Grid container spacing={2}>
                                         <Grid item md={4}>
                                             <Box mb={2}>
@@ -233,15 +253,61 @@ const CandidatePersonalInfo: React.FC<ICandidatePersonalInfoProps> = ({
                                                         {translate("Birth date")}
                                                     </Typography>
                                                 </Box>
-                                                <TextField
+                                                <DatePicker
+                                                    
+                                                     renderCustomHeader={({
+                                                        date,
+                                                        changeYear,
+                                                        changeMonth,
+                                                        decreaseMonth,
+                                                        increaseMonth,
+                                                        prevMonthButtonDisabled,
+                                                        nextMonthButtonDisabled,
+                                                      }) => (
+                                                        <div
+                                                          style={{
+                                                            margin: 10,
+                                                            display: "flex",
+                                                            justifyContent: "center",
+                                                          }}
+                                                        >
+                                                          <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                                                            {"<"}
+                                                          </button>
+                                                          <select
+                                                            value={getYear(date)}
+                                                            onChange={({ target: { value } }) => changeYear(value)}
+                                                          >
+                                                            {years.map((option) => (
+                                                              <option key={option} value={option}>
+                                                                {option}
+                                                              </option>
+                                                            ))}
+                                                          </select>
+                                                
+                                                          <select
+                                                            value={months[getMonth(date)]}
+                                                            onChange={({ target: { value } }) =>
+                                                              changeMonth(months.indexOf(value))
+                                                            }
+                                                          >
+                                                            {months.map((option) => (
+                                                              <option key={option} value={option}>
+                                                                {option}
+                                                              </option>
+                                                            ))}
+                                                          </select>
+                                                
+                                                          <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                                                            {">"}
+                                                          </button>
+                                                        </div>
+                                                      )}
                                                     disabled={disabled}
-                                                    onChange={handleChange}
-                                                    variant="outlined"
+                                                    onChange={(date) => setFieldValue('birth_date',format(date, "yyyy-MM-dd"))}
                                                     size="small"
-                                                    type="date"
-                                                    id="birth_date"
                                                     name="birth_date"
-                                                    value={values.birth_date}
+                                                    value={`${values.birth_date}`}
                                                     onBlur={handleBlur}
                                                     error={Boolean(touched.birth_date && errors.birth_date)}
                                                     helperText={touched.birth_date && errors.birth_date}
