@@ -78,6 +78,4 @@ export default class CourseService {
         throw error;
       });
   }
-
-  
 }

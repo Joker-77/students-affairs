@@ -73,7 +73,7 @@ const MTable: React.FC<ITableProps> = ({
         {
           <TableCell
             align="center"
-            style={{ width: `${calcWidth}%` }}
+            style={{ width: `${calcWidth}% !important` }}
             key={
               actions != null && actions.length > 0
                 ? actions.length.toString()
