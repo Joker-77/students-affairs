@@ -1,52 +1,157 @@
 const getFields = (candidate, docType = 1) => [
-  {label: 'رقم التسجيل', value: candidate.registeration_number},
-  {label: 'التاريخ', value: new Date().toLocaleDateString('ar-SY', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    })},
-  {label: 'رقم الاكتتاب', value: candidate?.certificates[0].subscription_number || ''},
-  {label: 'المحافظة', value: candidate?.certificates[0].city || ''},
-  {label: 'الدورة', value: candidate?.certificates[0].round == 1 ? 'الأولى' : 'الثانية'},
-  {label: 'طريقة التسجيل', value: candidate?.registeration_method || ''},
-  {label: 'الاسم', value: candidate?.person.first_name || ''},
-  {label: 'الشهرة', value: candidate?.person.last_name || ''},
-  {label: 'اسم الأب', value: candidate?.father.first_name || ''},
-  {label: 'اسم الأم', value: candidate?.mother.first_name || ''},
-  {label: 'مكان وتاريخ الولادة', value: candidate?.birth_place + ' ' +
-      (candidate?.birth_date ? new Date(candidate?.birth_date).toLocaleDateString('ar-SY', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-      }) : '')},
-  {label: 'الجنسية', value: candidate?.person?.nationality || ''},
-  {label: 'الرقم الوطني', value: candidate?.person?.national_number || ''},
-  {label: 'الرغبات', value: candidate?.desires?.filter(e => e.id != 1).map(item => item.ar_short_name).join(' / ') || '', col: 'col-xs-12'},
-  {label: 'أرقام الهواتف', value: candidate?.person?.phones?.map(item => item.phone).join(' / ') || ''},
-  {label: 'الرغبة المعتمدة', value: candidate?.selected_desire?.speciality_name || '', hidden: docType === 1},
-  {label: 'مكان تقديم امتحان القبول', value: candidate?.exam_place},
-  {label: 'مجموع الطالب (من 2400)', value: candidate?.certificates[0]?.details[9].value || '', col: 'col-xs-6'},
-  {label: 'مجموع الطالب (من 2400)', value: candidate?.certificates[0]?.details[9].value || '', hidden: docType !== 3, col: 'col-xs-6'},
-  {label: 'علامة القبول في الرياضيات', value: candidate?.registerations[0]?.math || '', hidden: docType === 1, col: 'col-xs-6'},
-  {label: 'علامة الرياضيات', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'math')[0]?.value || '', hidden: docType !== 3, col: 'col-xs-6'},
-  {label: 'علامة القبول في الفيزياء', value: candidate?.registerations[0]?.physics || '', hidden: docType === 1, col: 'col-xs-6'},
-  {label: 'علامة الفيزياء', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'physics')[0]?.value || '', hidden: docType !== 3, col: 'col-xs-6'},
-  {label: '', value: '', hidden: docType !== 3, col: 'col-xs-6'},
-  {label: 'علامة الكيمياء', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'chemestry')[0]?.value || '', hidden: docType !== 3, col: 'col-xs-6'},
-  {label: 'علامة الطالب التي يفاضل وفقها (من 3400)', value: candidate?.registerations[0]?.mark_3400 || '', hidden: docType === 1, col: 'col-xs-6'},
-  {label: 'علامة الطالب (من 3600)', value: candidate?.registerations[0]?.mark_3600 || '', hidden: docType !== 3, col: 'col-xs-6'},
-  {label: 'علامة اللغة الانكليزية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'english')[0]?.value || ''},
-  {label: 'علامة اللغة الفرنسية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'الفرنسية')[0]?.value || ''},
-  {label: 'علامة اللغة الروسية', value: candidate?.certificates[0]?.details.filter(x => x.key ==  'الروسية')[0]?.value || ''},
-  {label: 'فئة التسجيل', value: candidate?.registeration_class || '', hidden: docType !== 1},
-  {label: 'فئة القبول', value: candidate?.registerations[0]?.class || '', hidden: docType === 1},
-  {label: 'سكن جامعي', value: candidate?.residance == 1 ? 'نعم' : 'لا'},
+  { label: "رقم التسجيل", value: candidate.registeration_number },
+  {
+    label: "التاريخ",
+    value: new Date().toLocaleDateString("ar-SY", {
+      weekday: "long",
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    }),
+  },
+  {
+    label: "رقم الاكتتاب",
+    value: candidate?.certificates[0].subscription_number || "",
+  },
+  { label: "المحافظة", value: candidate?.certificates[0].city || "" },
+  {
+    label: "الدورة",
+    value: candidate?.certificates[0].round == 1 ? "الأولى" : "الثانية",
+  },
+  { label: "طريقة التسجيل", value: candidate?.registeration_method || "" },
+  { label: "الاسم", value: candidate?.person.first_name || "" },
+  { label: "الشهرة", value: candidate?.person.last_name || "" },
+  { label: "اسم الأب", value: candidate?.father.first_name || "" },
+  { label: "اسم الأم", value: candidate?.mother.first_name || "" },
+  {
+    label: "مكان وتاريخ الولادة",
+    value:
+      candidate?.birth_place +
+      " " +
+      (candidate?.birth_date
+        ? new Date(candidate?.birth_date).toLocaleDateString("ar-SY", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+          })
+        : ""),
+  },
+  { label: "الجنسية", value: candidate?.person?.nationality || "" },
+  { label: "الرقم الوطني", value: candidate?.person?.national_number || "" },
+  {
+    label: "الرغبات",
+    value:
+      candidate?.desires
+        ?.filter((e) => e.id != 1)
+        .map((item) => item.ar_short_name)
+        .join(" / ") || "",
+    col: "col-xs-12",
+  },
+  {
+    label: "أرقام الهواتف",
+    value:
+      candidate?.person?.phones?.map((item) => item.phone).join(" / ") || "",
+  },
+  {
+    label: "الرغبة المعتمدة",
+    value: candidate?.selected_desire?.speciality_name || "",
+    hidden: docType === 1,
+  },
+  { label: "مكان تقديم امتحان القبول", value: candidate?.exam_place },
+  {
+    label: "مجموع الطالب (من 2400)",
+    value: candidate?.certificates[0]?.details[9].value || "",
+    col: "col-xs-6",
+  },
+  {
+    label: "مجموع الطالب (من 2400)",
+    value: candidate?.certificates[0]?.details[9].value || "",
+    hidden: docType !== 3,
+    col: "col-xs-6",
+  },
+  {
+    label: "علامة القبول في الرياضيات",
+    value: candidate?.registerations[0]?.math || "",
+    hidden: docType === 1,
+    col: "col-xs-6",
+  },
+  {
+    label: "علامة الرياضيات",
+    value:
+      candidate?.certificates[0]?.details.filter((x) => x.key == "math")[0]
+        ?.value || "",
+    hidden: docType !== 3,
+    col: "col-xs-6",
+  },
+  {
+    label: "علامة القبول في الفيزياء",
+    value: candidate?.registerations[0]?.physics || "",
+    hidden: docType === 1,
+    col: "col-xs-6",
+  },
+  {
+    label: "علامة الفيزياء",
+    value:
+      candidate?.certificates[0]?.details.filter((x) => x.key == "physics")[0]
+        ?.value || "",
+    hidden: docType !== 3,
+    col: "col-xs-6",
+  },
+  { label: "", value: "", hidden: docType !== 3, col: "col-xs-6" },
+  {
+    label: "علامة الكيمياء",
+    value:
+      candidate?.certificates[0]?.details.filter((x) => x.key == "chemestry")[0]
+        ?.value || "",
+    hidden: docType !== 3,
+    col: "col-xs-6",
+  },
+  {
+    label: "علامة الطالب التي يفاضل وفقها (من 3400)",
+    value: candidate?.registerations[0]?.mark_3400 || "",
+    hidden: docType === 1,
+    col: "col-xs-6",
+  },
+  {
+    label: "علامة الطالب (من 3600)",
+    value: candidate?.registerations[0]?.mark_3600 || "",
+    hidden: docType !== 3,
+    col: "col-xs-6",
+  },
+  {
+    label: "علامة اللغة الانكليزية",
+    value:
+      candidate?.certificates[0]?.details.filter((x) => x.key == "english")[0]
+        ?.value || "",
+  },
+  {
+    label: "علامة اللغة الفرنسية",
+    value:
+      candidate?.certificates[0]?.details.filter((x) => x.key == "الفرنسية")[0]
+        ?.value || "",
+  },
+  {
+    label: "علامة اللغة الروسية",
+    value:
+      candidate?.certificates[0]?.details.filter((x) => x.key == "الروسية")[0]
+        ?.value || "",
+  },
+  {
+    label: "فئة التسجيل",
+    value: candidate?.registeration_class || "",
+    hidden: docType !== 1,
+  },
+  {
+    label: "فئة القبول",
+    value: candidate?.registerations[0]?.class || "",
+    hidden: docType === 1,
+  },
+  { label: "سكن جامعي", value: candidate?.residance == 1 ? "نعم" : "لا" },
 ];
 
 export const getCandidateToPrint = (candidate, docType = 1) => {
-    const fields = getFields(candidate, docType);
-    return `
+  const fields = getFields(candidate, docType);
+  return `
     <html lang="ar" dir="rtl">
         <head>
           <title>استمارة مفاضلة</title>
@@ -87,10 +192,18 @@ export const getCandidateToPrint = (candidate, docType = 1) => {
           
         <div class="container">
           <div class="row">
-            ${fields.filter(x => !x.hidden).map(({label, value, col}) => `<div class="${col || 'col-xs-4'} col-xs-pull" style="margin-bottom: 10px">
-              <p><strong>${label}${label ? ':' : ''}</strong> ${value}</p>
+            ${fields
+              .filter((x) => !x.hidden)
+              .map(
+                ({ label, value, col }) => `<div class="${
+                  col || "col-xs-4"
+                } col-xs-pull" style="margin-bottom: 10px; ${
+                  docType == 1 ? "margin-top: 1em" : ""
+                }">
+              <p><strong>${label}${label ? ":" : ""}</strong> ${value}</p>
             </div>`
-            ).join('')}
+              )
+              .join("")}
           </div>
           
           <div style="float: left"><strong>توقيع الطالب</strong></div>
@@ -99,4 +212,4 @@ export const getCandidateToPrint = (candidate, docType = 1) => {
         </html>
 
     `;
-}
+};
