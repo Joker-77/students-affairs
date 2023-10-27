@@ -43,7 +43,7 @@ const InitializeYear: React.FC = () => {
         console.log(result);
         if (result.length > 0) setLatestYear(result[0]);
       })
-      .catch((error) => { });
+      .catch((error) => {});
     SpecialityService.GetAll()
       .then((response) => {
         if (response.result.length > 0) {
@@ -72,10 +72,10 @@ const InitializeYear: React.FC = () => {
                 setInitYears(initYears);
               }
             })
-            .catch((error) => { });
+            .catch((error) => {});
         }
       })
-      .catch((error) => { });
+      .catch((error) => {});
   }, []);
 
   const closeProperties = () => {
@@ -86,8 +86,8 @@ const InitializeYear: React.FC = () => {
   };
 
   const confirmOpenYear = (value, message) => {
-    let alertMessage = message ?.split("%")[0] + " 2022-2023";
-    let confirmMessage = message ?.split("%")[1];
+    let alertMessage = message?.split("%")[0] + " 2022-2023";
+    let confirmMessage = message?.split("%")[1];
     setValue(value);
     setAlertMessage(alertMessage);
     setMessage(confirmMessage);
@@ -96,39 +96,41 @@ const InitializeYear: React.FC = () => {
 
   const handleSubmitConfirm = () => {
     console.log(value);
-    if (!!value) {
-      EduYearService.checkYear(latestYear ?.year).then((resp) => {
-          if (resp.result ?.success) {
-            EduYearService.InitYears({
-              year: latestYear.year,
-              type: value,
-            })
-              .then((response) => {
-                let result = response ?.result;
-                if (result && result.success) {
-                  setShowConfirm(false);
-                  setShow(false);
-                  SetSuccess(true);
-                }
-                setShowConfirm(false);
-                setShow(false);
-                SetSuccess(true);
-              })
-              .catch((error) => {
-                setShowConfirm(false);
-                setShow(false);
-                SetSuccess(true);
-              });
-          }
-          else {
-            alert('else');
-            setShowConfirm(false);
-            setShow(false);
-            SetSuccess(true);
-          }
-        })
-        .catch((error) => { })
-    }
+    setShowConfirm(false);
+    setShow(false);
+    SetSuccess(true);
+    // if (!!value) {
+    //   EduYearService.checkYear(latestYear?.year)
+    //     .then((resp) => {
+    //       if (resp.result?.success) {
+    //         EduYearService.InitYears({
+    //           year: latestYear.year,
+    //           type: value,
+    //         })
+    //           .then((response) => {
+    //             let result = response?.result;
+    //             if (result && result.success) {
+    //               setShowConfirm(false);
+    //               setShow(false);
+    //               SetSuccess(true);
+    //             }
+    //             setShowConfirm(false);
+    //             setShow(false);
+    //             SetSuccess(true);
+    //           })
+    //           .catch((error) => {
+    //             setShowConfirm(false);
+    //             setShow(false);
+    //             SetSuccess(true);
+    //           });
+    //       } else {
+    //         setShowConfirm(false);
+    //         setShow(false);
+    //         SetSuccess(true);
+    //       }
+    //     })
+    //     .catch((error) => {});
+    // }
   };
 
   const closeConfirmProperties = () => {
