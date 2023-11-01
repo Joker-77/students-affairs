@@ -1,0 +1,1 @@
+{"ast":null,"code":"\"use strict\";\n\nvar _interopRequireDefault = require(\"@babel/runtime/helpers/interopRequireDefault\");\n\nvar _ar = _interopRequireDefault(require(\"./ar.json\"));\n\nmodule.exports = {\n  ar: _ar.default,\n  en: {}\n};","map":null,"metadata":{},"sourceType":"script"}

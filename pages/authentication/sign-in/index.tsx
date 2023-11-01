@@ -114,14 +114,13 @@ function SignIn(props) {
           dispatch(updateProfile(response.result));
           dispatch(setSessionKey(response.result.token));
           router.push("/students_affairs/dashboard");
-        }
-        else {
+        } else {
           toast.error(response);
           setSubmitting(false);
         }
       })
       .catch((e) => {
-        throw new Error(e)
+        throw new Error(e);
       });
   };
   return (
@@ -245,8 +244,8 @@ function SignIn(props) {
                         cursor: "pointer",
                         userSelect: "none",
                       }}
-                    // onClick={handleSetRememberMe}
-                    // sx={{ cursor: "pointer", userSelect: "none" }}
+                      // onClick={handleSetRememberMe}
+                      // sx={{ cursor: "pointer", userSelect: "none" }}
                     >
                       &nbsp;&nbsp;{translate("Remember me")}
                     </Typography>
@@ -262,16 +261,16 @@ function SignIn(props) {
                         {translate("Signing in...")}
                       </SuiButton>
                     ) : (
-                        <SuiButton
-                          disabled={!(dirty && isValid)}
-                          type="submit"
-                          variant="gradient"
-                          color="info"
-                          fullWidth
-                        >
-                          {translate("Sign in")}
-                        </SuiButton>
-                      )}
+                      <SuiButton
+                        disabled={!(dirty && isValid)}
+                        type="submit"
+                        variant="gradient"
+                        color="info"
+                        fullWidth
+                      >
+                        {translate("Sign in")}
+                      </SuiButton>
+                    )}
                   </Box>
                 </Form>
               );
