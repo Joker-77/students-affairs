@@ -60,7 +60,7 @@ const CourseShallow: React.FC<ICourseShallowProps> = ({
               margin: "0 5px",
             }}
           >
-            <Typography style={{ textAlign: "center" }}>
+            <Typography style={{ textAlign: "center", fontSize: "15px" }}>
               عدد ساعات النظري
             </Typography>
             <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
@@ -80,7 +80,7 @@ const CourseShallow: React.FC<ICourseShallowProps> = ({
               margin: "0 5px",
             }}
           >
-            <Typography style={{ textAlign: "center" }}>
+            <Typography style={{ textAlign: "center", fontSize: "15px" }}>
               عدد ساعات العملي
             </Typography>
             <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
@@ -100,8 +100,8 @@ const CourseShallow: React.FC<ICourseShallowProps> = ({
               margin: "0 5px",
             }}
           >
-            <Typography style={{ textAlign: "center" }}>
-              عدد الساعات المشتركة
+            <Typography style={{ textAlign: "center", fontSize: "15px" }}>
+              عدد الساعات النظري / العملي
             </Typography>
             <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
               {
@@ -131,7 +131,7 @@ const CourseShallow: React.FC<ICourseShallowProps> = ({
               margin: "0 5px",
             }}
           >
-            <Typography style={{ textAlign: "center" }}>رمز المقرّر</Typography>
+            <Typography style={{ textAlign: "center", fontSize: "15px" }}>رمز المقرّر</Typography>
             <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
               {details?.edu_course?.course?.code}
             </Typography>
@@ -145,7 +145,7 @@ const CourseShallow: React.FC<ICourseShallowProps> = ({
               margin: "0 5px",
             }}
           >
-            <Typography style={{ textAlign: "center" }}>الاسم</Typography>
+            <Typography style={{ textAlign: "center", fontSize: "15px" }}>الاسم</Typography>
             <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
               {details?.edu_course?.course?.ar_name}
             </Typography>
@@ -159,7 +159,7 @@ const CourseShallow: React.FC<ICourseShallowProps> = ({
               margin: "0 5px",
             }}
           >
-            <Typography style={{ textAlign: "center" }}>السنة</Typography>
+            <Typography style={{ textAlign: "center", fontSize: "15px" }}>السنة</Typography>
             <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
               {details?.year?.ar_name}
             </Typography>
@@ -173,9 +173,9 @@ const CourseShallow: React.FC<ICourseShallowProps> = ({
               margin: "0 5px",
             }}
           >
-            <Typography style={{ textAlign: "center" }}>الاختصاص</Typography>
+            <Typography style={{ textAlign: "center", fontSize: "15px" }}>الاختصاص</Typography>
             <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
-              {details?.year?.speciality?.ar_name}
+              {`${details?.year?.speciality?.ar_code} ${details?.year?.speciality?.en_code}`}
             </Typography>
           </Grid>
           <Grid
@@ -187,7 +187,7 @@ const CourseShallow: React.FC<ICourseShallowProps> = ({
               margin: "0 5px",
             }}
           >
-            <Typography style={{ textAlign: "center" }}>الفصل</Typography>
+            <Typography style={{ textAlign: "center", fontSize: "15px" }}>الفصل</Typography>
             <Typography style={{ textAlign: "center", fontWeight: "bold" }}>
               {details?.semester == 1 ? "الأول" : "الثاني"}
             </Typography>

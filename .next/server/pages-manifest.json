@@ -1,5 +1,7 @@
 {
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
-  "/_error": "pages/_error.js"
+  "/_error": "pages/_error.js",
+  "/students_affairs/admin/exams/exams-list": "pages/students_affairs/admin/exams/exams-list.js",
+  "/students_affairs/affairs_officer/initialize-year/specify-courses": "pages/students_affairs/affairs_officer/initialize-year/specify-courses.js"
 }

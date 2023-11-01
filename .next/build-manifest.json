@@ -25,6 +25,20 @@
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
+    ],
+    "/students_affairs/admin/exams/exams-list": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/css/styles.chunk.css",
+      "static/chunks/styles.js",
+      "static/chunks/pages/students_affairs/admin/exams/exams-list.js"
+    ],
+    "/students_affairs/affairs_officer/initialize-year/specify-courses": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/css/styles.chunk.css",
+      "static/chunks/styles.js",
+      "static/chunks/pages/students_affairs/affairs_officer/initialize-year/specify-courses.js"
     ]
   },
   "ampFirstPages": []
