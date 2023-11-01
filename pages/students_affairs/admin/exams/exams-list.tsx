@@ -628,7 +628,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                         fullWidth
                       />
                     </GridItem>
-                    <GridItem md={3}>
+                    <GridItem md={1} style={{ marginTop: "1em" }}>
                       {inputFields.length !== 1 ? (
                         <Button
                           type="button"

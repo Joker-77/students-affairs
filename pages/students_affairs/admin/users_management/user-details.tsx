@@ -67,15 +67,17 @@ const UserDetails: FC<IUserDetailsProps> = ({
   );
 
   // Permissions
-  const [permissions, setPermissions] = React.useState<any>([]);
+  const [assignedPermissions, setAssignedPermissions] = React.useState<any>([]);
   const [unassignedPermissions, setUnAssignedPermissions] = React.useState<any>(
     []
   );
-
+  // Selected Permissions
+  const [selectedAssignedPermissions, setSelectedAssignedPermissions] =
+    React.useState([]);
+  const [selectedUnAssignedPermissions, setSelectedUnAssignedPermissions] =
+    React.useState([]);
+  //
   const [role, setRole] = React.useState<number>(0);
-  const [assignedRole, setAssignedRole] = React.useState(0);
-  const [selected, setSelected] = React.useState([]);
-  const [selectedUnAssigned, setSelectedUnAssigned] = React.useState([]);
 
   const { translate } = useTranslation();
   let UserSchema = yup.object({
@@ -177,6 +179,75 @@ const UserDetails: FC<IUserDetailsProps> = ({
         });
     });
   };
+  /************************* Handle Edit Permissions ************/
+  const addToUnAssignedPermission = (id) => {
+    let selectedAssigned = selectedAssignedPermissions.slice();
+    if (selectedAssigned.includes(id)) {
+      let index = selectedAssigned.findIndex((e) => e === id);
+      selectedAssigned.splice(index, 1);
+    } else {
+      selectedAssigned.push(id);
+    }
+    setSelectedAssignedPermissions(selectedAssigned);
+  };
+
+  const addToAssignedPermission = (id) => {
+    let selectedUnAssigned = selectedUnAssignedPermissions.slice();
+    if (selectedUnAssigned.includes(id)) {
+      let index = selectedUnAssigned.findIndex((e) => e === id);
+      selectedUnAssigned.splice(index, 1);
+    } else {
+      selectedUnAssigned.push(id);
+    }
+    setSelectedUnAssignedPermissions(selectedUnAssigned);
+  };
+  const AssignPermission = () => {
+    let trues = [];
+    let errors = [];
+    selectedUnAssignedPermissions.forEach((element) => {
+      console.log(element);
+      let payload = {
+        user_id: User.id,
+        permission_id: element,
+      };
+      UserService.AssignUserToPermission(payload)
+        .then((response) => {
+          if (response.success) {
+            getData();
+            trues.push(element);
+          } else {
+            errors.push(response.error.message);
+          }
+        })
+        .catch((error) => {
+          errors.push(error.message);
+        });
+    });
+  };
+  const UnAssignPermission = () => {
+    let trues = [];
+    let errors = [];
+    selectedAssignedPermissions.forEach((element) => {
+      console.log(element);
+      let payload = {
+        user_id: User.id,
+        permission_id: element,
+      };
+      UserService.RevokePermission(payload)
+        .then((response) => {
+          console.log(response);
+          if (response.success) {
+            getData();
+            trues.push(element);
+          } else {
+            errors.push(response.error.message);
+          }
+        })
+        .catch((error) => {
+          errors.push(error.message);
+        });
+    });
+  };
   /************************* Handle Edit User ************/
   const handleEditUser = (event) => {
     event.preventDefault();
@@ -244,19 +315,20 @@ const UserDetails: FC<IUserDetailsProps> = ({
     setUnAssignedRoles([]);
     setSelectedUnAssignedRoles([]);
     setSelectedAssignedRoles([]);
-    // setUnAssignedPermissions([]);
-    // setPermissions([]);
-    // setSelected([]);
-    // setSelectedUnAssigned([]);
+    // permissions
+    setAssignedPermissions([]);
+    setUnAssignedPermissions([]);
+    setSelectedUnAssignedPermissions([]);
+    setSelectedAssignedPermissions([]);
     let user = null;
-    // let permissions = [];
-    // await UserService.GetPermissions()
-    //   .then((response) => {
-    //     permissions = response.result;
-    //   })
-    //   .catch((e) => {
-    //     throw new Error(e);
-    //   });
+    let permissions = [];
+    await UserService.GetPermissions()
+      .then((response) => {
+        permissions = response.result;
+      })
+      .catch((e) => {
+        throw new Error(e);
+      });
     await UserService.Get(User.id.toString())
       .then((response) => {
         user = response.result;
@@ -272,18 +344,19 @@ const UserDetails: FC<IUserDetailsProps> = ({
           (e) => !user.roles.map((c) => c.id).includes(e.id)
         );
         setUnAssignedRoles(roles);
-        // let userPerm: object[] =
-        //   user?.user_permissions?.map((e) => e.permission) || [];
-        // let unAssignedPerms = permissions.filter(
-        //   (e) => !userPerm.map((c) => c.id).includes(e.id)
-        // );
-        // setPermissions(userPerm);
-        // setUnAssignedPermissions(unAssignedPerms);
+        let userPerm: object[] =
+          user?.user_permissions?.map((e) => e.permission) || [];
+        let unAssignedPerms = permissions.filter(
+          (e) => !userPerm.map((c) => c.id).includes(e.id)
+        );
+        setAssignedPermissions(userPerm);
+        setUnAssignedPermissions(unAssignedPerms);
       })
       .catch((e) => {
         throw new Error(e);
       });
   };
+
   useEffect(() => {
     getData();
   }, []);
@@ -598,8 +671,33 @@ const UserDetails: FC<IUserDetailsProps> = ({
               style={{ display: "flex", justifyContent: "space-between" }}
             >
               <Grid md={5}>
-                <Typography>الأدوار المسندة</Typography>
-                <Card style={{ padding: "3em 3em", margin: "5px 0px" }}></Card>
+                <Typography>الصلاحيات المسندة</Typography>
+                <Card
+                  style={{
+                    padding: "1em 3em",
+                    margin: "5px 0px",
+                    height: "15em",
+                  }}
+                >
+                  <FormGroup>
+                    {assignedPermissions.map((e) => {
+                      return (
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              value={e.id}
+                              checked={selectedAssignedPermissions.includes(
+                                e.id
+                              )}
+                              onChange={() => addToUnAssignedPermission(e.id)}
+                            />
+                          }
+                          label={e.name}
+                        />
+                      );
+                    })}
+                  </FormGroup>
+                </Card>
               </Grid>
               <Grid
                 md={1}
@@ -617,6 +715,7 @@ const UserDetails: FC<IUserDetailsProps> = ({
                     height: "3em",
                     marginLeft: "1em",
                   }}
+                  onClick={AssignPermission}
                 >
                   <ArrowRight style={{ fontSize: "50px" }} />
                 </SuiButton>
@@ -626,13 +725,40 @@ const UserDetails: FC<IUserDetailsProps> = ({
                     background: "rgb(23, 193, 232)",
                     height: "3em",
                   }}
+                  onClick={UnAssignPermission}
                 >
                   <ArrowLeft style={{ fontSize: "50px" }} />
                 </SuiButton>
               </Grid>
               <Grid md={5}>
-                <Typography>الأدوار غير المسندة</Typography>
-                <Card style={{ padding: "3em 3em", margin: "5px 0px" }}></Card>
+                <Typography>الصلاحيات غير المسندة</Typography>
+                <Card
+                  style={{
+                    padding: "1em 3em",
+                    margin: "5px 0px",
+                    height: "15em",
+                    overflowY: "scroll",
+                  }}
+                >
+                  <FormGroup>
+                    {unassignedPermissions.map((e) => {
+                      return (
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              value={e.id}
+                              checked={selectedUnAssignedPermissions.includes(
+                                e.id
+                              )}
+                              onChange={() => addToAssignedPermission(e.id)}
+                            />
+                          }
+                          label={e.name}
+                        />
+                      );
+                    })}
+                  </FormGroup>
+                </Card>
               </Grid>
             </Grid>
           </>

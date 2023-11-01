@@ -232,7 +232,7 @@ const InitPlanTabs: React.FC<InitPlanTabsProps> = ({
             <Grid item md={4}>
               <FormControl variant="filled" fullWidth>
                 <InputLabel id="demo-simple-select-label">
-                  السنة الدراسية
+                  العام الدراسي
                 </InputLabel>
                 <Select
                   disabled={disabled}

@@ -39,9 +39,29 @@ const InitializeYear: React.FC = () => {
     EduYearService.GetYears(`${new Date().getFullYear()}`)
       .then((resp) => {
         let result = resp.result;
-        console.clear();
-        console.log(result);
         if (result.length > 0) setLatestYear(result[0]);
+        console.log(result[0].year);
+        EduYearService.checkYear(result[0]?.year)
+          .then((response) => {
+            console.log("response", response);
+            if (response?.success) {
+              EduYearService.InitYears({
+                year: latestYear.year,
+                type: value,
+              })
+                .then((response) => {
+                  console.clear();
+                  console.log(response);
+                  let result = response?.result;
+                })
+                .catch((error) => {});
+            } else {
+              toast.success("السنة موجودة");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {});
     SpecialityService.GetAll()
@@ -99,38 +119,6 @@ const InitializeYear: React.FC = () => {
     setShowConfirm(false);
     setShow(false);
     SetSuccess(true);
-    // if (!!value) {
-    //   EduYearService.checkYear(latestYear?.year)
-    //     .then((resp) => {
-    //       if (resp.result?.success) {
-    //         EduYearService.InitYears({
-    //           year: latestYear.year,
-    //           type: value,
-    //         })
-    //           .then((response) => {
-    //             let result = response?.result;
-    //             if (result && result.success) {
-    //               setShowConfirm(false);
-    //               setShow(false);
-    //               SetSuccess(true);
-    //             }
-    //             setShowConfirm(false);
-    //             setShow(false);
-    //             SetSuccess(true);
-    //           })
-    //           .catch((error) => {
-    //             setShowConfirm(false);
-    //             setShow(false);
-    //             SetSuccess(true);
-    //           });
-    //       } else {
-    //         setShowConfirm(false);
-    //         setShow(false);
-    //         SetSuccess(true);
-    //       }
-    //     })
-    //     .catch((error) => {});
-    // }
   };
 
   const closeConfirmProperties = () => {

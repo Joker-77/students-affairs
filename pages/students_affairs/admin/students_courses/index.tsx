@@ -230,7 +230,7 @@ const StudentCourses: React.FC<IStudentCoursesProps> = ({}) => {
         <GridItem md={2}>
           <FormControl fullWidth variant="filled" size="small" size="small">
             <InputLabel id="demo-simple-select-label">
-              السنة الدراسية
+              العام الدراسي
             </InputLabel>
             <Select
               labelId="demo-simple-select-label"

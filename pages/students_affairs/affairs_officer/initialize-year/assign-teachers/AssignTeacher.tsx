@@ -207,7 +207,7 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                           >
                             {teachers?.map((t) => (
                               <MenuItem key={t.id} value={t.id}>
-                                {`${t.prefix_name} ${t.person?.first_name} ${t.person?.last_name}`}
+                                {`${t.person?.first_name} ${t.person?.last_name}`}
                               </MenuItem>
                             ))}
                           </TextField>
