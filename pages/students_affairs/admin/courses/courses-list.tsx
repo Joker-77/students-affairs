@@ -57,8 +57,8 @@ import { ExportToCsv } from "export-to-csv";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import _ from "lodash";
 
-interface ICoursesListProps { }
-const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
+interface ICoursesListProps {}
+const CoursesList: React.FC<ICoursesListProps> = ({}) => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -75,8 +75,8 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
   };
 
   const getCourse = (data: any) => {
-    setLoading(true)
-    let _course = Courses.find((item, index) => item.id === data ?.id);
+    setLoading(true);
+    let _course = Courses.find((item, index) => item.id === data?.id);
     CourseService.Get(data.id)
       .then((res) => {
         let _course = res.result as ICourseModel;
@@ -85,7 +85,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
         setIsCreate(false);
         setIsEditable(false);
         setshowCourseDetail(true);
-        setLoading(false)
+        setLoading(false);
       })
       .catch((error) => {
         console.error("error", error);
@@ -110,13 +110,13 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setLabelWidth(inputLabel ?.current ?.offsetWidth);
+    setLabelWidth(inputLabel?.current?.offsetWidth);
   }, []);
 
   const inputSortLabel = React.useRef(null);
   const [sortLabelWidth, setSortLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setSortLabelWidth(inputSortLabel ?.current ?.offsetWidth);
+    setSortLabelWidth(inputSortLabel?.current?.offsetWidth);
   }, []);
 
   const filters = [
@@ -152,10 +152,10 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
       _filteredCourses = Courses.filter((course, index) => {
         return (
           course.ar_name.includes(_value) ||
-            course.en_name.includes(_value) ||
-            course.fr_name.includes(_value) ||
-            course.current_description ?.total_hours.toString().includes(_value) ||
-              course.current_description ?.credit.toString().includes(_value)
+          course.en_name.includes(_value) ||
+          course.fr_name.includes(_value) ||
+          course.current_description?.total_hours.toString().includes(_value) ||
+          course.current_description?.credit.toString().includes(_value)
         );
       });
       setFilteredCourses(_filteredCourses);
@@ -172,7 +172,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
     }
     if (filter == 2) {
       _filteredCourses = Courses.filter((course, index) => {
-        return course.current_description ?.total_hours
+        return course.current_description?.total_hours
           .toString()
           .includes(_value);
       });
@@ -180,7 +180,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
     }
     if (filter == 3) {
       _filteredCourses = Courses.filter((course, index) => {
-        return course.current_description ?.credit.toString().includes(_value);
+        return course.current_description?.credit.toString().includes(_value);
       });
       setFilteredCourses(_filteredCourses);
     }
@@ -190,7 +190,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
     setFilter(event.target.value);
   };
   const handleSearch = (event) => {
-    let _value = event ?.target ?.value;
+    let _value = event?.target?.value;
     setSearch(_value);
   };
 
@@ -203,29 +203,24 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
     setFilteredCourses([]);
     let _filteredCourses = Courses;
     let _value = sortBy;
-    if (_value == 0)
-      _filteredCourses = Courses;
+    if (_value == 0) _filteredCourses = Courses;
     if (_value == 1) {
       _filteredCourses = Courses.sort((a, b) => {
         if (a.ar_name > b.ar_name) {
           return 1;
-        }
-        else if (a.ar_name < b.ar_name) {
+        } else if (a.ar_name < b.ar_name) {
           return -1;
         }
         if (a.en_name > b.en_name) {
           return 1;
-        }
-        else if (a.en_name < b.en_name) {
+        } else if (a.en_name < b.en_name) {
           return -1;
         }
         if (a.fr_name > b.fr_name) {
           return 1;
-        }
-        else if (a.fr_name < b.fr_name) {
+        } else if (a.fr_name < b.fr_name) {
           return -1;
-        }
-        else {
+        } else {
           return 0;
         }
       });
@@ -233,13 +228,13 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
     if (_value == 2) {
       _filteredCourses = Courses.sort((a, b) => {
         if (
-          a.current_description ?.total_hours >
-            b.current_description ?.total_hours
+          a.current_description?.total_hours >
+          b.current_description?.total_hours
         ) {
           return 1;
         } else if (
-          a.current_description ?.total_hours <
-            b.current_description ?.total_hours
+          a.current_description?.total_hours <
+          b.current_description?.total_hours
         ) {
           return -1;
         } else {
@@ -249,10 +244,10 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
     }
     if (_value == 3) {
       _filteredCourses = Courses.sort((a, b) => {
-        if (a.current_description ?.credit > b.current_description ?.credit) {
+        if (a.current_description?.credit > b.current_description?.credit) {
           return 1;
         } else if (
-          a.current_description ?.credit < b.current_description ?.credit
+          a.current_description?.credit < b.current_description?.credit
         ) {
           return -1;
         } else {
@@ -262,10 +257,10 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
     }
     setFilteredCourses([]);
     setTimeout(() => {
-      setFilteredCourses(_filteredCourses)
+      setFilteredCourses(_filteredCourses);
     }, 100);
     setLoading(false);
-  }
+  };
   /************************** Data ****************************/
   const getCourses = () => {
     CourseService.GetAll()
@@ -280,7 +275,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
       .catch((error) => {
         console.error("error", error);
       });
-  }
+  };
   useEffect(() => {
     getCourses();
   }, []);
@@ -335,6 +330,18 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
       title: translate("Mixed Hours"),
       field: "current_description.hours[2].hours",
     },
+    {
+      title: "مذاكرة",
+      field: "midTerm",
+    },
+    {
+      title: "امتحان",
+      field: "exam",
+    },
+    {
+      title: "اعمال",
+      field: "practice",
+    },
   ];
   const [checked, setChecked] = useState([]);
   const [selectedColumns, setSelectedColumns] = useState([]);
@@ -370,9 +377,38 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
       filteredCourses.map((course) => {
         let object = {};
         selectedColumns.forEach((item, index) => {
-          _.set(object, `col ${index}`, _.get(course, item.field) ?? "");
+          if (item.field === "exam")
+            _.set(
+              object,
+              `امتحان`,
+              `${
+                course.current_description?.evaluation_methods.filter(
+                  (e) => e.name === "امتحان"
+                )[0].percentage
+              }`
+            );
+          else if (item.field === "midTerm")
+            _.set(
+              object,
+              `مذاكرة`,
+              `${
+                course.current_description?.evaluation_methods.filter(
+                  (e) => e.name === "مذاكرة"
+                )[0].percentage
+              }`
+            );
+          else if (item.field === "practice")
+            _.set(
+              object,
+              `أعمال`,
+              `${
+                course.current_description?.evaluation_methods.filter(
+                  (e) => e.name === "أعمال"
+                )[0].percentage
+              }`
+            );
+          else _.set(object, `col ${index}`, _.get(course, item.field) ?? "");
         });
-        console.log(object);
         return object;
       })
     );
@@ -388,8 +424,7 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
   const handleConfirmClose = () => {
     setConfirm(false);
   };
-  const handleDeleteCourse = () => {
-  };
+  const handleDeleteCourse = () => {};
 
   const ConfirmDialog = () => (
     <div>
@@ -475,41 +510,40 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
             <ActionTable
               Title={translate("Courses List")}
               Columns={columns}
-              Data={data}
+              Data={data.map((item) => {
+                return {
+                  ...item,
+                  midTerm: item.current_description?.evaluation_methods.filter(
+                    (e) => e.name === "مذاكرة"
+                  )[0].percentage,
+                  exam: item.current_description?.evaluation_methods.filter(
+                    (e) => e.name === "امتحان"
+                  )[0].percentage,
+                  practice: item.current_description?.evaluation_methods.filter(
+                    (e) => e.name === "أعمال"
+                  )[0].percentage,
+                };
+              })}
               Options={options}
               Actions={actions}
             />
           </div>
         );
-      else
-        return <Placeholder loading={loading} />;
+      else return <Placeholder loading={loading} />;
     } else return <Placeholder loading={false} />;
   };
 
   const handleBack = () => {
     getCourses();
-    setshowCourseDetail(false)
-  }
+    setshowCourseDetail(false);
+  };
   return (
     <GridContainer>
       {!showCourseDetail && (
         <>
           <GridItem md={12}>
             <GridItem container md={12} style={{ margin: "0px 0px 10px 0" }}>
-              <GridItem md={7}>
-                {/* <Button
-                  style={{ margin: "0px 5px" }}
-                  disabled={false}
-                  variant="contained"
-                  className={classes.submitBtn}
-                  onClick={handleCreate}
-                >
-                  <span style={{ padding: "0px 0px 0px 10px" }}>
-                    {translate("Add New Course")}
-                  </span>
-                  <Add />
-                </Button> */}
-              </GridItem>
+              <GridItem md={7}></GridItem>
               <GridItem>
                 <Button
                   style={{ margin: "0px 5px" }}
@@ -578,18 +612,16 @@ const CoursesList: React.FC<ICoursesListProps> = ({ }) => {
                             justifyContent: "space-between",
                           }}
                         >
-                          {columns
-                            // .filter((item) => !item.hidden)
-                            .map((item, index) => (
-                              <GridItem key={index}>
-                                <input
-                                  value={item.field}
-                                  type="checkbox"
-                                  onChange={handleCheck}
-                                />
-                                <span>{item.title}</span>
-                              </GridItem>
-                            ))}
+                          {columns.map((item, index) => (
+                            <GridItem key={index}>
+                              <input
+                                value={item.field}
+                                type="checkbox"
+                                onChange={handleCheck}
+                              />
+                              <span>{item.title}</span>
+                            </GridItem>
+                          ))}
                         </GridItem>
                         <GridItem
                           md={12}

@@ -23,6 +23,8 @@ import { ISpecialityModel } from "../../../../../Models/ApiResponse/SpecialityMo
 import Router, { useRouter, withRouter } from "next/router";
 import YearsService from "../../../../../Services/SpecYearsService";
 import SpecYearsService from "../../../../../Services/SpecYearsService";
+import { default as RSelect } from "react-select";
+
 import {
   ISpecYear,
   IStudentYear,
@@ -71,14 +73,14 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
 
   // Year
   const router = useRouter();
-  const [year, setYear] = useState(router.query ?.year) as string;
-  const [eduYear, setEduYear] = useState(router.query ?.eduYear) as string;
+  const [year, setYear] = useState(router.query?.year) as string;
+  const [eduYear, setEduYear] = useState(router.query?.eduYear) as string;
 
   // handle component route data
   useEffect(() => {
-    setYear(router ?.query ?.year);
-    setEduYear(router ?.query ?.eduYear);
-  }, [router.query ?.year, router.query ?.eduYear]);
+    setYear(router?.query?.year);
+    setEduYear(router?.query?.eduYear);
+  }, [router.query?.year, router.query?.eduYear]);
 
   // handle component api data
   useEffect(() => {
@@ -94,9 +96,9 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
                 setSpecialities(specs.result as ISpecialityModel[]);
                 courses.result.length > 0 && setCourse(course.result[0].id);
               })
-              .catch((err) => { });
+              .catch((err) => {});
           })
-          .catch((err) => { });
+          .catch((err) => {});
       })
       .catch((err) => {
         console.error("Error", err);
@@ -107,8 +109,8 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
   const [loadSpecYear, setLoadSpecYear] = useState(false);
   const changeSpec = (e) => {
     setLoadSpecYear(true);
-    setSpec(e.target.value);
-    SpecYearsService.GetWhereSpeciality(e.target.value)
+    setSpec(e);
+    SpecYearsService.GetWhereSpeciality(e)
       .then((response) => {
         if (response.result && response.result.length > 0) {
           console.clear();
@@ -155,7 +157,7 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
                 setProgramCourses(resp.result);
               }
             })
-            .catch((err) => { });
+            .catch((err) => {});
         }
       })
       .catch((error) => {
@@ -228,27 +230,51 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
       </GridContainer>
       <Grid container md={12} style={{ margin: "2em 0em" }}>
         <GridItem md={2}>
+          <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
           <FormControl fullWidth variant="filled" size="small" size="small">
-            <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
-            <Select
+            <RSelect
+              defaultValue={program}
+              placeholder={"اختيار البرنامج"}
+              isSearchable={true}
+              options={programs}
+              onChange={(e) => {
+                changeProgram(e.id);
+              }}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
+            {/* <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={program}
               label="programs"
               onChange={(e) => changeProgram(e.target.value)}
             >
-              {programs ?.map((program) => (
+              {programs?.map((program) => (
                 <MenuItem key={program.id} value={program.id}>
                   {program.name}
                 </MenuItem>
               ))}
-            </Select>
+            </Select> */}
           </FormControl>
         </GridItem>
         <GridItem md={2}>
+          <InputLabel id="demo-simple-select-label">المقرّر</InputLabel>
           <FormControl fullWidth variant="filled" size="small" size="small">
-            <InputLabel id="demo-simple-select-label">المقرّر</InputLabel>
-            <Select
+            <RSelect
+              style={{ zIndex: 99 }}
+              defaultValue={course}
+              label="Single select"
+              placeholder={"اختيار مقرر"}
+              isSearchable={true}
+              options={courses}
+              onChange={(e) => {
+                setCourse(e.id);
+              }}
+              getOptionLabel={(option) => option.ar_name}
+              getOptionValue={(option) => option.id}
+            />
+            {/* <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={course}
@@ -260,31 +286,44 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
                   {course.ar_name}
                 </MenuItem>
               ))}
-            </Select>
+            </Select> */}
           </FormControl>
         </GridItem>
         <GridItem md={2}>
+          <InputLabel id="demo-simple-select-label">الاختصاص</InputLabel>
           <FormControl fullWidth variant="filled" size="small">
-            <InputLabel id="demo-simple-select-label">الاختصاص</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={spec}
-              label="speciality"
-              onChange={changeSpec}
-            >
-              {specialities.map((spec) => (
-                <MenuItem key={spec.id} value={spec.id}>
-                  {spec.ar_name}
-                </MenuItem>
-              ))}
-            </Select>
+            <RSelect
+              style={{ zIndex: 99 }}
+              defaultValue={spec}
+              label="Single select"
+              placeholder={"اختيار الاختصاص"}
+              isSearchable={true}
+              options={specialities}
+              onChange={(e) => {
+                changeSpec(e.id);
+              }}
+              getOptionLabel={(option) => option.ar_name}
+              getOptionValue={(option) => option.id}
+            />
           </FormControl>
         </GridItem>
         <GridItem md={2}>
+          <InputLabel id="demo-simple-select-label">السنة</InputLabel>
           <FormControl fullWidth variant="filled" size="small">
-            <InputLabel id="demo-simple-select-label">السنة</InputLabel>
-            <Select
+            <RSelect
+              defaultValue={spec}
+              label="Single select"
+              placeholder={"اختيار السنة"}
+              isSearchable={true}
+              isDisabled={loadSpecYear}
+              options={specYears}
+              onChange={(e) => {
+                setSpecYear(e.id);
+              }}
+              getOptionLabel={(option) => option.ar_name}
+              getOptionValue={(option) => option.id}
+            />
+            {/* <Select
               disabled={loadSpecYear}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -299,13 +338,23 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
                   {spYear.ar_name}
                 </MenuItem>
               ))}
-            </Select>
+            </Select> */}
           </FormControl>
         </GridItem>
         <GridItem md={2}>
+          <InputLabel id="demo-simple-select-label">الفصل</InputLabel>
           <FormControl fullWidth variant="filled" size="small">
-            <InputLabel id="demo-simple-select-label">الفصل</InputLabel>
-            <Select
+            <RSelect
+              defaultValue={semester}
+              label="Single select"
+              placeholder={"اختيار الفصل"}
+              isSearchable={true}
+              options={semesters}
+              onChange={(e) => setSemester(e.id)}
+              getOptionLabel={(option) => option.value}
+              getOptionValue={(option) => option.id}
+            />
+            {/* <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={semester}
@@ -317,12 +366,12 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
                   {sem.value}
                 </MenuItem>
               ))}
-            </Select>
+            </Select> */}
           </FormControl>
         </GridItem>
         <GridItem md={2}>
           <Button
-            style={{ margin: "10px 5px" }}
+            style={{ margin: "20px 5px" }}
             variant="contained"
             className={classes.submitBtn}
             onClick={handleAddCourse}

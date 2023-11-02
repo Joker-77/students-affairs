@@ -32,6 +32,7 @@ import { toast } from "react-toastify";
 import "./exams-list-style.css";
 import { Card } from "@material-ui/core";
 import SuiButton from "../../../../components/SuiButton";
+import { default as RSelect } from "react-select";
 
 interface IExamsListProps {}
 const ExamsList: React.FC<IExamsListProps> = ({}) => {
@@ -157,13 +158,13 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     clear();
     setCourse(val);
     setLoadExamsType(true);
-    let _course = courses.find((e) => e.id === val);
+    let _course = courses.find((e) => e.edu_course_id === val);
     setExamsType(_course.evaluation_methods);
     setLoadExamsType(false);
   };
   const changeExamType = (val: number) => {
     clear();
-    let _course = courses.find((e) => e.id == course);
+    let _course = courses.find((e) => e.edu_course_id == course);
     setExamType(val);
     ExamService.GetAllPlans(
       program,
@@ -702,45 +703,39 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       </GridContainer>
       <Grid container md={12} style={{ margin: "2em 0em" }}>
         <GridItem md={2}>
+          <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
           <FormControl fullWidth variant="filled" size="small" size="small">
-            <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={program}
-              label="programs"
-              onChange={(e) => changeProgram(e.target.value)}
-            >
-              {programs?.map((program) => (
-                <MenuItem key={program.id} value={program.id}>
-                  {program.name}
-                </MenuItem>
-              ))}
-            </Select>
+            <RSelect
+              defaultValue={program}
+              placeholder={"اختيار البرنامج"}
+              isSearchable={true}
+              options={programs}
+              onChange={(e) => {
+                changeProgram(e.id);
+              }}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
           </FormControl>
         </GridItem>
         <GridItem md={2}>
+          <InputLabel id="demo-simple-select-label">السنة</InputLabel>
           <FormControl fullWidth variant="filled" size="small">
-            <InputLabel id="demo-simple-select-label">السنة</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={eduYear}
-              label="specYears"
-              onChange={(e) => changeEduYear(e.target.value)}
-            >
-              {eduYears.map((spYear) => (
-                <MenuItem key={spYear.id} value={spYear.id}>
-                  {spYear.year}
-                </MenuItem>
-              ))}
-            </Select>
+            <RSelect
+              defaultValue={eduYear}
+              placeholder={"اختيار السنة"}
+              isSearchable={true}
+              options={eduYears}
+              onChange={(e) => changeEduYear(e.id)}
+              getOptionLabel={(option) => option.year}
+              getOptionValue={(option) => option.id}
+            />
           </FormControl>
         </GridItem>
         <GridItem md={2}>
+          <InputLabel id="demo-simple-select-label">المقرّر</InputLabel>
           <FormControl fullWidth variant="filled" size="small" size="small">
-            <InputLabel id="demo-simple-select-label">المقرّر</InputLabel>
-            <Select
+            {/* <Select
               disabled={loadCourses}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -753,26 +748,32 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                   {course.ar_name}
                 </MenuItem>
               ))}
-            </Select>
+            </Select> */}
+            <RSelect
+              isDisabled={loadCourses}
+              defaultValue={course}
+              placeholder={"اختيار المقرّر"}
+              isSearchable={true}
+              options={courses}
+              onChange={(e) => changeCourse(e.edu_course_id)}
+              getOptionLabel={(option) => option.ar_name}
+              getOptionValue={(option) => option.edu_course_id}
+            />
           </FormControl>
         </GridItem>
         <GridItem md={2}>
+          <InputLabel id="demo-simple-select-label">نوع الواقعة</InputLabel>
           <FormControl fullWidth variant="filled" size="small" size="small">
-            <InputLabel id="demo-simple-select-label">نوع الواقعة</InputLabel>
-            <Select
-              disabled={loadExamsType}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={examType}
-              label="examTypes"
-              onChange={(e) => changeExamType(e.target.value)}
-            >
-              {examsTypes.map((exam) => (
-                <MenuItem key={exam.id} value={exam.id}>
-                  {exam.name}
-                </MenuItem>
-              ))}
-            </Select>
+            <RSelect
+              isDisabled={loadExamsType}
+              defaultValue={examType}
+              placeholder={"اختيار الواقعة"}
+              isSearchable={true}
+              options={examsTypes}
+              onChange={(e) => changeExamType(e.id)}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
           </FormControl>
         </GridItem>
       </Grid>
