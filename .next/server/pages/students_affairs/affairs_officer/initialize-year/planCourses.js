@@ -1519,7 +1519,7 @@ const PlanCourses = ({
   };
 
   const generateExcel = () => {
-    csvExporter.generateCsv(filteredCourses.map(course => {
+    csvExporter.generateCsv(data.map(course => {
       let object = {};
       selectedColumns.forEach((item, index) => {
         var _$get;
@@ -4252,7 +4252,7 @@ const CourseShallow = ({
   course,
   close
 }) => {
-  var _details$edu_course, _details$edu_course$c, _details$edu_course$c2, _details$edu_course$c3, _details$edu_course2, _details$edu_course2$, _details$edu_course2$2, _details$edu_course2$3, _details$edu_course3, _details$edu_course3$, _details$edu_course3$2, _details$edu_course3$3, _details$edu_course4, _details$edu_course4$, _details$edu_course5, _details$edu_course5$, _details$year, _details$year2, _details$year2$specia;
+  var _details$edu_course, _details$edu_course$c, _details$edu_course$c2, _details$edu_course$c3, _details$edu_course2, _details$edu_course2$, _details$edu_course2$2, _details$edu_course2$3, _details$edu_course3, _details$edu_course3$, _details$edu_course3$2, _details$edu_course3$3, _details$edu_course4, _details$edu_course4$, _details$edu_course5, _details$edu_course5$, _details$year, _details$year2, _details$year2$specia, _details$year3, _details$year3$specia;
 
   const title = "";
   const [fullWidth, setFullWidth] = react__WEBPACK_IMPORTED_MODULE_2___default.a.useState(true);
@@ -4292,7 +4292,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0639\u062F\u062F \u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0646\u0638\u0631\u064A"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4312,7 +4313,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0639\u062F\u062F \u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0639\u0645\u0644\u064A"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4332,9 +4334,10 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
-            children: "\u0639\u062F\u062F \u0627\u0644\u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0645\u0634\u062A\u0631\u0643\u0629"
+            children: "\u0639\u062F\u062F \u0627\u0644\u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0646\u0638\u0631\u064A / \u0627\u0644\u0639\u0645\u0644\u064A"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
               textAlign: "center",
@@ -4362,7 +4365,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0631\u0645\u0632 \u0627\u0644\u0645\u0642\u0631\u0651\u0631"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4382,7 +4386,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0627\u0644\u0627\u0633\u0645"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4402,7 +4407,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0627\u0644\u0633\u0646\u0629"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4422,7 +4428,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0627\u0644\u0627\u062E\u062A\u0635\u0627\u0635"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4430,7 +4437,7 @@ const CourseShallow = ({
               textAlign: "center",
               fontWeight: "bold"
             },
-            children: details === null || details === void 0 ? void 0 : (_details$year2 = details.year) === null || _details$year2 === void 0 ? void 0 : (_details$year2$specia = _details$year2.speciality) === null || _details$year2$specia === void 0 ? void 0 : _details$year2$specia.ar_name
+            children: `${details === null || details === void 0 ? void 0 : (_details$year2 = details.year) === null || _details$year2 === void 0 ? void 0 : (_details$year2$specia = _details$year2.speciality) === null || _details$year2$specia === void 0 ? void 0 : _details$year2$specia.ar_code} ${details === null || details === void 0 ? void 0 : (_details$year3 = details.year) === null || _details$year3 === void 0 ? void 0 : (_details$year3$specia = _details$year3.speciality) === null || _details$year3$specia === void 0 ? void 0 : _details$year3$specia.en_code}`
           })]
         }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Grid"], {
           item: true,
@@ -4442,7 +4449,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0627\u0644\u0641\u0635\u0644"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {

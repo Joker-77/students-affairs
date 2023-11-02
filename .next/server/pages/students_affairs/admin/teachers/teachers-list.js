@@ -3895,125 +3895,6 @@ const TeacherDetail = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.
     event.preventDefault();
     activateEdit();
   };
-  /************************* Handle Add Description ************/
-
-  /*const validationSchema = useMemo(() => {
-    //if (addDescription) {
-      teacherSchema = yup.object({
-        first_name: yup
-          .string(translate("First name"))
-          .required(translate("Field is required")),
-        last_name: yup
-          .string(translate("Last name"))
-          .required(translate("Field is required")),
-        father_name: yup
-          .string(translate("Father name"))
-          .required(translate("Field is required")),
-        national_number: yup
-          .number(translate("National number"))
-          .required(translate("Field is required")),
-        number: yup
-          .number(translate("ID Number"))
-          .required(translate("Field is required")),
-        gender: yup
-          .number(translate("Gender"))
-          .required(translate("Field is required")),
-        work_field: yup
-          .string(translate("Work Field"))
-          .required(translate("Field is required")),
-        activity: yup
-          .string(translate("Activity"))
-          .required(translate("Field is required")),
-        prefix_name: yup
-          .string(translate("Name prefix"))
-          .required(translate("Field is required")),
-        primary_number: yup
-          .number(translate("Primary number"))
-          .required(translate("Field is required")),
-        secondary_number: yup
-          .number(translate("Secondary number")),
-        office_number: yup
-          .number(translate("Office number")),
-        mobile_1: yup
-          .number(translate("Mobile 1"))
-          .required(translate("Field is required")),
-        mobile_2: yup
-          .number(translate("Mobile 2")),
-        degree: yup
-          .string(translate("Degree"))
-          .required(translate("Field is required")),
-        hiast_graduate: yup
-          .boolean(translate("HIAST graduate"))
-          .required(translate("Field is required")),
-        status: yup
-          .string(translate("Status"))
-          .required(translate("Field is required")),        
-        attachement: yup
-          .mixed()
-          .required(translate("Need an attachement for this teacher")),
-      });
-    } else {
-      teacherSchema = yup.object({
-        en_name: yup
-          .string(translate("English Name"))
-          .required(translate("Field is required")),
-        ar_name: yup
-          .string(translate("Arabic Name"))
-          .required(translate("Field is required")),
-        fr_name: yup
-          .string(translate("French Name"))
-          .required(translate("Field is required")),
-        code: yup
-          .string(translate("Teacher Code"))
-          .required(translate("Field is required")),
-        attachement: yup.mixed(),
-        // .required(translate("Need an attachement for this teacher")),
-      });
-    }
-    return teacherSchema;
-  }, [addDescription]);*/
-
-  /*const handleActivateAddDesc = (event) => {
-    event.preventDefault();
-    setAddDescription(!addDescription);
-    if (addDescription) {
-      initialValues = {
-        en_name: teacher?.en_name,
-        ar_name: teacher?.ar_name,
-        fr_name: teacher?.fr_name,
-        code: teacher?.code,
-        credit: teacher?.current_description?.credit,
-        theoretical_hours: teacher?.current_description?.hours?.find(
-          (hour) => hour?.type == "theoretic"
-        )?.hours,
-        practical_hours: teacher?.current_description?.hours?.find(
-          (hour) => hour?.type == "practical"
-        )?.hours,
-        mixed_hours: teacher?.current_description?.hours?.find(
-          (hour) => hour?.type == "mixed"
-        )?.hours,
-        evaluation_methods:
-          teacher?.current_description?.evaluation_methods?.map((ev, idx) => {
-            return {
-              id: ev.id,
-              name: ev.name,
-              percentage: ev.percentage * 100,
-            };
-          }),
-        attachement: teacher?.current_description?.attachement,
-      };
-    } else {
-      initialValues = {
-        id: teacher.id,
-        en_name: teacher.en_name,
-        ar_name: teacher.ar_name,
-        fr_name: teacher.fr_name,
-        code: teacher.code,
-        attachement: teacher?.current_description?.attachement,
-      };
-    }
-  };*/
-
   /*************** Handle End Add Description For Teacher ******/
 
 
@@ -4066,80 +3947,50 @@ const TeacherDetail = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.
         react_toastify__WEBPACK_IMPORTED_MODULE_7__["toast"].error(error.message);
         throw new Error(error);
       });
-    }
-    /*else if (addDescription) {
-      console.clear();
-      console.log("add desc info");
-      const payload: IAddDescriptionModel = {
-        teacher_id: teacher.id,
-        credit: values.credit,
-        theoretic_hours: values.theoretical_hours,
-        practical_hours: values.practical_hours,
-        mixed_hours: values.mixed_hours,
-        evaluation_methods: values.evaluation_methods,
+    } else {
+      const payload = {
+        id: teacher.id,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        father_name: values.father_name,
+        national_number: values.national_number,
+        number: values.number,
+        gender: values.gender,
+        authority: values.authority,
+        work_field: values.work_field,
+        activity: values.activity,
+        degree: values.degree,
+        prefix_name: values.prefix_name,
+        primary_number: values.primary_number,
+        secondary_number: values.secondary_number,
+        office_number: values.office_number,
+        mobile_1: values.mobile_1,
+        mobile_2: values.mobile_2,
+        hiast_graduate: values.hiast_graduate,
+        status: values.status
       };
       const isFile = hiddenInput.current.value != "";
-      if (isFile) payload.attachement = values.attachement;
-      console.log(payload);
-      TeacherService.AddDesc(payload)
-        .then((response) => {
-          if (response.success) {
-            toast.success("Description Added Successfully");
-          } else {
-            console.log(response.error);
-            toast.error(response.error.message);
-          }
-        })
-        .catch((error) => {
-          console.log(error.message);
-          toast.error(error.message);
-          throw new Error(error);
-        });
-    }*/
-    else {
-        const payload = {
-          id: teacher.id,
-          first_name: values.first_name,
-          last_name: values.last_name,
-          father_name: values.father_name,
-          national_number: values.national_number,
-          number: values.number,
-          gender: values.gender,
-          authority: values.authority,
-          work_field: values.work_field,
-          activity: values.activity,
-          degree: values.degree,
-          prefix_name: values.prefix_name,
-          primary_number: values.primary_number,
-          secondary_number: values.secondary_number,
-          office_number: values.office_number,
-          mobile_1: values.mobile_1,
-          mobile_2: values.mobile_2,
-          hiast_graduate: values.hiast_graduate,
-          status: values.status
-        };
-        const isFile = hiddenInput.current.value != "";
 
-        if (isFile) {
-          payload.attachement = values.attachement;
-          payload.attachement_name = fileName;
-        }
-
-        console.log(payload);
-        _Services_TeacherService__WEBPACK_IMPORTED_MODULE_8__[/* default */ "a"].Edit(payload).then(response => {
-          if (response.success) {
-            react_toastify__WEBPACK_IMPORTED_MODULE_7__["toast"].success("Teacher Edited Successfully");
-            setShow();
-          } else {
-            console.log(response.error);
-            react_toastify__WEBPACK_IMPORTED_MODULE_7__["toast"].error(response.error.message);
-          }
-        }).catch(error => {
-          console.log(error.message);
-          react_toastify__WEBPACK_IMPORTED_MODULE_7__["toast"].error(error.message);
-          throw new Error(error);
-        });
+      if (isFile) {
+        payload.attachement = values.attachement;
+        payload.attachement_name = fileName;
       }
+
+      console.log(payload);
+      _Services_TeacherService__WEBPACK_IMPORTED_MODULE_8__[/* default */ "a"].Edit(payload).then(response => {
+        if (response.success) {
+          react_toastify__WEBPACK_IMPORTED_MODULE_7__["toast"].success("Teacher Edited Successfully");
+          setShow();
+        } else {
+          console.log(response.error);
+          react_toastify__WEBPACK_IMPORTED_MODULE_7__["toast"].error(response.error.message);
+        }
+      }).catch(error => {
+        console.log(error.message);
+        react_toastify__WEBPACK_IMPORTED_MODULE_7__["toast"].error(error.message);
+        throw new Error(error);
+      });
+    }
 
     setSubmitting(false); // TeacherService.Add(payload)
     //   .then(() => {})
@@ -4200,6 +4051,9 @@ const TeacherDetail = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.
 
   return /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])("div", {
     ref: ref,
+    style: {
+      width: "100%"
+    },
     children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_12__["Grid"], {
       container: true,
       md: 12,
@@ -4251,7 +4105,8 @@ const TeacherDetail = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.
         }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Card_Card__WEBPACK_IMPORTED_MODULE_11__[/* default */ "a"], {
           style: {
             padding: "3em 3em",
-            margin: "5px 0px"
+            margin: "5px 0px",
+            width: "100%"
           },
           children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(formik__WEBPACK_IMPORTED_MODULE_5__["Formik"], {
             enableReinitialize: true,
@@ -4260,12 +4115,9 @@ const TeacherDetail = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.
             onSubmit: (values, {
               setSubmitting
             }) => {
-              const work_field = Object(_Static_resources__WEBPACK_IMPORTED_MODULE_14__[/* work_fields */ "n"])(translate).find(field => field.id == values.work_field); //console.log("values.work_field: " + values.work_field);
-              //console.log("work_field: " + JSON.stringify(work_field));
-
+              const work_field = Object(_Static_resources__WEBPACK_IMPORTED_MODULE_14__[/* work_fields */ "n"])(translate).find(field => field.id == values.work_field);
               if (work_field && work_field.activities.length === 0) values.activity = undefined;
-              submitForm(values, setSubmitting); // console.clear();
-              // console.log(values);
+              submitForm(values, setSubmitting);
             },
             children: formik => {
               const {
@@ -4297,16 +4149,7 @@ const TeacherDetail = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.
                       color: "red",
                       display: errors && // 👈 null and undefined check
                       Object.keys(errors).length === 0 && Object.getPrototypeOf(errors) === Object.prototype ? "none" : "block"
-                    },
-                    children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_12__["Grid"], {
-                      item: true,
-                      xs: 3,
-                      md: 3,
-                      style: {
-                        color: "red"
-                      },
-                      children: JSON.stringify(errors)
-                    })
+                    }
                   }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_12__["Grid"], {
                     item: true,
                     xs: 4,
@@ -5034,16 +4877,16 @@ var external_lodash_default = /*#__PURE__*/__webpack_require__.n(external_lodash
 const TeacherDetailsPrint = ({
   teacher
 }) => {
-  var _teacher$person, _teacher$person2, _teacher$person3, _teacher$person4, _teacher$person5, _teacher$person6, _teacher$person6$phon, _teacher$person6$phon2, _teacher$person7, _teacher$person7$phon, _teacher$person7$phon2, _teacher$person8, _teacher$person8$phon, _teacher$person8$phon2, _teacher$person9, _teacher$person9$phon, _teacher$person9$phon2, _teacher$person10, _teacher$person10$pho, _teacher$person10$pho2;
+  var _teacher$person, _teacher$person2, _teacher$person3, _teacher$person4, _teacher$person5, _teacher$person6, _teacher$person6$phon, _teacher$person6$phon2, _teacher$person7, _teacher$person7$phon, _teacher$person7$phon2, _teacher$person8, _teacher$person8$phon, _teacher$person8$phon2, _teacher$person9, _teacher$person9$phon, _teacher$person9$phon2, _teacher$person10, _teacher$person11, _teacher$person11$pho, _teacher$person11$pho2;
 
   //const tableRef = useRef();
   const {
     translate
   } = Object(useTranslation["a" /* useTranslation */])();
   /*const generatePDF = useReactToPrint({
-      content: () => tableRef.current,
-      documentTitle: `${translate("Teacher Details")}: ${teacher?.person?.first_name} ${teacher?.person?.last_name}`,
-  });*/
+        content: () => tableRef.current,
+        documentTitle: `${translate("Teacher Details")}: ${teacher?.person?.first_name} ${teacher?.person?.last_name}`,
+    });*/
 
   Object(external_react_["useEffect"])(() => {
     console.log("Teacher to print: ");
@@ -5099,7 +4942,7 @@ const TeacherDetailsPrint = ({
             scope: "row",
             children: translate("Gender")
           }), /*#__PURE__*/Object(jsx_runtime_["jsx"])(core_["TableCell"], {
-            children: (teacher === null || teacher === void 0 ? void 0 : (_teacher$person4 = teacher.person) === null || _teacher$person4 === void 0 ? void 0 : _teacher$person4.sex) && ((teacher === null || teacher === void 0 ? void 0 : (_teacher$person5 = teacher.person) === null || _teacher$person5 === void 0 ? void 0 : _teacher$person5.sex) == 'male' ? translate("Male") : translate("Female"))
+            children: (teacher === null || teacher === void 0 ? void 0 : (_teacher$person4 = teacher.person) === null || _teacher$person4 === void 0 ? void 0 : _teacher$person4.sex) && ((teacher === null || teacher === void 0 ? void 0 : (_teacher$person5 = teacher.person) === null || _teacher$person5 === void 0 ? void 0 : _teacher$person5.sex) == "male" ? translate("Male") : translate("Female"))
           })]
         }), /*#__PURE__*/Object(jsx_runtime_["jsxs"])(core_["TableRow"], {
           children: [/*#__PURE__*/Object(jsx_runtime_["jsx"])(core_["TableCell"], {
@@ -5147,7 +4990,7 @@ const TeacherDetailsPrint = ({
             scope: "row",
             children: translate("Mobile 2")
           }), /*#__PURE__*/Object(jsx_runtime_["jsx"])(core_["TableCell"], {
-            children: teacher === null || teacher === void 0 ? void 0 : (_teacher$person10 = teacher.person) === null || _teacher$person10 === void 0 ? void 0 : (_teacher$person10$pho = _teacher$person10.phones) === null || _teacher$person10$pho === void 0 ? void 0 : (_teacher$person10$pho2 = _teacher$person10$pho.find(phone => (phone === null || phone === void 0 ? void 0 : phone.type) === "personal")[1]) === null || _teacher$person10$pho2 === void 0 ? void 0 : _teacher$person10$pho2.phone
+            children: (teacher === null || teacher === void 0 ? void 0 : (_teacher$person10 = teacher.person) === null || _teacher$person10 === void 0 ? void 0 : _teacher$person10.phones.length) > 0 && (teacher === null || teacher === void 0 ? void 0 : (_teacher$person11 = teacher.person) === null || _teacher$person11 === void 0 ? void 0 : (_teacher$person11$pho = _teacher$person11.phones) === null || _teacher$person11$pho === void 0 ? void 0 : (_teacher$person11$pho2 = _teacher$person11$pho.find(phone => (phone === null || phone === void 0 ? void 0 : phone.type) === "personal")[1]) === null || _teacher$person11$pho2 === void 0 ? void 0 : _teacher$person11$pho2.phone)
           })]
         })]
       })
@@ -5504,7 +5347,7 @@ const TeachersList = ({}) => {
       selectedColumns.forEach((item, index) => {
         var _teacher$person5, _teacher$father_name, _teacher$person6, _teacher$person$phone, _teacher$person$phone2, _$get;
 
-        if (item.field === 'full_name') external_lodash_default.a.set(object, 'full_name', `${(_teacher$person5 = teacher.person) === null || _teacher$person5 === void 0 ? void 0 : _teacher$person5.first_name} ${(_teacher$father_name = teacher.father_name) !== null && _teacher$father_name !== void 0 ? _teacher$father_name : ''} ${(_teacher$person6 = teacher.person) === null || _teacher$person6 === void 0 ? void 0 : _teacher$person6.last_name}`);else if (item.field === 'office_phone') external_lodash_default.a.set(object, 'office_phone', (_teacher$person$phone = (_teacher$person$phone2 = teacher.person.phones.find(phone => phone.type === "office")) === null || _teacher$person$phone2 === void 0 ? void 0 : _teacher$person$phone2.phone) !== null && _teacher$person$phone !== void 0 ? _teacher$person$phone : "");else external_lodash_default.a.set(object, `col ${index}`, (_$get = external_lodash_default.a.get(teacher, item.field)) !== null && _$get !== void 0 ? _$get : "");
+        if (item.field === "full_name") external_lodash_default.a.set(object, "full_name", `${(_teacher$person5 = teacher.person) === null || _teacher$person5 === void 0 ? void 0 : _teacher$person5.first_name} ${(_teacher$father_name = teacher.father_name) !== null && _teacher$father_name !== void 0 ? _teacher$father_name : ""} ${(_teacher$person6 = teacher.person) === null || _teacher$person6 === void 0 ? void 0 : _teacher$person6.last_name}`);else if (item.field === "office_phone") external_lodash_default.a.set(object, "office_phone", (_teacher$person$phone = (_teacher$person$phone2 = teacher.person.phones.find(phone => phone.type === "office")) === null || _teacher$person$phone2 === void 0 ? void 0 : _teacher$person$phone2.phone) !== null && _teacher$person$phone !== void 0 ? _teacher$person$phone : "");else external_lodash_default.a.set(object, `col ${index}`, (_$get = external_lodash_default.a.get(teacher, item.field)) !== null && _$get !== void 0 ? _$get : "");
       });
       console.log(object);
       return object;
@@ -5883,24 +5726,17 @@ const TeachersList = ({}) => {
         md: 12,
         children: renderTeachers()
       })]
-    }), showTeacherDetail ?
-    /*#__PURE__*/
-    //<div ref={teacherDetailsRef}>
-    Object(jsx_runtime_["jsx"])(teacher_details["default"], {
+    }), showTeacherDetail ? /*#__PURE__*/Object(jsx_runtime_["jsx"])(teacher_details["default"], {
       isCreate: isCreate,
       details: teacher,
       activateEdit: activateEdit,
       setShow: setShow,
       show: showTeacherDetail //isEditable={isEditable}
       ,
-      isEditable: true //ref={teacherDetailsRef}
-
-    }) //</div>
-    :
-    /*#__PURE__*/
-    Object(jsx_runtime_["jsx"])("div", {
+      isEditable: true
+    }) : /*#__PURE__*/Object(jsx_runtime_["jsx"])("div", {
       style: {
-        display: 'none'
+        display: "none"
       },
       children: /*#__PURE__*/Object(jsx_runtime_["jsx"])("div", {
         ref: teacherDetailsRef,

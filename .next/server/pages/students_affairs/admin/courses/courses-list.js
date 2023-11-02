@@ -510,6 +510,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
 
 
 
@@ -804,6 +811,15 @@ const CoursesList = ({}) => {
   }, {
     title: translate("Mixed Hours"),
     field: "current_description.hours[2].hours"
+  }, {
+    title: "مذاكرة",
+    field: "midTerm"
+  }, {
+    title: "امتحان",
+    field: "exam"
+  }, {
+    title: "اعمال",
+    field: "practice"
   }];
   const {
     0: checked,
@@ -848,11 +864,10 @@ const CoursesList = ({}) => {
     csvExporter.generateCsv(filteredCourses.map(course => {
       let object = {};
       selectedColumns.forEach((item, index) => {
-        var _$get;
+        var _course$current_descr5, _course$current_descr6, _course$current_descr7, _$get;
 
-        lodash__WEBPACK_IMPORTED_MODULE_18___default.a.set(object, `col ${index}`, (_$get = lodash__WEBPACK_IMPORTED_MODULE_18___default.a.get(course, item.field)) !== null && _$get !== void 0 ? _$get : "");
+        if (item.field === "exam") lodash__WEBPACK_IMPORTED_MODULE_18___default.a.set(object, `امتحان`, `${(_course$current_descr5 = course.current_description) === null || _course$current_descr5 === void 0 ? void 0 : _course$current_descr5.evaluation_methods.filter(e => e.name === "امتحان")[0].percentage}`);else if (item.field === "midTerm") lodash__WEBPACK_IMPORTED_MODULE_18___default.a.set(object, `مذاكرة`, `${(_course$current_descr6 = course.current_description) === null || _course$current_descr6 === void 0 ? void 0 : _course$current_descr6.evaluation_methods.filter(e => e.name === "مذاكرة")[0].percentage}`);else if (item.field === "practice") lodash__WEBPACK_IMPORTED_MODULE_18___default.a.set(object, `أعمال`, `${(_course$current_descr7 = course.current_description) === null || _course$current_descr7 === void 0 ? void 0 : _course$current_descr7.evaluation_methods.filter(e => e.name === "أعمال")[0].percentage}`);else lodash__WEBPACK_IMPORTED_MODULE_18___default.a.set(object, `col ${index}`, (_$get = lodash__WEBPACK_IMPORTED_MODULE_18___default.a.get(course, item.field)) !== null && _$get !== void 0 ? _$get : "");
       });
-      console.log(object);
       return object;
     }));
   };
@@ -955,7 +970,15 @@ const CoursesList = ({}) => {
         children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_MaterialTable_ActionTable__WEBPACK_IMPORTED_MODULE_9__[/* default */ "a"], {
           Title: translate("Courses List"),
           Columns: columns,
-          Data: data,
+          Data: data.map(item => {
+            var _item$current_descrip, _item$current_descrip2, _item$current_descrip3;
+
+            return _objectSpread(_objectSpread({}, item), {}, {
+              midTerm: (_item$current_descrip = item.current_description) === null || _item$current_descrip === void 0 ? void 0 : _item$current_descrip.evaluation_methods.filter(e => e.name === "مذاكرة")[0].percentage,
+              exam: (_item$current_descrip2 = item.current_description) === null || _item$current_descrip2 === void 0 ? void 0 : _item$current_descrip2.evaluation_methods.filter(e => e.name === "امتحان")[0].percentage,
+              practice: (_item$current_descrip3 = item.current_description) === null || _item$current_descrip3 === void 0 ? void 0 : _item$current_descrip3.evaluation_methods.filter(e => e.name === "أعمال")[0].percentage
+            });
+          }),
           Options: options,
           Actions: actions
         })
@@ -1057,8 +1080,7 @@ const CoursesList = ({}) => {
                       display: "flex",
                       justifyContent: "space-between"
                     },
-                    children: columns // .filter((item) => !item.hidden)
-                    .map((item, index) => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem_js__WEBPACK_IMPORTED_MODULE_8__[/* default */ "a"], {
+                    children: columns.map((item, index) => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem_js__WEBPACK_IMPORTED_MODULE_8__[/* default */ "a"], {
                       children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])("input", {
                         value: item.field,
                         type: "checkbox",

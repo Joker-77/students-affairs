@@ -1519,7 +1519,7 @@ const PlanCourses = ({
   };
 
   const generateExcel = () => {
-    csvExporter.generateCsv(filteredCourses.map(course => {
+    csvExporter.generateCsv(data.map(course => {
       let object = {};
       selectedColumns.forEach((item, index) => {
         var _$get;
@@ -4392,7 +4392,7 @@ const CourseShallow = ({
   course,
   close
 }) => {
-  var _details$edu_course, _details$edu_course$c, _details$edu_course$c2, _details$edu_course$c3, _details$edu_course2, _details$edu_course2$, _details$edu_course2$2, _details$edu_course2$3, _details$edu_course3, _details$edu_course3$, _details$edu_course3$2, _details$edu_course3$3, _details$edu_course4, _details$edu_course4$, _details$edu_course5, _details$edu_course5$, _details$year, _details$year2, _details$year2$specia;
+  var _details$edu_course, _details$edu_course$c, _details$edu_course$c2, _details$edu_course$c3, _details$edu_course2, _details$edu_course2$, _details$edu_course2$2, _details$edu_course2$3, _details$edu_course3, _details$edu_course3$, _details$edu_course3$2, _details$edu_course3$3, _details$edu_course4, _details$edu_course4$, _details$edu_course5, _details$edu_course5$, _details$year, _details$year2, _details$year2$specia, _details$year3, _details$year3$specia;
 
   const title = "";
   const [fullWidth, setFullWidth] = react__WEBPACK_IMPORTED_MODULE_2___default.a.useState(true);
@@ -4432,7 +4432,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0639\u062F\u062F \u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0646\u0638\u0631\u064A"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4452,7 +4453,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0639\u062F\u062F \u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0639\u0645\u0644\u064A"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4472,9 +4474,10 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
-            children: "\u0639\u062F\u062F \u0627\u0644\u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0645\u0634\u062A\u0631\u0643\u0629"
+            children: "\u0639\u062F\u062F \u0627\u0644\u0633\u0627\u0639\u0627\u062A \u0627\u0644\u0646\u0638\u0631\u064A / \u0627\u0644\u0639\u0645\u0644\u064A"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
               textAlign: "center",
@@ -4502,7 +4505,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0631\u0645\u0632 \u0627\u0644\u0645\u0642\u0631\u0651\u0631"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4522,7 +4526,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0627\u0644\u0627\u0633\u0645"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4542,7 +4547,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0627\u0644\u0633\u0646\u0629"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4562,7 +4568,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0627\u0644\u0627\u062E\u062A\u0635\u0627\u0635"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -4570,7 +4577,7 @@ const CourseShallow = ({
               textAlign: "center",
               fontWeight: "bold"
             },
-            children: details === null || details === void 0 ? void 0 : (_details$year2 = details.year) === null || _details$year2 === void 0 ? void 0 : (_details$year2$specia = _details$year2.speciality) === null || _details$year2$specia === void 0 ? void 0 : _details$year2$specia.ar_name
+            children: `${details === null || details === void 0 ? void 0 : (_details$year2 = details.year) === null || _details$year2 === void 0 ? void 0 : (_details$year2$specia = _details$year2.speciality) === null || _details$year2$specia === void 0 ? void 0 : _details$year2$specia.ar_code} ${details === null || details === void 0 ? void 0 : (_details$year3 = details.year) === null || _details$year3 === void 0 ? void 0 : (_details$year3$specia = _details$year3.speciality) === null || _details$year3$specia === void 0 ? void 0 : _details$year3$specia.en_code}`
           })]
         }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Grid"], {
           item: true,
@@ -4582,7 +4589,8 @@ const CourseShallow = ({
           },
           children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
             style: {
-              textAlign: "center"
+              textAlign: "center",
+              fontSize: "15px"
             },
             children: "\u0627\u0644\u0641\u0635\u0644"
           }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_1__["Typography"], {
@@ -8772,9 +8780,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__("4Q3z");
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_12__);
 /* harmony import */ var _Services_SpecYearsService__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__("ei/K");
-/* harmony import */ var _Services_PlanService__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("2+Pb");
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("oAEb");
-/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(react_toastify__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("vtRj");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(react_select__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _Services_PlanService__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("2+Pb");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__("oAEb");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(react_toastify__WEBPACK_IMPORTED_MODULE_16__);
+
 
 
 
@@ -8866,7 +8877,7 @@ const SpcecifyCourses = () => {
   }, [(_router$query5 = router.query) === null || _router$query5 === void 0 ? void 0 : _router$query5.year, (_router$query6 = router.query) === null || _router$query6 === void 0 ? void 0 : _router$query6.eduYear]); // handle component api data
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(() => {
-    _Services_PlanService__WEBPACK_IMPORTED_MODULE_14__[/* default */ "a"].GetAll().then(programs => {
+    _Services_PlanService__WEBPACK_IMPORTED_MODULE_15__[/* default */ "a"].GetAll().then(programs => {
       console.log("Program", programs);
       _Services_CourseService__WEBPACK_IMPORTED_MODULE_10__[/* default */ "a"].GetAll().then(courses => {
         _Services_SpecialityService__WEBPACK_IMPORTED_MODULE_11__[/* default */ "a"].GetAll().then(specs => {
@@ -8888,8 +8899,8 @@ const SpcecifyCourses = () => {
 
   const changeSpec = e => {
     setLoadSpecYear(true);
-    setSpec(e.target.value);
-    _Services_SpecYearsService__WEBPACK_IMPORTED_MODULE_13__[/* default */ "a"].GetWhereSpeciality(e.target.value).then(response => {
+    setSpec(e);
+    _Services_SpecYearsService__WEBPACK_IMPORTED_MODULE_13__[/* default */ "a"].GetWhereSpeciality(e).then(response => {
       if (response.result && response.result.length > 0) {
         console.clear();
         console.log(response.result);
@@ -8927,17 +8938,17 @@ const SpcecifyCourses = () => {
       course_id: course,
       semester: semester
     };
-    _Services_PlanService__WEBPACK_IMPORTED_MODULE_14__[/* default */ "a"].AddCourse(payLoad).then(result => {
+    _Services_PlanService__WEBPACK_IMPORTED_MODULE_15__[/* default */ "a"].AddCourse(payLoad).then(result => {
       if (result.success) {
-        react_toastify__WEBPACK_IMPORTED_MODULE_15__["toast"].success(translate("Course Added To Plan Successfully"));
-        _Services_PlanService__WEBPACK_IMPORTED_MODULE_14__[/* default */ "a"].GetProgramCourses(program, specYear, year).then(resp => {
+        react_toastify__WEBPACK_IMPORTED_MODULE_16__["toast"].success(translate("Course Added To Plan Successfully"));
+        _Services_PlanService__WEBPACK_IMPORTED_MODULE_15__[/* default */ "a"].GetProgramCourses(program, specYear, year).then(resp => {
           if (resp.success) {
             setProgramCourses(resp.result);
           }
         }).catch(err => {});
       }
     }).catch(error => {
-      react_toastify__WEBPACK_IMPORTED_MODULE_15__["toast"].error(error.message);
+      react_toastify__WEBPACK_IMPORTED_MODULE_16__["toast"].error(error.message);
     });
   }; // handle routing back
 
@@ -8953,15 +8964,15 @@ const SpcecifyCourses = () => {
 
   const getProgramCourses = () => {
     if (year && specYear && program) {
-      _Services_PlanService__WEBPACK_IMPORTED_MODULE_14__[/* default */ "a"].GetProgramCourses(program, specYear, year).then(resp => {
+      _Services_PlanService__WEBPACK_IMPORTED_MODULE_15__[/* default */ "a"].GetProgramCourses(program, specYear, year).then(resp => {
         if (resp.success) {
           setProgramCourses(resp.result);
         }
       }).catch(err => {
-        react_toastify__WEBPACK_IMPORTED_MODULE_15__["toast"].error(err.message);
+        react_toastify__WEBPACK_IMPORTED_MODULE_16__["toast"].error(err.message);
       });
     } else {
-      react_toastify__WEBPACK_IMPORTED_MODULE_15__["toast"].error("يجب تحديد البرنامج والسنة والاختصاص");
+      react_toastify__WEBPACK_IMPORTED_MODULE_16__["toast"].error("يجب تحديد البرنامج والسنة والاختصاص");
     }
   }; // handle program courses
 
@@ -9019,121 +9030,127 @@ const SpcecifyCourses = () => {
       style: {
         margin: "2em 0em"
       },
-      children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
+      children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
         md: 2,
-        children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+        children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
+          id: "demo-simple-select-label",
+          children: "\u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C"
+        }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
           fullWidth: true,
           variant: "filled",
           size: "small",
           size: "small",
-          children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
-            id: "demo-simple-select-label",
-            children: "\u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C"
-          }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Select"], {
-            labelId: "demo-simple-select-label",
-            id: "demo-simple-select",
-            value: program,
-            label: "programs",
-            onChange: e => changeProgram(e.target.value),
-            children: programs === null || programs === void 0 ? void 0 : programs.map(program => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["MenuItem"], {
-              value: program.id,
-              children: program.name
-            }, program.id))
-          })]
-        })
-      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
-        md: 2,
-        children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
-          fullWidth: true,
-          variant: "filled",
-          size: "small",
-          size: "small",
-          children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
-            id: "demo-simple-select-label",
-            children: "\u0627\u0644\u0645\u0642\u0631\u0651\u0631"
-          }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Select"], {
-            labelId: "demo-simple-select-label",
-            id: "demo-simple-select",
-            value: course,
-            label: "courses",
-            onChange: e => setCourse(e.target.value),
-            children: courses.map(course => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["MenuItem"], {
-              value: course.id,
-              children: course.ar_name
-            }, course.id))
-          })]
-        })
-      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
-        md: 2,
-        children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
-          fullWidth: true,
-          variant: "filled",
-          size: "small",
-          children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
-            id: "demo-simple-select-label",
-            children: "\u0627\u0644\u0627\u062E\u062A\u0635\u0627\u0635"
-          }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Select"], {
-            labelId: "demo-simple-select-label",
-            id: "demo-simple-select",
-            value: spec,
-            label: "speciality",
-            onChange: changeSpec,
-            children: specialities.map(spec => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["MenuItem"], {
-              value: spec.id,
-              children: spec.ar_name
-            }, spec.id))
-          })]
-        })
-      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
-        md: 2,
-        children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
-          fullWidth: true,
-          variant: "filled",
-          size: "small",
-          children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
-            id: "demo-simple-select-label",
-            children: "\u0627\u0644\u0633\u0646\u0629"
-          }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Select"], {
-            disabled: loadSpecYear,
-            labelId: "demo-simple-select-label",
-            id: "demo-simple-select",
-            value: specYear,
-            label: "specYears",
+          children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(react_select__WEBPACK_IMPORTED_MODULE_14___default.a, {
+            defaultValue: program,
+            placeholder: "اختيار البرنامج",
+            isSearchable: true,
+            options: programs,
             onChange: e => {
-              setSpecYear(e.target.value);
+              changeProgram(e.id);
             },
-            children: specYears.map(spYear => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["MenuItem"], {
-              value: spYear.id,
-              children: spYear.ar_name
-            }, spYear.id))
-          })]
-        })
-      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
+            getOptionLabel: option => option.name,
+            getOptionValue: option => option.id
+          })
+        })]
+      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
         md: 2,
-        children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+        children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
+          id: "demo-simple-select-label",
+          children: "\u0627\u0644\u0645\u0642\u0631\u0651\u0631"
+        }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
           fullWidth: true,
           variant: "filled",
           size: "small",
-          children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
-            id: "demo-simple-select-label",
-            children: "\u0627\u0644\u0641\u0635\u0644"
-          }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Select"], {
-            labelId: "demo-simple-select-label",
-            id: "demo-simple-select",
-            value: semester,
-            label: "speciality",
-            onChange: e => setSemester(e.target.value),
-            children: semesters.map(sem => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["MenuItem"], {
-              value: sem.id,
-              children: sem.value
-            }, sem.id))
-          })]
-        })
+          size: "small",
+          children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(react_select__WEBPACK_IMPORTED_MODULE_14___default.a, {
+            style: {
+              zIndex: 99
+            },
+            defaultValue: course,
+            label: "Single select",
+            placeholder: "اختيار مقرر",
+            isSearchable: true,
+            options: courses,
+            onChange: e => {
+              setCourse(e.id);
+            },
+            getOptionLabel: option => option.ar_name,
+            getOptionValue: option => option.id
+          })
+        })]
+      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
+        md: 2,
+        children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
+          id: "demo-simple-select-label",
+          children: "\u0627\u0644\u0627\u062E\u062A\u0635\u0627\u0635"
+        }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+          fullWidth: true,
+          variant: "filled",
+          size: "small",
+          children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(react_select__WEBPACK_IMPORTED_MODULE_14___default.a, {
+            style: {
+              zIndex: 99
+            },
+            defaultValue: spec,
+            label: "Single select",
+            placeholder: "اختيار الاختصاص",
+            isSearchable: true,
+            options: specialities,
+            onChange: e => {
+              changeSpec(e.id);
+            },
+            getOptionLabel: option => option.ar_name,
+            getOptionValue: option => option.id
+          })
+        })]
+      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
+        md: 2,
+        children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
+          id: "demo-simple-select-label",
+          children: "\u0627\u0644\u0633\u0646\u0629"
+        }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+          fullWidth: true,
+          variant: "filled",
+          size: "small",
+          children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(react_select__WEBPACK_IMPORTED_MODULE_14___default.a, {
+            defaultValue: spec,
+            label: "Single select",
+            placeholder: "اختيار السنة",
+            isSearchable: true,
+            isDisabled: loadSpecYear,
+            options: specYears,
+            onChange: e => {
+              setSpecYear(e.id);
+            },
+            getOptionLabel: option => option.ar_name,
+            getOptionValue: option => option.id
+          })
+        })]
+      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
+        md: 2,
+        children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
+          id: "demo-simple-select-label",
+          children: "\u0627\u0644\u0641\u0635\u0644"
+        }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+          fullWidth: true,
+          variant: "filled",
+          size: "small",
+          children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(react_select__WEBPACK_IMPORTED_MODULE_14___default.a, {
+            defaultValue: semester,
+            label: "Single select",
+            placeholder: "اختيار الفصل",
+            isSearchable: true,
+            options: semesters,
+            onChange: e => setSemester(e.id),
+            getOptionLabel: option => option.value,
+            getOptionValue: option => option.id
+          })
+        })]
       }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
         md: 2,
         children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Button"], {
           style: {
-            margin: "10px 5px"
+            margin: "20px 5px"
           },
           variant: "contained",
           className: classes.submitBtn,
@@ -10385,6 +10402,13 @@ function createObserver(options) {
   });
   return instance;
 }
+
+/***/ }),
+
+/***/ "vtRj":
+/***/ (function(module, exports) {
+
+module.exports = require("react-select");
 
 /***/ }),
 

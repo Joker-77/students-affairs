@@ -1620,7 +1620,6 @@ const SpecialityList = ({}) => {
   const [openModalForDetails, setOpenModalForDetails] = external_react_default.a.useState(false);
 
   const handleOpenUpdateSpeciality = data => {
-    console.log("data", data);
     setInitUpdateSpeciality({
       id: data.id,
       ar_name: data.ar_name,
@@ -1693,8 +1692,11 @@ const SpecialityList = ({}) => {
         title: translate("English Short Name"),
         field: "en_short_name"
       }, {
-        title: translate("Code"),
-        field: "code"
+        title: translate("الرمز بالعربية"),
+        field: "ar_code"
+      }, {
+        title: translate("الرمز بالإنكليزية"),
+        field: "en_code"
       }];
       let data = Speciality;
       let options = {

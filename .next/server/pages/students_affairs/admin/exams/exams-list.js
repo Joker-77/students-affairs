@@ -3275,6 +3275,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _exams_list_style_css__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("BGDJ");
 /* harmony import */ var _exams_list_style_css__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_exams_list_style_css__WEBPACK_IMPORTED_MODULE_15__);
 /* harmony import */ var _components_SuiButton__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__("8uep");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__("vtRj");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(react_select__WEBPACK_IMPORTED_MODULE_17__);
+
 
 
 
@@ -3443,7 +3446,7 @@ const ExamsList = ({}) => {
     setCourse(val);
     setLoadExamsType(true);
 
-    let _course = courses.find(e => e.id === val);
+    let _course = courses.find(e => e.edu_course_id === val);
 
     setExamsType(_course.evaluation_methods);
     setLoadExamsType(false);
@@ -3452,7 +3455,7 @@ const ExamsList = ({}) => {
   const changeExamType = val => {
     clear();
 
-    let _course = courses.find(e => e.id == course);
+    let _course = courses.find(e => e.edu_course_id == course);
 
     setExamType(val);
     _Services_ExamService__WEBPACK_IMPORTED_MODULE_8__[/* default */ "a"].GetAllPlans(program, eduYear, _course.edu_course_id, val.toString()).then(resp => setPlans(resp.result)).catch(error => {});
@@ -4089,95 +4092,89 @@ const ExamsList = ({}) => {
       style: {
         margin: "2em 0em"
       },
-      children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
+      children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
         md: 2,
-        children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+        children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
+          id: "demo-simple-select-label",
+          children: "\u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C"
+        }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
           fullWidth: true,
           variant: "filled",
           size: "small",
           size: "small",
-          children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
-            id: "demo-simple-select-label",
-            children: "\u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C"
-          }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Select"], {
-            labelId: "demo-simple-select-label",
-            id: "demo-simple-select",
-            value: program,
-            label: "programs",
-            onChange: e => changeProgram(e.target.value),
-            children: programs === null || programs === void 0 ? void 0 : programs.map(program => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["MenuItem"], {
-              value: program.id,
-              children: program.name
-            }, program.id))
-          })]
-        })
-      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
+          children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(react_select__WEBPACK_IMPORTED_MODULE_17___default.a, {
+            defaultValue: program,
+            placeholder: "اختيار البرنامج",
+            isSearchable: true,
+            options: programs,
+            onChange: e => {
+              changeProgram(e.id);
+            },
+            getOptionLabel: option => option.name,
+            getOptionValue: option => option.id
+          })
+        })]
+      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
         md: 2,
-        children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+        children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
+          id: "demo-simple-select-label",
+          children: "\u0627\u0644\u0633\u0646\u0629"
+        }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
           fullWidth: true,
           variant: "filled",
           size: "small",
-          children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
-            id: "demo-simple-select-label",
-            children: "\u0627\u0644\u0633\u0646\u0629"
-          }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Select"], {
-            labelId: "demo-simple-select-label",
-            id: "demo-simple-select",
-            value: eduYear,
-            label: "specYears",
-            onChange: e => changeEduYear(e.target.value),
-            children: eduYears.map(spYear => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["MenuItem"], {
-              value: spYear.id,
-              children: spYear.year
-            }, spYear.id))
-          })]
-        })
-      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
+          children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(react_select__WEBPACK_IMPORTED_MODULE_17___default.a, {
+            defaultValue: eduYear,
+            placeholder: "اختيار السنة",
+            isSearchable: true,
+            options: eduYears,
+            onChange: e => changeEduYear(e.id),
+            getOptionLabel: option => option.year,
+            getOptionValue: option => option.id
+          })
+        })]
+      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
         md: 2,
-        children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
-          fullWidth: true,
-          variant: "filled",
-          size: "small",
-          size: "small",
-          children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
-            id: "demo-simple-select-label",
-            children: "\u0627\u0644\u0645\u0642\u0631\u0651\u0631"
-          }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Select"], {
-            disabled: loadCourses,
-            labelId: "demo-simple-select-label",
-            id: "demo-simple-select",
-            value: course,
-            label: "courses",
-            onChange: e => changeCourse(e.target.value),
-            children: courses.map(course => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["MenuItem"], {
-              value: course.id,
-              children: course.ar_name
-            }, course.id))
-          })]
-        })
-      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
-        md: 2,
-        children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+        children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
+          id: "demo-simple-select-label",
+          children: "\u0627\u0644\u0645\u0642\u0631\u0651\u0631"
+        }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
           fullWidth: true,
           variant: "filled",
           size: "small",
           size: "small",
-          children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
-            id: "demo-simple-select-label",
-            children: "\u0646\u0648\u0639 \u0627\u0644\u0648\u0627\u0642\u0639\u0629"
-          }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Select"], {
-            disabled: loadExamsType,
-            labelId: "demo-simple-select-label",
-            id: "demo-simple-select",
-            value: examType,
-            label: "examTypes",
-            onChange: e => changeExamType(e.target.value),
-            children: examsTypes.map(exam => /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["MenuItem"], {
-              value: exam.id,
-              children: exam.name
-            }, exam.id))
-          })]
-        })
+          children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(react_select__WEBPACK_IMPORTED_MODULE_17___default.a, {
+            isDisabled: loadCourses,
+            defaultValue: course,
+            placeholder: "اختيار المقرّر",
+            isSearchable: true,
+            options: courses,
+            onChange: e => changeCourse(e.edu_course_id),
+            getOptionLabel: option => option.ar_name,
+            getOptionValue: option => option.edu_course_id
+          })
+        })]
+      }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsxs"])(_components_Grid_GridItem__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
+        md: 2,
+        children: [/*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["InputLabel"], {
+          id: "demo-simple-select-label",
+          children: "\u0646\u0648\u0639 \u0627\u0644\u0648\u0627\u0642\u0639\u0629"
+        }), /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+          fullWidth: true,
+          variant: "filled",
+          size: "small",
+          size: "small",
+          children: /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])(react_select__WEBPACK_IMPORTED_MODULE_17___default.a, {
+            isDisabled: loadExamsType,
+            defaultValue: examType,
+            placeholder: "اختيار الواقعة",
+            isSearchable: true,
+            options: examsTypes,
+            onChange: e => changeExamType(e.id),
+            getOptionLabel: option => option.name,
+            getOptionValue: option => option.id
+          })
+        })]
       })]
     }), renderPlans(plans)]
   });
@@ -8329,6 +8326,13 @@ function createObserver(options) {
   });
   return instance;
 }
+
+/***/ }),
+
+/***/ "vtRj":
+/***/ (function(module, exports) {
+
+module.exports = require("react-select");
 
 /***/ }),
 
