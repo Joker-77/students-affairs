@@ -26,19 +26,19 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/students_affairs/admin/exams/exams-list": [
+    "/students_affairs/affairs_officer/candidates/candidates-list": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/css/styles.chunk.css",
       "static/chunks/styles.js",
-      "static/chunks/pages/students_affairs/admin/exams/exams-list.js"
+      "static/chunks/pages/students_affairs/affairs_officer/candidates/candidates-list.js"
     ],
-    "/students_affairs/affairs_officer/initialize-year/specify-courses": [
+    "/students_affairs/dashboard": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/css/styles.chunk.css",
       "static/chunks/styles.js",
-      "static/chunks/pages/students_affairs/affairs_officer/initialize-year/specify-courses.js"
+      "static/chunks/pages/students_affairs/dashboard.js"
     ]
   },
   "ampFirstPages": []

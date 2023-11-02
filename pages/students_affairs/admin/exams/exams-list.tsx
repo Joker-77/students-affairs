@@ -158,13 +158,13 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     clear();
     setCourse(val);
     setLoadExamsType(true);
-    let _course = courses.find((e) => e.id === val);
+    let _course = courses.find((e) => e.edu_course_id === val);
     setExamsType(_course.evaluation_methods);
     setLoadExamsType(false);
   };
   const changeExamType = (val: number) => {
     clear();
-    let _course = courses.find((e) => e.id == course);
+    let _course = courses.find((e) => e.edu_course_id == course);
     setExamType(val);
     ExamService.GetAllPlans(
       program,
@@ -755,9 +755,9 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
               placeholder={"اختيار المقرّر"}
               isSearchable={true}
               options={courses}
-              onChange={(e) => changeCourse(e.id)}
+              onChange={(e) => changeCourse(e.edu_course_id)}
               getOptionLabel={(option) => option.ar_name}
-              getOptionValue={(option) => option.id}
+              getOptionValue={(option) => option.edu_course_id}
             />
           </FormControl>
         </GridItem>
