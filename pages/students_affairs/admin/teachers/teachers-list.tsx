@@ -347,8 +347,8 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
     decimalSeparator: ".",
     showLabels: true,
     useBom: true,
-    useKeysAsHeaders: false,
-    headers: selectedColumns.map((c) => c.title),
+    useKeysAsHeaders: true,
+    // headers: selectedColumns.map((c) => c.title),
   };
   const csvExporter = new ExportToCsv(csvOptions);
   const handleExportData = () => {
@@ -362,7 +362,7 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
           if (item.field === "full_name")
             _.set(
               object,
-              "full_name",
+              "الاسم الثلاثي",
               `${teacher.person?.first_name} ${teacher.father_name ?? ""} ${
                 teacher.person?.last_name
               }`
@@ -370,13 +370,12 @@ const TeachersList: React.FC<ITeachersListProps> = ({}) => {
           else if (item.field === "office_phone")
             _.set(
               object,
-              "office_phone",
+              "رقم الهاتف",
               teacher.person.phones.find((phone) => phone.type === "office")
                 ?.phone ?? ""
             );
-          else _.set(object, `col ${index}`, _.get(teacher, item.field) ?? "");
+          else _.set(object, item.title, _.get(teacher, item.field) ?? "");
         });
-        console.log(object);
         return object;
       })
     );

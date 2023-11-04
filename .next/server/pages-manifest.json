@@ -1,5 +1,8 @@
 {
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
-  "/_error": "pages/_error.js"
+  "/_error": "pages/_error.js",
+  "/students_affairs/admin/courses/courses-list": "pages/students_affairs/admin/courses/courses-list.js",
+  "/students_affairs/admin/teachers/teachers-list": "pages/students_affairs/admin/teachers/teachers-list.js",
+  "/students_affairs/admin/observers/observers-list": "pages/students_affairs/admin/observers/observers-list.js"
 }

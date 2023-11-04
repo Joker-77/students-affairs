@@ -365,53 +365,53 @@ const CoursesList: React.FC<ICoursesListProps> = ({}) => {
     decimalSeparator: ".",
     showLabels: true,
     useBom: true,
-    useKeysAsHeaders: false,
-    headers: selectedColumns.map((c) => c.title),
+    useKeysAsHeaders: true,
+    // headers: selectedColumns.map((c) => c.title),
   };
   const csvExporter = new ExportToCsv(csvOptions);
   const handleExportData = () => {
     setShowExportColumns(!showExportColumns);
   };
   const generateExcel = () => {
-    csvExporter.generateCsv(
-      filteredCourses.map((course) => {
-        let object = {};
-        selectedColumns.forEach((item, index) => {
-          if (item.field === "exam")
-            _.set(
-              object,
-              `امتحان`,
-              `${
-                course.current_description?.evaluation_methods.filter(
-                  (e) => e.name === "امتحان"
-                )[0].percentage
-              }`
-            );
-          else if (item.field === "midTerm")
-            _.set(
-              object,
-              `مذاكرة`,
-              `${
-                course.current_description?.evaluation_methods.filter(
-                  (e) => e.name === "مذاكرة"
-                )[0].percentage
-              }`
-            );
-          else if (item.field === "practice")
-            _.set(
-              object,
-              `أعمال`,
-              `${
-                course.current_description?.evaluation_methods.filter(
-                  (e) => e.name === "أعمال"
-                )[0].percentage
-              }`
-            );
-          else _.set(object, `col ${index}`, _.get(course, item.field) ?? "");
-        });
-        return object;
-      })
-    );
+    let data = filteredCourses.map((course) => {
+      let object = {};
+      selectedColumns.forEach((item, index) => {
+        if (item.field === "exam")
+          _.set(
+            object,
+            `امتحان`,
+            `${
+              course.current_description?.evaluation_methods.filter(
+                (e) => e.name === "امتحان"
+              )[0].percentage
+            }`
+          );
+        else if (item.field === "midTerm")
+          _.set(
+            object,
+            `مذاكرة`,
+            `${
+              course.current_description?.evaluation_methods.filter(
+                (e) => e.name === "مذاكرة"
+              )[0].percentage
+            }`
+          );
+        else if (item.field === "practice")
+          _.set(
+            object,
+            `أعمال`,
+            `${
+              course.current_description?.evaluation_methods.filter(
+                (e) => e.name === "أعمال"
+              )[0].percentage
+            }`
+          );
+        else _.set(object, item.title, _.get(course, item.field) ?? "");
+      });
+      return object;
+    });
+    console.log("data", data);
+    csvExporter.generateCsv(data);
   };
   /************************** Finish Handle Export Data ****************************/
   const [confirm, setConfirm] = React.useState(false);

@@ -58,7 +58,7 @@ import ReactToPrint, { useReactToPrint } from "react-to-print";
 import _ from "lodash";
 import { GetStaticProps } from "next";
 
-interface IObserversListProps { }
+interface IObserversListProps {}
 
 const ObserversList: React.FC<IObserversListProps> = () => {
   const { translate } = useTranslation();
@@ -75,7 +75,7 @@ const ObserversList: React.FC<IObserversListProps> = () => {
   };
 
   const getObserver = (data: any) => {
-    let _observer = Observers.find((item, index) => item.id === data ?.id);
+    let _observer = Observers.find((item, index) => item.id === data?.id);
     ObserverService.Get(data.id)
       .then((res) => {
         let _observer = res.result as IObserverModel;
@@ -131,13 +131,13 @@ const ObserversList: React.FC<IObserversListProps> = () => {
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setLabelWidth(inputLabel ?.current ?.offsetWidth);
+    setLabelWidth(inputLabel?.current?.offsetWidth);
   }, []);
 
   const inputSortLabel = React.useRef(null);
   const [sortLabelWidth, setSortLabelWidth] = React.useState(0);
   React.useEffect(() => {
-    setSortLabelWidth(inputSortLabel ?.current ?.offsetWidth);
+    setSortLabelWidth(inputSortLabel?.current?.offsetWidth);
   }, []);
 
   const filters = [
@@ -171,7 +171,7 @@ const ObserversList: React.FC<IObserversListProps> = () => {
   const handleChangeExcluded = (event) => {
     setExcluded(!isExcluded);
     //filterData();
-  }
+  };
   const [Observers, setObservers] = React.useState<IObserverModel[]>(null);
   const [filteredObservers, setFilteredObservers] =
     React.useState<IObserverModel[]>(null);
@@ -185,14 +185,18 @@ const ObserversList: React.FC<IObserversListProps> = () => {
     if (_filteredObservers != null) {
       if (filter == 0) {
         _filteredObservers = Observers.filter((observer, index) => {
-          let level = levels.find(level => level.id == observer ?.level_id).name;
-          let activity = activities.find(activity => activity.id == observer ?.activity_id).name;
+          let level = levels.find(
+            (level) => level.id == observer?.level_id
+          ).name;
+          let activity = activities.find(
+            (activity) => activity.id == observer?.activity_id
+          ).name;
           return (
-            observer ?.first_name.includes(_value) ||
-              observer ?.last_name.includes(_value) ||
-                observer ?.number ?.toString().includes(_value) ||
-                  activity.includes(_value) ||
-                  level.includes(_value)
+            observer?.first_name.includes(_value) ||
+            observer?.last_name.includes(_value) ||
+            observer?.number?.toString().includes(_value) ||
+            activity.includes(_value) ||
+            level.includes(_value)
           );
         });
         //setFilteredObservers(_filteredObservers);
@@ -200,35 +204,39 @@ const ObserversList: React.FC<IObserversListProps> = () => {
       if (filter == 1) {
         _filteredObservers = Observers.filter((observer, index) => {
           return (
-            observer ?.first_name.includes(_value) ||
-              observer ?.last_name.includes(_value)
+            observer?.first_name.includes(_value) ||
+            observer?.last_name.includes(_value)
           );
         });
         //setFilteredObservers(_filteredObservers);
       }
       if (filter == 2) {
         _filteredObservers = Observers.filter((observer, index) => {
-          return observer ?.number.toString().includes(_value);
+          return observer?.number.toString().includes(_value);
         });
         //setFilteredObservers(_filteredObservers);
       }
       if (filter == 3) {
         _filteredObservers = Observers.filter((observer, index) => {
-          let activity = activities.find(activity => activity.id == observer ?.activity_id).name;
-          return activity.includes(_value)
+          let activity = activities.find(
+            (activity) => activity.id == observer?.activity_id
+          ).name;
+          return activity.includes(_value);
         });
         //setFilteredObservers(_filteredObservers);
       }
       if (filter == 4) {
         _filteredObservers = Observers.filter((observer, index) => {
-          let level = levels.find(level => level.id == observer ?.level_id).name;
-          return level.includes(_value)
+          let level = levels.find(
+            (level) => level.id == observer?.level_id
+          ).name;
+          return level.includes(_value);
         });
         //setFilteredObservers(_filteredObservers);
       }
       if (isExcluded) {
         _filteredObservers = _filteredObservers.filter((observer, index) => {
-          return observer ?.excluded
+          return observer?.excluded;
         });
       }
     }
@@ -239,7 +247,7 @@ const ObserversList: React.FC<IObserversListProps> = () => {
     //filterData();
   };
   const handleSearch = (event) => {
-    let _value = event ?.target ?.value;
+    let _value = event?.target?.value;
     setSearch(_value);
     //filterData();
   };
@@ -250,7 +258,7 @@ const ObserversList: React.FC<IObserversListProps> = () => {
 
   const [sortBy, setSortBy] = React.useState(0);
   const handleSortBy = (event) => {
-    let _value = event ?.target ?.value;
+    let _value = event?.target?.value;
     setSortBy(_value);
     let _filteredObservers = Observers;
     if (sortBy == 1) {
@@ -264,8 +272,7 @@ const ObserversList: React.FC<IObserversListProps> = () => {
           return 1;
         } else if (a.first_name < b.first_name) {
           return -1;
-        }
-        else {
+        } else {
           return 0;
         }
       });
@@ -273,15 +280,9 @@ const ObserversList: React.FC<IObserversListProps> = () => {
     }
     if (sortBy == 2) {
       _filteredObservers = Observers.sort((a, b) => {
-        if (
-          parseInt(a.number, 10) >
-          parseInt(b.number, 10)
-        ) {
+        if (parseInt(a.number, 10) > parseInt(b.number, 10)) {
           return 1;
-        } else if (
-          parseInt(a.number, 10) <
-          parseInt(b.number, 10)
-        ) {
+        } else if (parseInt(a.number, 10) < parseInt(b.number, 10)) {
           return -1;
         } else {
           return 0;
@@ -291,24 +292,24 @@ const ObserversList: React.FC<IObserversListProps> = () => {
     }
     if (sortBy == 3) {
       _filteredObservers = Observers.sort((a, b) => {
-        let a_activity = activities.find(activity => activity.id == a.activity_id).name;
-        let b_activity = activities.find(activity => activity.id == b.activity_id).name;
-        if (a_activity > b_activity)
-          return 1;
-        if (a_activity < b_activity)
-          return -1;
+        let a_activity = activities.find(
+          (activity) => activity.id == a.activity_id
+        ).name;
+        let b_activity = activities.find(
+          (activity) => activity.id == b.activity_id
+        ).name;
+        if (a_activity > b_activity) return 1;
+        if (a_activity < b_activity) return -1;
         return 0;
       });
       setFilteredObservers(_filteredObservers);
     }
     if (sortBy == 4) {
       _filteredObservers = Observers.sort((a, b) => {
-        let a_level = levels.find(level => level.id == a.level_id).name;
-        let b_level = levels.find(level => level.id == b.level_id).name;
-        if (a_level > b_level)
-          return 1;
-        if (a_level < b_level)
-          return -1;
+        let a_level = levels.find((level) => level.id == a.level_id).name;
+        let b_level = levels.find((level) => level.id == b.level_id).name;
+        if (a_level > b_level) return 1;
+        if (a_level < b_level) return -1;
         return 0;
       });
       setFilteredObservers(_filteredObservers);
@@ -405,8 +406,8 @@ const ObserversList: React.FC<IObserversListProps> = () => {
     decimalSeparator: ".",
     showLabels: true,
     useBom: true,
-    useKeysAsHeaders: false,
-    headers: selectedColumns.map((c) => c.title),
+    useKeysAsHeaders: true,
+    // headers: selectedColumns.map((c) => c.title),
   };
   const csvExporter = new ExportToCsv(csvOptions);
   const handleExportData = () => {
@@ -417,18 +418,34 @@ const ObserversList: React.FC<IObserversListProps> = () => {
       filteredObservers.map((observer, idx) => {
         let object = {};
         selectedColumns.forEach((item, index) => {
-          if (item.field === 'full_name')
-            _.set(object, 'full_name', `${observer.nick_name} ${observer.first_name} ${observer.last_name}`);
+          if (item.field === "full_name")
+            _.set(
+              object,
+              "الاسم الثلاثي",
+              `${observer.nick_name} ${observer.first_name} ${observer.last_name}`
+            );
           //else if (item.field === 'office_phone')
           //_.set(object, 'office_phone', observer.person.phones.find(phone => phone.type === "office")?.phone ?? "");
-          else if (item.field === 'is_excluded')
-            _.set(object, 'is_excluded', observer.excluded == 0 ? translate("No") : translate("Yes"));
-          else if (item.field === 'authority')
-            _.set(object, 'authority', levels.find(level => level.id == observer.level_id).name);
-          else if (item.field === 'activity')
-            _.set(object, 'activity', activities.find(activity => activity.id == observer.activity_id).name);
-          else
-            _.set(object, `col ${index}`, _.get(observer, item.field) ?? "");
+          else if (item.field === "is_excluded")
+            _.set(
+              object,
+              "مستثنى",
+              observer.excluded == 0 ? translate("No") : translate("Yes")
+            );
+          else if (item.field === "authority")
+            _.set(
+              object,
+              "الهيئة",
+              levels.find((level) => level.id == observer.level_id).name
+            );
+          else if (item.field === "activity")
+            _.set(
+              object,
+              "الفعالية",
+              activities.find((activity) => activity.id == observer.activity_id)
+                .name
+            );
+          else _.set(object, item.title, _.get(observer, item.field) ?? "");
         });
         console.log(object);
         return object;
@@ -445,7 +462,7 @@ const ObserversList: React.FC<IObserversListProps> = () => {
   const handleConfirmClose = () => {
     setConfirm(false);
   };
-  const handleDeleteObserver = () => { };
+  const handleDeleteObserver = () => {};
 
   const ConfirmDialog = () => (
     <div>
@@ -514,7 +531,7 @@ const ObserversList: React.FC<IObserversListProps> = () => {
               {translate("Observing Assignments")}
             </SuiButton>
           ),
-          onClick: (evt, data) => { },
+          onClick: (evt, data) => {},
         },
       ];
       return (
@@ -522,14 +539,18 @@ const ObserversList: React.FC<IObserversListProps> = () => {
           <ActionTable
             Title={translate("Observers List")}
             Columns={columns}
-            Data={data.map(item => {
+            Data={data.map((item) => {
               return {
                 ...item,
                 //full_name: `${item.nick_name} ${item.first_name} ${item.last_name}`,
-                is_excluded: item.excluded == 0 ? translate("No") : translate("Yes"),
-                authority: levels ?.find(level => level.id == item.level_id) ?.name,
-                activity: activities ?.find(activity => activity.id == item.activity_id) ?.name,
-              }
+                is_excluded:
+                  item.excluded == 0 ? translate("No") : translate("Yes"),
+                authority: levels?.find((level) => level.id == item.level_id)
+                  ?.name,
+                activity: activities?.find(
+                  (activity) => activity.id == item.activity_id
+                )?.name,
+              };
             })}
             Options={options}
             Actions={actions}

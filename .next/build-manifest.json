@@ -25,6 +25,27 @@
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
+    ],
+    "/students_affairs/admin/courses/courses-list": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/css/styles.chunk.css",
+      "static/chunks/styles.js",
+      "static/chunks/pages/students_affairs/admin/courses/courses-list.js"
+    ],
+    "/students_affairs/admin/observers/observers-list": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/css/styles.chunk.css",
+      "static/chunks/styles.js",
+      "static/chunks/pages/students_affairs/admin/observers/observers-list.js"
+    ],
+    "/students_affairs/admin/teachers/teachers-list": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/css/styles.chunk.css",
+      "static/chunks/styles.js",
+      "static/chunks/pages/students_affairs/admin/teachers/teachers-list.js"
     ]
   },
   "ampFirstPages": []
