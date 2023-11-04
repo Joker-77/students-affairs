@@ -208,6 +208,16 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       name: "ق2",
       selected: false,
     },
+    {
+      id: 3,
+      name: "3ق",
+      selected: false,
+    },
+    {
+      id: 3,
+      name: "4ق",
+      selected: false,
+    },
   ];
   const [halls, setHalls] = useState(_halls);
   const handleDateChange = (e) => {
@@ -329,8 +339,8 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       plan_ids: [...selectedPlans],
       type: `${examsTypes.filter((e) => e.id == examType)[0].name}`,
       date: getFullDate(selectedDate),
-      from: getFullTime(startTime),
-      to: getFullTime(endTime),
+      from: startTime.value,
+      to: endTime.value,
       halls: inputFields.map((dd) => {
         return {
           id: dd.hall,
@@ -340,22 +350,15 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       }),
     };
     console.log(payLoad);
-    // PlanService.AddCourse(payLoad)
-    //   .then((result) => {
-    //     if (result.success) {
-    //       toast.success(translate("Course Added To Plan Successfully"));
-    //       PlanService.GetProgramCourses(program, specYear, year)
-    //         .then((resp) => {
-    //           if (resp.success) {
-    //             setProgramCourses(resp.result);
-    //           }
-    //         })
-    //         .catch((err) => {});
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error.message);
-    //   });
+    ExamService.Add(payLoad)
+      .then((result) => {
+        if (result.success) {
+          toast.success("تمت إضافة الواقعة الامتحانية بنجاح");
+        }
+      })
+      .catch((error) => {
+        // toast.error(error.message);
+      });
   };
   const renderPlans = (plans) => {
     if (plans.length > 0) {

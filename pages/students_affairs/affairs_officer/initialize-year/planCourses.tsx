@@ -272,8 +272,8 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
     decimalSeparator: ".",
     showLabels: true,
     useBom: true,
-    useKeysAsHeaders: false,
-    headers: selectedColumns.map((c) => c.title),
+    useKeysAsHeaders: true,
+    // headers: selectedColumns.map((c) => c.title),
   };
   const csvExporter = new ExportToCsv(csvOptions);
   const handleExportData = () => {
@@ -284,7 +284,7 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
       data.map((course) => {
         let object = {};
         selectedColumns.forEach((item, index) => {
-          _.set(object, `col ${index}`, _.get(course, item.field) ?? "");
+          _.set(object, item.title, _.get(course, item.field) ?? "");
         });
         console.log(object);
         return object;

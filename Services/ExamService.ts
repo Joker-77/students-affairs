@@ -63,7 +63,7 @@ export default class ExamService {
   }
 
   static async Add(payload): Promise<ApiResponse> {
-    const createUrl = process.env.CREATE_COURSE_URL as string;
+    const createUrl = "/exam/add";
     console.log(createUrl);
     return await apiConnector
       .post(createUrl, payload)
