@@ -33,6 +33,7 @@ import "./exams-list-style.css";
 import { Card } from "@material-ui/core";
 import SuiButton from "../../../../components/SuiButton";
 import { default as RSelect } from "react-select";
+import { DateHelper } from "./../../../../Helpers/DateHelper";
 
 interface IExamsListProps {}
 const ExamsList: React.FC<IExamsListProps> = ({}) => {
@@ -40,6 +41,8 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
+  const times = DateHelper.getQuarterHourTimes();
+  console.log(times);
   // Programs
   const [programs, setPrograms] = useState([]);
   const [program, setProgram] = useState(null);
@@ -55,6 +58,11 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   // Exam Type
   const [examsTypes, setExamsType] = useState([]);
   const [examType, setExamType] = useState(null);
+
+  const [loadCourses, setLoadCourses] = useState(false);
+  const [loadExamsType, setLoadExamsType] = useState(false);
+
+  const [plans, setPlans] = useState([]);
 
   useEffect(() => {
     PlanService.GetAll()
@@ -88,11 +96,6 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       .catch((error) => {});
     setLoadCourses(false);
   };
-
-  const [loadCourses, setLoadCourses] = useState(false);
-  const [loadExamsType, setLoadExamsType] = useState(false);
-
-  const [plans, setPlans] = useState([]);
 
   // Get Exams
   useEffect(() => {}, []);
@@ -133,10 +136,6 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     // This arrangement can be altered based on how we want the date's format to appear.
     return `${("0" + day).slice(-2)}-${("0" + month).slice(-2)}-${year}`;
   };
-  //
-  const getFullTime = (date) => {
-    return date.toLocaleTimeString();
-  };
   // ------------------------
   const clear = () => {
     setSelectedNewStds(0);
@@ -148,8 +147,8 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       {
         hall: 0,
         date: getFullDate(selectedDate),
-        from: getFullTime(startTime),
-        to: getFullTime(endTime),
+        from: startTime,
+        to: endTime,
         num_studs: 0,
       },
     ]);
@@ -184,16 +183,15 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   const [selectedNewStds, setSelectedNewStds] = useState(0);
   const [selectedOldStds, setSelectedOldStds] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
-  console.log("selectedDate", selectedDate.getDay());
+  const [startTime, setStartTime] = useState(DateHelper.getTimeOfDay());
+  const [endTime, setEndTime] = useState(DateHelper.getTimeOfDay());
   // Dynamic Halls
   const [inputFields, setInputFields] = useState([
     {
       hall: 0,
       date: getFullDate(selectedDate),
-      from: getFullTime(startTime),
-      to: getFullTime(endTime),
+      from: startTime,
+      to: endTime,
       planId: 0,
       num_studs: 0,
     },
@@ -232,8 +230,8 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       return {
         hall: dd.hall,
         date: getFullDate(selectedDate),
-        from: getFullTime(e),
-        to: getFullTime(endTime),
+        from: e.value,
+        to: endTime.value,
         planId: dd.planId,
         num_studs: dd.num_studs,
       };
@@ -246,52 +244,32 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       return {
         hall: dd.hall,
         date: getFullDate(selectedDate),
-        from: getFullTime(startTime),
-        to: getFullTime(e),
+        from: startTime.value,
+        to: e.value,
         planId: dd.planId,
         num_studs: dd.num_studs,
       };
     });
     setInputFields(_inptFilds);
-    const startHour = startTime.getHours();
-    const startMinute = startTime.getMinutes();
-    const endHour = e.getHours();
-    const endMinute = e.getMinutes();
-    if (e < startTime) toast.error("وقت الانتهاء يجب أن يكون بعد وقت البدء");
+    let st = new Date(
+      2023,
+      1,
+      1,
+      parseInt(startTime.value.split(":")[0]),
+      parseInt(startTime.value.split(":")[1])
+    );
+    let en = new Date(
+      2023,
+      1,
+      1,
+      parseInt(e.value.split(":")[0]),
+      parseInt(e.value.split(":")[1])
+    );
+    if (en < st) toast.error("وقت الانتهاء يجب أن يكون بعد وقت البدء");
   };
 
   // get selected plan exams
   const [selectedPlan, setSelectedPlan] = useState(0);
-  //   useEffect(() => {
-  //     if (selectedPlan != 0 && !!selectedPlanData) {
-  //       ExamService.getExams(selectedPlan)
-  //         .then((resp) => {
-  //           console.clear();
-  //           console.log(resp);
-  //           if (resp.result?.length > 0) {
-  //             let exam = resp.result?.filter((dt, indx) => {
-  //               return dt.evaluation_method?.id == examType;
-  //             })[0];
-  //             if (exam.exam_halls && exam.exam_halls.length > 0) {
-  //               let fields = exam?.exam_halls?.map((e) => {
-  //                 return {
-  //                   planId: exam.plan_id,
-  //                   from: exam.from,
-  //                   to: exam.to,
-  //                   date: exam.date.split("T")[0],
-  //                   hall: e.hall_id,
-  //                   num_studs: e.students_num,
-  //                 };
-  //               });
-  //               console.log("selectedPlanData", selectedPlanData);
-  //               console.log("fields", fields);
-  //               setInputFields(fields);
-  //             }
-  //           }
-  //         })
-  //         .catch((error) => {});
-  //     }
-  //   }, [selectedPlanData, selectedPlan]);
   // Select Plan
   const selectPlan = (id) => {
     let valAsNum = parseInt(id);
@@ -459,31 +437,47 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                   value={selectedDate}
                   onChange={(date) => handleDateChange(date)}
                   minDate={new Date()}
-                  format="MM/dd/yyyy"
+                  format="dd/MM/yyyy"
                   // inputVariant="outlined"
                 />
               </GridItem>
             </Grid>
-            <Grid container md={12} style={{ marginTop: "3em" }}>
+            <Grid
+              container
+              md={12}
+              style={{ marginTop: "3em", height: "15em" }}
+            >
               <GridItem style={{ display: "flex", marginTop: "1em" }} md={1}>
                 <span> الوقت</span>
               </GridItem>
               <GridItem md={2}>
-                <TimePicker
-                  clearable
-                  label="من"
-                  value={startTime}
-                  onChange={handleStartTime}
+                <InputLabel id="demo-simple-select-label">من</InputLabel>
+                <RSelect
+                  style={{ zIndex: 999 }}
+                  defaultValue={startTime}
+                  placeholder={"اختيار الوقت"}
+                  isSearchable={true}
+                  options={times}
+                  onChange={(e) => {
+                    handleStartTime(e);
+                  }}
+                  getOptionLabel={(option) => option.label}
+                  getOptionValue={(option) => option.value}
                 />
               </GridItem>
               <GridItem md={2}>
-                <TimePicker
-                  showTodayButton
-                  todayLabel="now"
-                  label="إلى"
-                  value={endTime}
-                  minutesStep={5}
-                  onChange={handleEndTime}
+                <InputLabel id="demo-simple-select-label">إلى</InputLabel>
+                <RSelect
+                  style={{ zIndex: 999 }}
+                  defaultValue={endTime}
+                  placeholder={"اختيار الوقت"}
+                  isSearchable={true}
+                  options={times}
+                  onChange={(e) => {
+                    handleEndTime(e);
+                  }}
+                  getOptionLabel={(option) => option.label}
+                  getOptionValue={(option) => option.value}
                 />
               </GridItem>
               <GridItem md={1}></GridItem>

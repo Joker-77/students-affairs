@@ -1,0 +1,36 @@
+export class DateHelper {
+  static getDay(day: number) {
+    return days[day];
+  }
+
+  static getQuarterHourTimes() {
+    var quarterHours = ["00", "15", "30", "45"];
+    var times = [];
+    for (var i = 0; i < 24; i++) {
+      for (var j = 0; j < 4; j++) {
+        if (i < 10) {
+          times.push({
+            label: "0" + i + ":" + quarterHours[j],
+            value: "0" + i + ":" + quarterHours[j],
+          });
+        } else
+          times.push({
+            label: i + ":" + quarterHours[j],
+            value: i + ":" + quarterHours[j],
+          });
+      }
+    }
+    return times;
+  }
+
+  static getTimeOfDay() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    // add a zero in front of numbers<10
+    m = m < 10 ? `0${m}` : m;
+    h = h < 10 ? `0${h}` : h;
+    return h + ":" + m;
+  }
+}
