@@ -308,6 +308,10 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
       field: "program_id",
     },
     {
+      title: translate("Speciality"),
+      field: "year.speciality.ar_name",
+    },
+    {
       title: translate("Course Code"),
       field: "edu_course.course.code",
     },
@@ -319,14 +323,27 @@ const PlanCourses: React.FC<IPlanCoursesProps> = ({
       title: translate("Year"),
       field: "year.ar_name",
     },
-    {
-      title: translate("Speciality"),
-      field: "year.speciality.ar_name",
-    },
+
     {
       title: translate("Semester"),
       field: "semester",
       lookup: { 1: "الأول", 2: "الثاني" },
+    },
+    {
+      title: "عدد ساعات النظري",
+      field: "edu_course.course.current_description.hours[0].hours",
+    },
+    {
+      title: "عدد ساعات العملي",
+      field: "edu_course.course.current_description.hours[1].hours",
+    },
+    {
+      title: "عدد ساعات نظري/عملي",
+      field: "edu_course.course.current_description.hours[2].hours",
+    },
+    {
+      title: "وحدات التعلم",
+      field: "edu_course.course.current_description.credit",
     },
   ];
 
