@@ -89,4 +89,20 @@ export default class StudentsImportService {
         throw error;
       });
   }
+
+  static async getStudents(yearId, eduYearId): Promise<ApiResponse> {
+    const listUrl = `/student?year_id=${yearId}&edu_year_id=${eduYearId}`;
+    return await apiConnector
+      .get(listUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        console.log("Api Error:", error);
+        throw error;
+      });
+  }
 }

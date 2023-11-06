@@ -92,6 +92,7 @@ export default function ActionTable(props) {
 
   return (
     <MaterialTable
+      style={{ width: "100%", zIndex: "0" }}
       icons={tableIcons}
       title={props.Title}
       columns={props.Columns.map((column) => {

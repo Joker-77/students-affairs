@@ -243,19 +243,6 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
-            {/* <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={program}
-              label="programs"
-              onChange={(e) => changeProgram(e.target.value)}
-            >
-              {programs?.map((program) => (
-                <MenuItem key={program.id} value={program.id}>
-                  {program.name}
-                </MenuItem>
-              ))}
-            </Select> */}
           </FormControl>
         </GridItem>
         <GridItem md={2}>
@@ -274,19 +261,6 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
               getOptionLabel={(option) => option.ar_name}
               getOptionValue={(option) => option.id}
             />
-            {/* <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={course}
-              label="courses"
-              onChange={(e) => setCourse(e.target.value)}
-            >
-              {courses.map((course) => (
-                <MenuItem key={course.id} value={course.id}>
-                  {course.ar_name}
-                </MenuItem>
-              ))}
-            </Select> */}
           </FormControl>
         </GridItem>
         <GridItem md={2}>
@@ -323,22 +297,6 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
               getOptionLabel={(option) => option.ar_name}
               getOptionValue={(option) => option.id}
             />
-            {/* <Select
-              disabled={loadSpecYear}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={specYear}
-              label="specYears"
-              onChange={(e) => {
-                setSpecYear(e.target.value);
-              }}
-            >
-              {specYears.map((spYear) => (
-                <MenuItem key={spYear.id} value={spYear.id}>
-                  {spYear.ar_name}
-                </MenuItem>
-              ))}
-            </Select> */}
           </FormControl>
         </GridItem>
         <GridItem md={2}>
@@ -354,19 +312,6 @@ const SpcecifyCourses: React.FC<ISpecifyCoursesProps> = () => {
               getOptionLabel={(option) => option.value}
               getOptionValue={(option) => option.id}
             />
-            {/* <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={semester}
-              label="speciality"
-              onChange={(e) => setSemester(e.target.value)}
-            >
-              {semesters.map((sem) => (
-                <MenuItem key={sem.id} value={sem.id}>
-                  {sem.value}
-                </MenuItem>
-              ))}
-            </Select> */}
           </FormControl>
         </GridItem>
         <GridItem md={2}>

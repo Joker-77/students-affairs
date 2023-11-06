@@ -10,7 +10,8 @@ import {
   EditAttributesSharp,
 } from "@material-ui/icons";
 
-const dashboardRoutes = [{
+const dashboardRoutes = [
+  {
     path: "/dashboard",
     name: "Dashboard",
     rtlName: "لوحة التحكم",
@@ -43,6 +44,16 @@ const dashboardRoutes = [{
     name: "Specialities",
     rtlName: "الاختصاصات",
     icon: LibraryBooks,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/students/students-list",
+    name: "Students",
+    rtlName: "الطلاب",
+    path: "/admin/students/students-list",
+    name: "Students",
+    rtlName: "الطلاب",
+    icon: School,
     layout: "/students_affairs",
   },
   {
@@ -105,12 +116,12 @@ const dashboardRoutes = [{
   //   layout: "/students_affairs",
   // },
   {
-    path: '/admin/course_result',
+    path: "/admin/course_result",
     name: "CourseResult",
     rtlName: "حساب معدّل مقرر",
     icon: EditAttributesSharp,
-    layout: "/students_affairs"
-  }
+    layout: "/students_affairs",
+  },
   // {
   //   path: "/table-list",
   //   name: "Table List",
