@@ -109,8 +109,8 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
         {
           hall: 0,
           date: getFullDate(selectedDate),
-          from: getFullTime(startTime),
-          to: getFullTime(endTime),
+          from: startTime.value,
+          to: endTime.value,
           planId: 0,
           num_studs: 0,
         },
@@ -226,8 +226,8 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       return {
         hall: dd.hall,
         date: getFullDate(e),
-        from: getFullTime(startTime),
-        to: getFullTime(endTime),
+        from: startTime.value,
+        to: endTime.value,
         planId: dd.planId,
         num_studs: dd.num_studs,
       };
@@ -283,7 +283,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   // Select Plan
   const selectPlan = (id) => {
     let valAsNum = parseInt(id);
-    // setSelectedPlan(valAsNum);
+    setSelectedPlan(valAsNum);
     let _arr = selectedPlans.slice();
     if (_arr.includes(valAsNum)) {
       let index = _arr.findIndex((e) => e == valAsNum);
@@ -291,11 +291,15 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       setSelectedPlans(_arr);
       let sel =
         _arr.length > 0
-          ? plans.map((e) => {
-              if (_arr.includes(parseInt(e.id))) return e;
-            })
+          ? _arr.map(
+              (ee) =>
+                plans.filter((e) => {
+                  return ee == e.id;
+                })[0]
+            )
           : [];
       setSelectedPlanData(sel);
+      console.log(sel);
       if (sel.length > 0) {
         const sumOld = sel.reduce(
           (partialSum, a) => partialSum + a.old_students_num,
@@ -316,9 +320,12 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       setSelectedPlans(_arr);
       let sel =
         _arr.length > 0
-          ? plans.map((e) => {
-              if (_arr.includes(parseInt(e.id))) return e;
-            })
+          ? _arr.map(
+              (ee) =>
+                plans.filter((e) => {
+                  return ee == e.id;
+                })[0]
+            )
           : [];
       setSelectedPlanData(sel);
       const sumOld = sel.reduce(
@@ -391,47 +398,45 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                 </h5>
               </GridItem>
             </Grid>
-            <Grid container md={12} style={{ margin: "2em 0em" }}>
-              {plans.map((e) => (
-                <>
-                  <GridItem md={2}>
-                    <TextField
-                      variant="outlined"
-                      size="small"
-                      disabled
-                      value={e.year?.ar_name}
-                    />
-                  </GridItem>
-                  <GridItem md={2}>
-                    <TextField
-                      variant="outlined"
-                      size="small"
-                      disabled
-                      value={e.year?.speciality?.ar_name}
-                    />
-                  </GridItem>
-                  <GridItem md={2}>
-                    <TextField
-                      variant="outlined"
-                      size="small"
-                      disabled
-                      value={e.semester}
-                    />
-                  </GridItem>
-                  <GridItem md={1}>
-                    {e.new_students_num} | {e.old_students_num}
-                  </GridItem>
-                  <GridItem md={1}>
-                    <input
-                      type="checkbox"
-                      checked={selectedPlans.includes(e.id)}
-                      value={e.id}
-                      onChange={(p) => selectPlan(p.target.value)}
-                    />
-                  </GridItem>
-                </>
-              ))}
-            </Grid>
+            {plans.map((e) => (
+              <Grid container md={12} style={{ margin: "2em 0em" }}>
+                <GridItem md={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    disabled
+                    value={e.year?.ar_name}
+                  />
+                </GridItem>
+                <GridItem md={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    disabled
+                    value={e.year?.speciality?.ar_name}
+                  />
+                </GridItem>
+                <GridItem md={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    disabled
+                    value={e.semester}
+                  />
+                </GridItem>
+                <GridItem md={1}>
+                  {e.new_students_num} | {e.old_students_num}
+                </GridItem>
+                <GridItem md={1}>
+                  <input
+                    type="checkbox"
+                    checked={selectedPlans.includes(e.id)}
+                    value={e.id}
+                    onChange={(p) => selectPlan(p.target.value)}
+                  />
+                </GridItem>
+              </Grid>
+            ))}
             <Grid container md={12}>
               <GridItem md={1}>التاريخ</GridItem>
               <GridItem md={3}>
