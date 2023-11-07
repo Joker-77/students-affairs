@@ -26,7 +26,7 @@ import { useTranslation } from "../../../../Utility/Translations/useTranslation"
 import ActionTable from "../../../../components/MaterialTable/ActionTable";
 import Placeholder from "../../../../Utility/Placeholders";
 import SuiButton from "../../../../components/SuiButton";
-import { getCandidatesToPrint } from "../../../../Helpers/candidates-print.js";
+import { getStudentToPrint } from "../../../../Helpers/delay-print.js";
 
 const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
   // Programs
@@ -312,47 +312,18 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
         setDisable(false);
       });
   };
+
   const printDelay = () => {
-    if (eduYear && speciality && specYear) {
+    if (student) {
       const printWindow = window.open("", "_blank");
-      console.log(
-        eduYear,
-        speciality,
-        specYear,
-        eduYears.filter((e) => e.id == eduYear)[0].year,
-        specialities.filter((e) => e.id == speciality)[0].ar_name,
-        specYears.filter((e) => e.id == specYear)[0].ar_name
-      );
-      printWindow.document.write(
-        getCandidatesToPrint(
-          Candidates,
-          eduYears.filter((e) => e.id == eduYear)[0].year,
-          specialities.filter((e) => e.id == speciality)[0].ar_name,
-          specYears.filter((e) => e.id == spec)[0].ar_name
-        )
-      );
+      printWindow.document.write(getStudentToPrint(student, 1));
       setTimeout(() => printWindow.print(), 1000);
     }
   };
   const printAttend = () => {
-    if (eduYear && speciality && specYear) {
+    if (student) {
       const printWindow = window.open("", "_blank");
-      console.log(
-        eduYear,
-        speciality,
-        specYear,
-        eduYears.filter((e) => e.id == eduYear)[0].year,
-        specialities.filter((e) => e.id == speciality)[0].ar_name,
-        specYears.filter((e) => e.id == specYear)[0].ar_name
-      );
-      printWindow.document.write(
-        getCandidatesToPrint(
-          Candidates,
-          eduYears.filter((e) => e.id == eduYear)[0].year,
-          specialities.filter((e) => e.id == speciality)[0].ar_name,
-          specYears.filter((e) => e.id == spec)[0].ar_name
-        )
-      );
+      printWindow.document.write(getStudentToPrint(student, 2));
       setTimeout(() => printWindow.print(), 1000);
     }
   };

@@ -63,7 +63,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   const [loadExamsType, setLoadExamsType] = useState(false);
 
   const [plans, setPlans] = useState([]);
-
+  const [allNums, setAllNums] = useState(0);
   useEffect(() => {
     PlanService.GetAll()
       .then((programs) => {
@@ -171,7 +171,16 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       _course.edu_course_id,
       val.toString()
     )
-      .then((resp) => setPlans(resp.result))
+      .then((resp) => {
+        setPlans(resp.result);
+        let all = resp.result.reduce(
+          (partialSum, a) =>
+            partialSum + a.old_students_num + a.new_students_num,
+          0
+        );
+        console.log("all", all);
+        setAllNums(all);
+      })
       .catch((error) => {});
   };
   // Halls
@@ -357,15 +366,35 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       }),
     };
     console.log(payLoad);
-    ExamService.Add(payLoad)
-      .then((result) => {
-        if (result.success) {
-          toast.success("تمت إضافة الواقعة الامتحانية بنجاح");
-        }
-      })
-      .catch((error) => {
-        // toast.error(error.message);
-      });
+    let allSelected = selectedOldStds + selectedNewStds;
+    let hallsStdsNums = payLoad.halls.reduce(
+      (partialSum, a) => a.students_num,
+      0
+    );
+    if (
+      parseInt(allSelected) == parseInt(allNums) &&
+      parseInt(allSelected) == parseInt(hallsStdsNums) &&
+      parseInt(hallsStdsNums) == parseInt(allNums)
+    ) {
+      if (
+        payLoad.halls.some((e) => e.id == 0) ||
+        payLoad.halls.some((e) => e.plan_id == undefined)
+      ) {
+        toast.error("يجب اختيار قاعة ");
+      } else {
+        ExamService.Add(payLoad)
+          .then((result) => {
+            if (result.success) {
+              toast.success("تمت إضافة الواقعة الامتحانية بنجاح");
+            }
+          })
+          .catch((error) => {
+            // toast.error(error.message);
+          });
+      }
+    } else {
+      toast.error("يجب اختيار كامل الطلّاب");
+    }
   };
   const renderPlans = (plans) => {
     if (plans.length > 0) {

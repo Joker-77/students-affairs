@@ -26,19 +26,19 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
+    "/students_affairs/admin/exams/exams-list": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/css/styles.chunk.css",
+      "static/chunks/styles.js",
+      "static/chunks/pages/students_affairs/admin/exams/exams-list.js"
+    ],
     "/students_affairs/admin/students-delay/students-delay": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/css/styles.chunk.css",
       "static/chunks/styles.js",
       "static/chunks/pages/students_affairs/admin/students-delay/students-delay.js"
-    ],
-    "/students_affairs/dashboard": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/css/styles.chunk.css",
-      "static/chunks/styles.js",
-      "static/chunks/pages/students_affairs/dashboard.js"
     ]
   },
   "ampFirstPages": []
