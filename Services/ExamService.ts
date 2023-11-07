@@ -107,4 +107,41 @@ export default class ExamService {
         throw error;
       });
   }
+
+  static async getHalls(): Promise<ApiResponse> {
+    const getUrl = "/halls";
+    return await apiConnector
+      .get(getUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data.result;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  static async schedule(
+    pId,
+    eduYearId,
+    evalId,
+    yearId,
+    sem
+  ): Promise<ApiResponse> {
+    const getUrl = `/exam/schedule?program_id=${pId}&edu_year_id=${eduYearId}
+    &evaluation_method=${evalId}&year_id=${yearId}&semester=${sem}`;
+    return await apiConnector
+      .get(getUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data.result;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }

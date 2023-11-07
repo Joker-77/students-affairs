@@ -183,9 +183,6 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       })
       .catch((error) => {});
   };
-  // Halls
-  // const [halls, setHalls] = useState([]);
-  // handle add coursse to program
 
   const [selectedPlanData, setSelectedPlanData] = useState([]);
   const [selectedPlans, setSelectedPlans] = useState<number[]>([]);
@@ -205,30 +202,15 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       num_studs: 0,
     },
   ]);
-  console.log(inputFields);
-  const _halls = [
-    {
-      id: 1,
-      name: "ق1",
-      selected: false,
-    },
-    {
-      id: 2,
-      name: "ق2",
-      selected: false,
-    },
-    {
-      id: 3,
-      name: "3ق",
-      selected: false,
-    },
-    {
-      id: 4,
-      name: "4ق",
-      selected: false,
-    },
-  ];
-  const [halls, setHalls] = useState(_halls);
+  const [halls, setHalls] = useState([]);
+  useEffect(() => {
+    ExamService.getHalls()
+      .then((resp) => {
+        setHalls(resp);
+      })
+      .catch((e) => {});
+  }, []);
+
   const handleDateChange = (e) => {
     setSelectedDate(e);
     let _inptFilds = inputFields.slice().map((dd) => {
@@ -368,7 +350,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     console.log(payLoad);
     let allSelected = selectedOldStds + selectedNewStds;
     let hallsStdsNums = payLoad.halls.reduce(
-      (partialSum, a) => a.students_num,
+      (partialSum, a) => partialSum + a.students_num,
       0
     );
     if (

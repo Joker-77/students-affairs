@@ -86,6 +86,13 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
+    path: "/admin/exam-schedule/exam-schedule",
+    name: "ExamsSchedule",
+    rtlName: "برنامج الامتحان",
+    icon: Edit,
+    layout: "/students_affairs",
+  },
+  {
     path: "/admin/observers/observers-list",
     name: "Observers",
     rtlName: "المراقبون",

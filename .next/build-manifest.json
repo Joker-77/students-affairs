@@ -26,12 +26,12 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/students_affairs/admin/exams/exams-list": [
+    "/students_affairs/admin/exam-schedule/exam-schedule": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/css/styles.chunk.css",
       "static/chunks/styles.js",
-      "static/chunks/pages/students_affairs/admin/exams/exams-list.js"
+      "static/chunks/pages/students_affairs/admin/exam-schedule/exam-schedule.js"
     ],
     "/students_affairs/admin/students-delay/students-delay": [
       "static/chunks/main.js",
