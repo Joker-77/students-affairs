@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
-  "/students_affairs/admin/students/students-list": "pages/students_affairs/admin/students/students-list.js",
-  "/students_affairs/admin/exams/exams-list": "pages/students_affairs/admin/exams/exams-list.js"
+  "/students_affairs/dashboard": "pages/students_affairs/dashboard.js",
+  "/students_affairs/admin/students-delay/students-delay": "pages/students_affairs/admin/students-delay/students-delay.js"
 }
