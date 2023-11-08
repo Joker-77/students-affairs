@@ -381,6 +381,7 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
     setConfirmDelete(false);
     ExamService.delete(id)
       .then((response) => {
+        console.log("response", response);
         toast.success("تم حذف الواقعة بنجاح");
         let _data = (data as Array<any>).filter((item) => {
           return item.id != deleteId;
