@@ -1,3 +1,5 @@
+import ar from "date-fns/locale/ar-SA";
+import { format } from "date-fns";
 export class DateHelper {
   static getDay(day: number) {
     return days[day];
@@ -32,5 +34,14 @@ export class DateHelper {
     m = m < 10 ? `0${m}` : m;
     h = h < 10 ? `0${h}` : h;
     return h + ":" + m;
+  }
+
+  static getArabicDatefromDate(date) {
+    console.clear();
+    console.log(date);
+    let _date = new Date(date);
+    console.log(_date);
+    let str = format(_date, "cccc dd-LL-yyyy", { locale: ar });
+    return str;
   }
 }

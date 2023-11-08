@@ -22,6 +22,8 @@ import YearsService from "../../../../Services/SpecYearsService";
 import SpecialityService from "../../../../Services/SpecialityService";
 import { useTranslation } from "../../../../Utility/Translations/useTranslation";
 import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
+import ActionTable from "../../../../components/MaterialTable/ActionTable";
+import Placeholder from "../../../../Utility/Placeholders";
 import {
   KeyboardDatePicker,
   TimePicker,
@@ -35,6 +37,8 @@ import { Card } from "@material-ui/core";
 import SuiButton from "../../../../components/SuiButton";
 import { default as RSelect } from "react-select";
 import { DateHelper } from "./../../../../Helpers/DateHelper";
+import { getExamToPrint } from "../../../../Helpers/exam-print.js";
+
 interface IExamsListProps {}
 const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
   const { translate } = useTranslation();
@@ -193,20 +197,38 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
       });
   };
   // ------------------------
-
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [data, setData] = React.useState(null);
-
+  const tableRef = React.useRef();
+  const [disable, setDisable] = React.useState(true);
   const [semester, setSemester] = React.useState("1");
   const changeExamType = (val) => {
     setExamType(val);
   };
   const changeSemester = (val) => {
     setSemester(val);
-    ExamService.schedule(program, eduYear, examType, spec, val)
-      .then((resp) => {
-        setData(resp.result);
-      })
-      .then((e) => console.log(e));
+    setLoading(true);
+    if (program && eduYear && examType && spec && val)
+      ExamService.schedule(program, eduYear, examType, spec, val)
+        .then((resp) => {
+          let _dd = resp.map((e) => {
+            return {
+              ...e,
+              date: DateHelper.getArabicDatefromDate(e.date),
+              type: examType,
+              time: `${e.to}-${e.from}`,
+            };
+          });
+          setData(_dd);
+          console.log(_dd);
+          setDisable(false);
+          setLoading(false);
+        })
+        .then((e) => {
+          console.log(e);
+          setLoading(false);
+        });
+    else toast.error("يجب اختيار كافة المعلومات");
   };
   const semesters = [
     {
@@ -218,6 +240,79 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
       value: "2",
     },
   ];
+  let columns = [
+    {
+      title: translate("Id"),
+      field: "id",
+      hidden: true,
+    },
+    {
+      title: "اليوم والتاريخ",
+      field: "date",
+    },
+    {
+      title: "رمز المقرّر",
+      field: "course.code",
+    },
+    {
+      title: "نوع الامتحان",
+      field: "type",
+    },
+    {
+      title: "اسم المقرّر",
+      field: "course.ar_name",
+    },
+    {
+      title: "التوقيت",
+      field: "time",
+    },
+  ];
+  const renderExam = () => {
+    if (loading) return <Placeholder loading={loading} />;
+    if (data != null && data.length > 0) {
+      let options = {
+        // exportAllData: true,
+        // exportButton: true,
+        actionsColumnIndex: -1,
+        headerStyle: {
+          backgroundColor: "#01579b",
+          color: "#FFF",
+          fontWeight: "bold",
+        },
+        filtering: false,
+        paging: true,
+        pageSize: 10,
+        maxBodyHeight: "500px",
+        search: false,
+        tableLayout: "auto",
+      };
+      return (
+        <div ref={tableRef}>
+          <ActionTable
+            Title={"برنامج الامتحان"}
+            Columns={columns}
+            Data={data.map((item) => {
+              return {
+                ...item,
+              };
+            })}
+            Options={options}
+          />
+        </div>
+      );
+    } else return <Placeholder loading={false} />;
+  };
+  const print = () => {
+    if (data) {
+      const printWindow = window.open("", "_blank");
+      let _eduYear = eduYears.filter((e) => e.id == eduYear)[0].year;
+      let _spec = specYears.filter((e) => e.id == spec)[0].ar_name;
+      printWindow.document.write(
+        getExamToPrint(data, semester, _eduYear, _spec)
+      );
+      setTimeout(() => printWindow.print(), 1000);
+    }
+  };
   return (
     <GridContainer md={12}>
       <Grid container md={12} style={{ margin: "2em 0em" }}>
@@ -309,6 +404,17 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
             />
           </FormControl>
         </GridItem>
+        <GridItem md={3}>
+          <SuiButton
+            style={{ minWidth: 140, marginTop: "1.5em" }}
+            color={"primary"}
+            onClick={print}
+            disabled={disable}
+          >
+            طباعة البرنامج
+          </SuiButton>
+        </GridItem>
+        <GridItem md={12}>{renderExam()}</GridItem>
       </Grid>
     </GridContainer>
   );
