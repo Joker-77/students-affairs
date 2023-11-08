@@ -317,14 +317,14 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
     if (student) {
       const printWindow = window.open("", "_blank");
       printWindow.document.write(getStudentToPrint(student, 1));
-      setTimeout(() => printWindow.print(), 1000);
+      setTimeout(() => printWindow.print(), 2500);
     }
   };
   const printAttend = () => {
     if (student) {
       const printWindow = window.open("", "_blank");
       printWindow.document.write(getStudentToPrint(student, 2));
-      setTimeout(() => printWindow.print(), 1000);
+      setTimeout(() => printWindow.print(), 2500);
     }
   };
   const renderCandidates = () => {

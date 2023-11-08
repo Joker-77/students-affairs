@@ -310,7 +310,7 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
       printWindow.document.write(
         getExamToPrint(data, semester, _eduYear, _spec)
       );
-      setTimeout(() => printWindow.print(), 1000);
+      setTimeout(() => printWindow.print(), 2500);
     }
   };
   return (

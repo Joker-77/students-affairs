@@ -300,7 +300,7 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
           specYears.filter((e) => e.id == spec)[0].ar_name
         )
       );
-      setTimeout(() => printWindow.print(), 1000);
+      setTimeout(() => printWindow.print(), 2500);
     }
   };
   const renderCandidates = () => {
