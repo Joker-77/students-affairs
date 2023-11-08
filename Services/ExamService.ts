@@ -144,4 +144,18 @@ export default class ExamService {
         throw error;
       });
   }
+  static async delete(_id): promise<ApiResponse> {
+    return await apiConnector
+      .post("/exam/delete", {
+        id: parseInt(_id),
+      })
+      .then((response) => {
+        if (response?.data?.success) {
+          return response?.data;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }

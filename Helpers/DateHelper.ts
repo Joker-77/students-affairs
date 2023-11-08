@@ -37,10 +37,7 @@ export class DateHelper {
   }
 
   static getArabicDatefromDate(date) {
-    console.clear();
-    console.log(date);
     let _date = new Date(date);
-    console.log(_date);
     let str = format(_date, "cccc dd-LL-yyyy", { locale: ar });
     return str;
   }

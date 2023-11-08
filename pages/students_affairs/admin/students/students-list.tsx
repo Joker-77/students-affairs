@@ -7,6 +7,8 @@ import SpecialityService from "../../../../Services/SpecialityService";
 import StudentsImportService from "../../../../Services/StudentsImportService";
 import { default as RSelect } from "react-select";
 import React, { useEffect, useState } from "react";
+import styles from "../../../../assets/jss/nextjs-material-dashboard/views/rtlStyle.js";
+import { Close, Description } from "@material-ui/icons";
 import {
   Button,
   FormControl,
@@ -18,6 +20,8 @@ import {
   makeStyles,
   Input,
   TextField,
+  AccordionDetails,
+  Accordion,
 } from "@material-ui/core";
 import GridItem from "../../../../components/Grid/GridItem";
 import { ExportToCsv } from "export-to-csv";
@@ -27,6 +31,7 @@ import ActionTable from "../../../../components/MaterialTable/ActionTable";
 import Placeholder from "../../../../Utility/Placeholders";
 import SuiButton from "../../../../components/SuiButton";
 import { getCandidatesToPrint } from "../../../../Helpers/candidates-print.js";
+import _ from "lodash";
 
 const StudentsList: React.FC<ITeachersListProps> = ({}) => {
   // Programs
@@ -53,6 +58,8 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
   const [loading, setLoading] = React.useState(false);
   const { translate } = useTranslation();
   const [Candidates, setCandidates] = React.useState<ICandidateModel[]>(null);
+  const useStyles = makeStyles(styles);
+  const classes = useStyles();
 
   useEffect(() => {
     PlanService.GetAll()
@@ -253,14 +260,28 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
   const handleExportData = () => {
     setShowExportColumns(!showExportColumns);
   };
+  const handleCheck = (event) => {
+    var updatedList = [...checked];
+    if (event.target.checked) {
+      updatedList = [...checked, event.target.value];
+    } else {
+      updatedList.splice(checked.indexOf(event.target.value), 1);
+    }
+    setChecked(updatedList);
+    setSelectedColumns(
+      columns.filter((item) => {
+        return updatedList.includes(item.field);
+      })
+    );
+  };
   const csvOptions = {
     fieldSeparator: ";",
     quoteStrings: '"',
     decimalSeparator: ".",
     showLabels: true,
     useBom: true,
-    useKeysAsHeaders: false,
-    headers: selectedColumns.map((c) => c.title),
+    useKeysAsHeaders: true,
+    // headers: selectedColumns.map((c) => c.title),
   };
   const csvExporter = new ExportToCsv(csvOptions);
   const generateExcel = () => {
@@ -268,13 +289,22 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
       Candidates.map((ct) => {
         let object = {};
         selectedColumns.forEach((item, index) => {
-          if (item.field == "full_name")
+          if (item.field == "registeration_year_name") {
+            let val =
+              item.registeration_year == new Date().getFullYear()
+                ? "الحالي"
+                : "السابق";
+            _.set(object, item.title, val);
+          } else if (item.field == "external_value") {
+            let val = item.external ? translate("Yes") : translate("No");
+            _.set(object, item.title, val);
+          } else if (item.field == "full_name")
             _.set(
               object,
-              `col ${index}`,
+              "الاسم الكامل",
               `${ct.person?.first_name} ${ct.father?.first_name} ${ct.person?.last_name}`
             );
-          else _.set(object, `col ${index}`, _.get(ct, item.field) ?? "");
+          else _.set(object, item.title, _.get(ct, item.field) ?? "");
         });
         console.log(object);
         return object;
@@ -407,7 +437,7 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
             />
           </FormControl>
         </GridItem>
-        <GridItem md={2}>
+        <GridItem md={2} style={{ display: "flex", justifyContent: "center" }}>
           <SuiButton
             style={{ minWidth: 140, marginTop: "1.5em" }}
             color={"primary"}
@@ -416,7 +446,82 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
             طباعة
           </SuiButton>
         </GridItem>
+        <GridItem md={2}>
+          <SuiButton
+            color={"primary"}
+            style={{ minWidth: 140, marginTop: "1.5em" }}
+            onClick={handleExportData}
+          >
+            تصدير
+          </SuiButton>
+        </GridItem>
       </Grid>
+
+      {showExportColumns && (
+        <GridItem style={{ marginBottom: "1em" }}>
+          <Accordion>
+            <AccordionDetails>
+              <GridItem container>
+                <GridItem
+                  md={12}
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Typography
+                    style={{
+                      backgroundColor: "lightgray",
+                      boxShadow:
+                        "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)",
+                      padding: "0em 1.2em",
+                      margin: "0em 0em .5em 0em",
+                    }}
+                  >
+                    {translate("Select Columns")}
+                  </Typography>
+                </GridItem>
+                <GridItem md={12}>
+                  <GridItem
+                    className="list-container"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {columns
+                      // .filter((item) => !item.hidden)
+                      .map((item, index) => (
+                        <GridItem key={index}>
+                          <input
+                            value={item.field}
+                            type="checkbox"
+                            onChange={handleCheck}
+                          />
+                          <span>{item.title}</span>
+                        </GridItem>
+                      ))}
+                  </GridItem>
+                  <GridItem
+                    md={12}
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Button
+                      style={{ margin: "0px 5px" }}
+                      disabled={false}
+                      variant="contained"
+                      className={classes.successText}
+                      onClick={generateExcel}
+                    >
+                      <span style={{ padding: "0px 0px 0px 10px" }}>
+                        {translate("Export")}
+                      </span>
+                      <Description />
+                    </Button>
+                  </GridItem>
+                </GridItem>
+              </GridItem>
+            </AccordionDetails>
+          </Accordion>
+        </GridItem>
+      )}
       <Grid
         container
         style={{ display: "flex", justifyContent: "center" }}

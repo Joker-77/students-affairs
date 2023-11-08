@@ -13,7 +13,15 @@ import {
   makeStyles,
   Input,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Box,
+  IconButton,
 } from "@material-ui/core";
+import { Close, Description } from "@material-ui/icons";
 import GridItem from "../../../../components/Grid/GridItem";
 import PlanService from "../../../../Services/PlanService";
 import EduYearService from "../../../../Services/EduYearService";
@@ -111,8 +119,6 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
                 type: value,
               })
                 .then((response) => {
-                  console.clear();
-                  console.log(response);
                   let result = response?.result;
                 })
                 .catch((error) => {});
@@ -172,8 +178,6 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
     YearsService.GetWhereSpeciality(e)
       .then((response) => {
         if (response.result && response.result.length > 0) {
-          console.clear();
-          console.log(response.result);
           let _data: ISpecYear[] = response.result.map((e) => {
             return {
               id: e.id,
@@ -202,6 +206,46 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
   const tableRef = React.useRef();
   const [disable, setDisable] = React.useState(true);
   const [semester, setSemester] = React.useState("1");
+  const [deleteId, setDeleteId] = React.useState(null);
+  const [confirmDelete, setConfirmDelete] = React.useState(false);
+
+  const handleConfirmOpen = (data) => {
+    setDeleteId(data.id);
+    setConfirmDelete(true);
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setDeleteId(null);
+    setConfirmDelete(false);
+  };
+
+  const ConfirmDialog = ({ id, show, handleClose, handleDeleteExam }) => (
+    <div>
+      <Dialog open={show} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          <Typography>{`هل تريد تأكيد حذف الواقعة`}</Typography>
+        </DialogTitle>
+        <Box position="absolute" top={0} right={0}>
+          <IconButton onClick={handleClose}>
+            <Close />
+          </IconButton>
+        </Box>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary" variant="contained">
+            {translate("Cancel")}
+          </Button>
+          <Button
+            onClick={() => handleDeleteExam(id)}
+            color="primary"
+            variant="contained"
+          >
+            {translate("Confirm")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+
   const changeExamType = (val) => {
     setExamType(val);
   };
@@ -286,6 +330,24 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
         search: false,
         tableLayout: "auto",
       };
+      let actions = [
+        {
+          icon: () => (
+            <SuiButton
+              style={{
+                minWidth: 80,
+                color: "#dc3545",
+                backgroundColor: "transparent",
+                border: "1px solid #dc3545",
+              }}
+              color={"danger"}
+            >
+              {translate("Delete")}
+            </SuiButton>
+          ),
+          onClick: (evt, data) => handleConfirmOpen(data),
+        },
+      ];
       return (
         <div ref={tableRef}>
           <ActionTable
@@ -297,6 +359,7 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
               };
             })}
             Options={options}
+            Actions={actions}
           />
         </div>
       );
@@ -312,6 +375,23 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
       );
       setTimeout(() => printWindow.print(), 2500);
     }
+  };
+  const handleDeleteExam = (id) => {
+    setLoading(true);
+    setConfirmDelete(false);
+    ExamService.delete(id)
+      .then((response) => {
+        toast.success("تم حذف الواقعة بنجاح");
+        let _data = (data as Array<any>).filter((item) => {
+          return item.id != deleteId;
+        });
+        setData(_data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
   };
   return (
     <GridContainer md={12}>
@@ -416,6 +496,13 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
         </GridItem>
         <GridItem md={12}>{renderExam()}</GridItem>
       </Grid>
+      <ConfirmDialog
+        key={"Confirm Delete Exam"}
+        id={deleteId}
+        show={confirmDelete}
+        handleClose={handleCloseConfirmDialog}
+        handleDeleteExam={handleDeleteExam}
+      />
     </GridContainer>
   );
 };

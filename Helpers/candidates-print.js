@@ -60,26 +60,21 @@ export const getCandidatesToPrint = (candidates, eduYear, spec, specYear) => {
                   <tr>
                     <td>مسلسل</td>
                     <td>الرقم الذاتي</td>
-                    <td>الاسم والشهري</td>
+                    <td>الاسم والشهرة</td>
                     <td colspan="7"></td>
                   </tr>
               </thead>
               <tbody> 
                   ${candidates.map((e, index) => {
                     return `<tr> 
-                    <td>${index + 1}</td>
-                    <td>${e.personal_number}</td>
-                    <td> 
-                    ${e.person?.first_name} ${e.father?.first_name} ${
+                      <td>${index + 1}</td>
+                      <td>${e.personal_number}</td>
+                      <td> 
+                      ${e.person?.first_name} ${e.father?.first_name} ${
                       e.person?.last_name
                     }
-                    </td>
-                    <td colspan="7"></td>
-                    <td colspan="7"></td>
-                    <td colspan="7"></td>
-                    <td colspan="7"></td>
-                    <td colspan="7"></td>
-                    <td colspan="7"></td>
+                      </td>
+                      <td colspan="7"></td>
                     </tr>`;
                   })}
               </tbody>
@@ -88,6 +83,5 @@ export const getCandidatesToPrint = (candidates, eduYear, spec, specYear) => {
         </div>
         </body>
         </html>
-
     `;
 };
