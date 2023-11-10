@@ -1,4 +1,4 @@
-import { Form, Formik } from "formik";
+import { Form, Formik, Field } from "formik";
 import React, { useState, useEffect } from "react";
 import * as yup from "yup";
 import Admin from "../../../../../layouts/Admin";
@@ -11,6 +11,7 @@ import {
   TextField,
   TextareaAutosize,
   Typography,
+  InputLabel,
 } from "@material-ui/core";
 import GridItem from "../../../../../components/Grid/GridItem";
 import { useRouter } from "next/router";
@@ -21,6 +22,7 @@ import { ArrowBack, Close } from "@material-ui/icons";
 import SuiButton from "../../../../../components/SuiButton";
 import TeacherService from "../../../../../Services/TeacherService";
 import { AssignedTeachers } from "../../../../../components/AssignedTeachers/AssignedTeachers";
+import { default as RSelect } from "react-select";
 
 interface IAssignTeacherProps {
   title: string;
@@ -51,28 +53,28 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
       .positive(translate("You must select a teacher"))
       .required(translate("Field is required")),
     theoretical_hours: yup
-      .number(translate("Theoretical Hours"))
-      .positive(translate("Field must be greater than 0"))
+      .number("Theoretical Hours")
+      .min(0, translate("Field must be greater than 0"))
       .required(translate("Field is required")),
     practical_hours: yup
       .number("Practical Hours")
-      .positive(translate("Field must be greater than 0"))
+      .min(0, translate("Field must be greater than 0"))
       .required(translate("Field is required")),
     mixed_hours: yup
       .number("Practical Hours")
-      .positive(translate("Field must be greater than 0"))
+      .min(0, translate("Field must be greater than 0"))
       .required(translate("Field is required")),
     theoretical_classes: yup
       .number(translate("Theoretical Classes"))
-      .positive(translate("Field must be greater than 0"))
+      .min(0, translate("Field must be greater than 0"))
       .required(translate("Field is required")),
     practical_classes: yup
       .number("Practical Classes")
-      .positive(translate("Field must be greater than 0"))
+      .min(0, translate("Field must be greater than 0"))
       .required(translate("Field is required")),
     mixed_classes: yup
       .number("Mixed Classes")
-      .positive(translate("Field must be greater than 0"))
+      .min(0, translate("Field must be greater than 0"))
       .required(translate("Field is required")),
     notes: yup.string().nullable(),
   });
@@ -187,7 +189,39 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                     >
                       <Grid item xs={3} md={3}>
                         <GridItem>
-                          <TextField
+                          <InputLabel id="demo-simple-select-label">
+                            المدرّس
+                          </InputLabel>
+                          <Field name="teacher_id">
+                            {({
+                              field, // { name, value, onChange, onBlur }
+                              form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+                              meta,
+                            }) => (
+                              <RSelect
+                                defaultValue={values.teacher_id}
+                                placeholder={"اختيار المدرّس"}
+                                isSearchable={true}
+                                options={teachers}
+                                id="teacher_id"
+                                name="teacher_id"
+                                error={Boolean(
+                                  touched.teacher_id && errors.teacher_id
+                                )}
+                                helperText={
+                                  touched.teacher_id && errors.teacher_id
+                                }
+                                onChange={(option) => {
+                                  setFieldValue("teacher_id", option.id);
+                                }}
+                                getOptionLabel={(option) => {
+                                  return `${option.person?.first_name} ${option.person?.last_name}`;
+                                }}
+                                getOptionValue={(option) => option.id}
+                              />
+                            )}
+                          </Field>
+                          {/* <TextField
                             value={values.teacher_id || -1}
                             variant="outlined"
                             size="small"
@@ -210,18 +244,22 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                                 {`${t.person?.first_name} ${t.person?.last_name}`}
                               </MenuItem>
                             ))}
-                          </TextField>
+                          </TextField> */}
                         </GridItem>
                       </Grid>
                     </Grid>
-                    <Grid item xs={3} md={3}>
+                    <Grid
+                      item
+                      xs={3}
+                      md={3}
+                      style={{ zIndex: "0", position: "relative" }}
+                    >
                       <GridItem>
                         <TextField
                           value={values.theoretical_hours || ""}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
-                          type="number"
                           id="theoretical_hours"
                           name="theoretical_hours"
                           onBlur={handleBlur}
@@ -239,14 +277,18 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                         />
                       </GridItem>
                     </Grid>
-                    <Grid item xs={3} md={3}>
+                    <Grid
+                      item
+                      xs={3}
+                      md={3}
+                      style={{ zIndex: "0", position: "relative" }}
+                    >
                       <GridItem>
                         <TextField
                           value={values.practical_hours || ""}
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
-                          type="number"
                           id="practical_hours"
                           name="practical_hours"
                           onBlur={handleBlur}
@@ -262,14 +304,18 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                         />
                       </GridItem>
                     </Grid>
-                    <Grid item xs={3} md={3}>
+                    <Grid
+                      item
+                      xs={3}
+                      md={3}
+                      style={{ zIndex: "0", position: "relative" }}
+                    >
                       <GridItem>
                         <TextField
                           onChange={handleChange}
                           value={values.mixed_hours || ""}
                           variant="outlined"
                           size="small"
-                          type="number"
                           id="mixed_hours"
                           name="mixed_hours"
                           onBlur={handleBlur}
@@ -303,14 +349,18 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                         {JSON.stringify(errors)}
                       </Grid>
                     </Grid> */}
-                    <Grid item xs={3} md={3}>
+                    <Grid
+                      item
+                      xs={3}
+                      md={3}
+                      style={{ zIndex: "0", position: "relative" }}
+                    >
                       <GridItem>
                         <TextField
                           onChange={handleChange}
                           value={values.theoretical_classes || ""}
                           variant="outlined"
                           size="small"
-                          type="number"
                           id="theoretical_classes"
                           name="theoretical_classes"
                           onBlur={handleBlur}
@@ -334,7 +384,6 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
-                          type="number"
                           id="practical_classes"
                           name="practical_classes"
                           value={values.practical_classes || ""}
@@ -359,7 +408,6 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                           onChange={handleChange}
                           variant="outlined"
                           size="small"
-                          type="number"
                           id="mixed_classes"
                           name="mixed_classes"
                           value={values.mixed_classes || ""}

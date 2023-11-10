@@ -392,7 +392,7 @@
   "Back": "عودة",
   "Field is required": "هذا الحقل مطلوب",
   "Field must be less than 100": "هذا الحقل يجب أن يكون رقم أصغر من 100",
-  "Field must be greater than 0": "هذا الحقل يجب أن يكون رقم أكبر من 0",
+  "Field must be greater than 0": "هذا الحقل يجب أن يكون رقم أكبر أو يساوي 0",
   "Back To Previous Page": "العودة للصفحة السابقة",
   "Percentage should be 100%, but you have:": "يجب أن يكون مجموع طرائق تقييم المقرّر هو 100 بينما المجموع الحالي هو:"
 }
