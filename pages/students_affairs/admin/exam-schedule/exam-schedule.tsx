@@ -373,7 +373,9 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
       printWindow.document.write(
         getExamToPrint(data, semester, _eduYear, _spec)
       );
-      setTimeout(() => printWindow.print(), 2500);
+      printWindow.document.close();
+      printWindow.focus();
+      // setTimeout(() => printWindow.print(), 2500);
     }
   };
   const handleDeleteExam = (id) => {

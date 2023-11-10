@@ -144,6 +144,25 @@ export default class ExamService {
         throw error;
       });
   }
+  static async teacherAssignReport(
+    eduYearId,
+    start_date,
+    end_date
+  ): Promise<ApiResponse> {
+    const getUrl = `/exam/teacher-assign?edu_year_id=${eduYearId}
+    &start_date=${start_date}&end_date=${end_date}`;
+    return await apiConnector
+      .get(getUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data.result;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
   static async delete(_id): promise<ApiResponse> {
     return await apiConnector
       .post("/exam/delete", {

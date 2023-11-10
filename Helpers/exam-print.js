@@ -71,6 +71,11 @@ export const getExamToPrint = (data, semester, eduYear, spec) => {
           </table>
           </div>
         </div>
+        <script> 
+              $(document).ready(function() {
+                  window.print();
+              })
+        </script>
         </body>
         </html>
 

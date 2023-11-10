@@ -36,6 +36,11 @@ export class DateHelper {
     return h + ":" + m;
   }
 
+  static getTimeOfSpecificDate(e) {
+    return `${e.split("T")[1].split(".")[0].split(":")[0]}:${
+      e.split("T")[1].split(".")[0].split(":")[1]
+    }`;
+  }
   static getArabicDatefromDate(date) {
     let _date = new Date(date);
     let str = format(_date, "cccc dd-LL-yyyy", { locale: ar });

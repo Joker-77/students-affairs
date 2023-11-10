@@ -86,6 +86,13 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
+    path: "/admin/teacher-assign/teacher-assign",
+    name: "TeacherAssign",
+    rtlName: "تكاليف المدرسين",
+    icon: Edit,
+    layout: "/students_affairs",
+  },
+  {
     path: "/admin/exam-schedule/exam-schedule",
     name: "ExamsSchedule",
     rtlName: "برنامج الامتحان",
