@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Admin from "layouts/Admin.js";
-import GridContainer from "../../../../components/Grid/GridContainer";
+import GridContainer from "../../../../../components/Grid/GridContainer";
 import { Add, ArrowBack, Backspace, ZoomIn } from "@material-ui/icons";
 import {
   Button,
@@ -22,16 +22,16 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { Close, Description } from "@material-ui/icons";
-import GridItem from "../../../../components/Grid/GridItem";
-import PlanService from "../../../../Services/PlanService";
-import EduYearService from "../../../../Services/EduYearService";
-import ExamService from "../../../../Services/ExamService";
-import YearsService from "../../../../Services/SpecYearsService";
-import SpecialityService from "../../../../Services/SpecialityService";
-import { useTranslation } from "../../../../Utility/Translations/useTranslation";
+import GridItem from "../../../../../components/Grid/GridItem";
+import PlanService from "../../../../../Services/PlanService";
+import EduYearService from "../../../../../Services/EduYearService";
+import ExamService from "../../../../../Services/ExamService";
+import YearsService from "../../../../../Services/SpecYearsService";
+import SpecialityService from "../../../../../Services/SpecialityService";
+import { useTranslation } from "../../../../../Utility/Translations/useTranslation";
 import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
-import ActionTable from "../../../../components/MaterialTable/ActionTable";
-import Placeholder from "../../../../Utility/Placeholders";
+import ActionTable from "../../../../../components/MaterialTable/ActionTable";
+import Placeholder from "../../../../../Utility/Placeholders";
 import {
   KeyboardDatePicker,
   TimePicker,
@@ -42,10 +42,10 @@ import { arSA } from "date-fns/locale";
 import { toast } from "react-toastify";
 import "./exams-list-style.css";
 import { Card } from "@material-ui/core";
-import SuiButton from "../../../../components/SuiButton";
+import SuiButton from "../../../../../components/SuiButton";
 import { default as RSelect } from "react-select";
-import { DateHelper } from "./../../../../Helpers/DateHelper";
-import { getTeacherAssign } from "../../../../Helpers/teacher-assign-print";
+import { DateHelper } from "./../../../../../Helpers/DateHelper";
+import { getTeacherAssign } from "../../../../../Helpers/teacher-assign-print";
 interface IExamsListProps {}
 const TeacherAssign: React.FC<IExamsListProps> = ({}) => {
   const { translate } = useTranslation();

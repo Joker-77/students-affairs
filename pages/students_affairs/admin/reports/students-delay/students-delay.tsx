@@ -1,10 +1,10 @@
-import Admin from "./../../../../layouts/Admin";
-import GridContainer from "./../../../../components/Grid/GridContainer";
-import EduYearService from "../../../../Services/EduYearService";
-import PlanService from "../../../../Services/PlanService";
-import YearsService from "../../../../Services/SpecYearsService";
-import SpecialityService from "../../../../Services/SpecialityService";
-import StudentsImportService from "../../../../Services/StudentsImportService";
+import Admin from "./../../../../../layouts/Admin";
+import GridContainer from "./../../../../../components/Grid/GridContainer";
+import EduYearService from "../../../../../Services/EduYearService";
+import PlanService from "../../../../../Services/PlanService";
+import YearsService from "../../../../../Services/SpecYearsService";
+import SpecialityService from "../../../../../Services/SpecialityService";
+import StudentsImportService from "../../../../../Services/StudentsImportService";
 import { default as RSelect } from "react-select";
 import React, { useEffect, useState } from "react";
 import {
@@ -19,14 +19,14 @@ import {
   Input,
   TextField,
 } from "@material-ui/core";
-import GridItem from "../../../../components/Grid/GridItem";
+import GridItem from "../../../../../components/Grid/GridItem";
 import { ExportToCsv } from "export-to-csv";
-import { ICandidateModel } from "../../../../Models/ApiResponse/CandidateModel";
-import { useTranslation } from "../../../../Utility/Translations/useTranslation";
-import ActionTable from "../../../../components/MaterialTable/ActionTable";
-import Placeholder from "../../../../Utility/Placeholders";
-import SuiButton from "../../../../components/SuiButton";
-import { getStudentToPrint } from "../../../../Helpers/delay-print.js";
+import { ICandidateModel } from "../../../../../Models/ApiResponse/CandidateModel";
+import { useTranslation } from "../../../../../Utility/Translations/useTranslation";
+import ActionTable from "../../../../../components/MaterialTable/ActionTable";
+import Placeholder from "../../../../../Utility/Placeholders";
+import SuiButton from "../../../../../components/SuiButton";
+import { getStudentToPrint } from "../../../../../Helpers/delay-print.js";
 
 const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
   // Programs

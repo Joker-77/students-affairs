@@ -36,6 +36,11 @@ export class DateHelper {
     return h + ":" + m;
   }
 
+  static getCurrentDate() {
+    let str = format(new Date(), "cccc dd-LL-yyyy", { locale: ar });
+    return str;
+  }
+
   static getTimeOfSpecificDate(e) {
     return `${e.split("T")[1].split(".")[0].split(":")[0]}:${
       e.split("T")[1].split(".")[0].split(":")[1]

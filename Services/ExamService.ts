@@ -163,6 +163,37 @@ export default class ExamService {
         throw error;
       });
   }
+
+  static async DepartmentTeacherAssign(dept, st, en): Promise<ApiResponse> {
+    const getUrl = `/exam/department-teacher-assign?department=${dept}&start_date=${st}&end_date=${en}`;
+    return await apiConnector
+      .get(getUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data.result;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  static async DepartmentObservAssign(dept, st, en): Promise<ApiResponse> {
+    const getUrl = `/exam/activity-observation-assign?department=${dept}&start_date=${st}&end_date=${en}`;
+    return await apiConnector
+      .get(getUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data.result;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
   static async delete(_id): promise<ApiResponse> {
     return await apiConnector
       .post("/exam/delete", {

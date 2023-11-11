@@ -55,7 +55,7 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
-    path: "/admin/students-delay/students-delay",
+    path: "/admin/reports/students-delay/students-delay",
     name: "StudentsDelay",
     rtlName: "وثيقة دوام - تأجيل",
     icon: School,
@@ -86,14 +86,21 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
-    path: "/admin/teacher-assign/teacher-assign",
+    path: "/admin/reports/teacher-assign/teacher-assign",
     name: "TeacherAssign",
     rtlName: "تكاليف المدرسين",
     icon: Edit,
     layout: "/students_affairs",
   },
   {
-    path: "/admin/exam-schedule/exam-schedule",
+    path: "/admin/reports/exam-departments-assigns/exam-departments-assigns",
+    name: "DeptAssign",
+    rtlName: "تكاليف الأقسام",
+    icon: Edit,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/reports/exam-schedule/exam-schedule",
     name: "ExamsSchedule",
     rtlName: "برنامج الامتحان",
     icon: Edit,

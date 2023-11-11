@@ -221,30 +221,6 @@ const AssignTeacher: React.FC<IAssignTeacherProps> = ({
                               />
                             )}
                           </Field>
-                          {/* <TextField
-                            value={values.teacher_id || -1}
-                            variant="outlined"
-                            size="small"
-                            type="select"
-                            id="teacher_id"
-                            name="teacher_id"
-                            select={true}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder={translate("Teacher")}
-                            label={translate("Teacher")}
-                            error={Boolean(
-                              touched.teacher_id && errors.teacher_id
-                            )}
-                            helperText={touched.teacher_id && errors.teacher_id}
-                            fullWidth
-                          >
-                            {teachers?.map((t) => (
-                              <MenuItem key={t.id} value={t.id}>
-                                {`${t.person?.first_name} ${t.person?.last_name}`}
-                              </MenuItem>
-                            ))}
-                          </TextField> */}
                         </GridItem>
                       </Grid>
                     </Grid>
