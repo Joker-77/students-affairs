@@ -532,7 +532,9 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
             </FormControl>
           </GridItem>
           <GridItem md={3}>
-            <InputLabel id="demo-simple-select-label">فلتر الحالة</InputLabel>
+            <InputLabel id="demo-simple-select-label">
+              فلتر جهة الإيفاد
+            </InputLabel>
             <FormControl fullWidth variant="filled" size="small">
               <RSelect
                 defaultValue={authority}
