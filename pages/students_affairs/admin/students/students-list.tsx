@@ -58,9 +58,49 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
   const [loading, setLoading] = React.useState(false);
   const { translate } = useTranslation();
   const [Candidates, setCandidates] = React.useState<ICandidateModel[]>(null);
+  const [filteredCandidates, setfilteredCandidates] =
+    React.useState<ICandidateModel[]>(null);
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
+  const [status, setStatus] = useState("الكل");
+  const [authority, setAuthority] = useState("الكل");
+  const filters = [
+    {
+      label: "الكل",
+      value: "الكل",
+    },
+    {
+      label: "مستجد",
+      value: "مستجد",
+    },
+    {
+      label: "معيد",
+      value: "معيد",
+    },
+  ];
+  const authorityFilters = [
+    {
+      label: "الكل",
+      value: "الكل",
+    },
+    {
+      label: "المركز",
+      value: "المركز",
+    },
+    {
+      label: "وزارة التعليم العالي",
+      value: "وزارة التعليم العالي",
+    },
+    {
+      label: "دراسة خاصة",
+      value: "دراسة خاصة",
+    },
+    {
+      label: "خ-أ-ع",
+      value: "خ-أ-ع",
+    },
+  ];
   useEffect(() => {
     PlanService.GetAll()
       .then((programs) => {
@@ -184,6 +224,7 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
       .then((resp) => {
         console.log(resp);
         setCandidates(resp.result.map((e) => e.candidate));
+        setfilteredCandidates(resp.result.map((e) => e.candidate));
         setLoading(false);
       })
       .catch((e) => {
@@ -206,36 +247,13 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
       filtering: false,
     },
     {
-      title: translate("Father"),
-      field: "father.first_name",
-      hidden: true,
+      title: "الرقم الذاتي",
+      field: "personal_number",
       filtering: false,
     },
     {
-      title: translate("Mother"),
-      field: "mother.first_name",
-      hidden: true,
-      filtering: false,
-    },
-    {
-      title: translate("Registeration number"),
-      field: "registeration_number",
-      filtering: false,
-      type: "string",
-    },
-    {
-      title: translate("Subscription number"),
-      field: "certificates[0].subscription_number",
-      filtering: false,
-    },
-    {
-      title: translate("City"),
-      field: "certificates[0].city",
-      filtering: false,
-    },
-    {
-      title: translate("Round"),
-      field: "certificates[0].round",
+      title: "جهة الإيفاد",
+      field: "auth",
       filtering: false,
     },
     {
@@ -244,14 +262,10 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
       filtering: false,
     },
     {
-      title: translate("Registration Year"),
-      field: "registeration_year_name",
+      title: "الحالة",
+      field: "status",
       filtering: false,
     },
-    // {
-    //     title: translate("Result"),
-    //     field: "certificates[0].result",
-    // },
   ];
   // Dynamic Export
   const [showExportColumns, setShowExportColumns] = React.useState(false);
@@ -286,7 +300,7 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
   const csvExporter = new ExportToCsv(csvOptions);
   const generateExcel = () => {
     csvExporter.generateCsv(
-      Candidates.map((ct) => {
+      filteredCandidates.map((ct) => {
         let object = {};
         selectedColumns.forEach((item, index) => {
           if (item.field == "registeration_year_name") {
@@ -296,8 +310,15 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
                 : "السابق";
             _.set(object, item.title, val);
           } else if (item.field == "external_value") {
-            let val = item.external ? translate("Yes") : translate("No");
+            let val = ct.external ? translate("Yes") : translate("No");
             _.set(object, item.title, val);
+          } else if (item.field == "auth") {
+            let val = ct.registeration_class;
+            _.set(object, item.title, val);
+          } else if (item.field == "personal_number") {
+            _.set(object, item.title, ct?.personal_number!);
+          } else if (item.field == "status") {
+            _.set(object, item.title, ct?.status!);
           } else if (item.field == "full_name")
             _.set(
               object,
@@ -324,7 +345,7 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
       );
       printWindow.document.write(
         getCandidatesToPrint(
-          Candidates,
+          filteredCandidates,
           eduYears.filter((e) => e.id == eduYear)[0].year,
           specialities.filter((e) => e.id == speciality)[0].ar_name,
           specYears.filter((e) => e.id == spec)[0].ar_name
@@ -333,10 +354,46 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
       setTimeout(() => printWindow.print(), 2500);
     }
   };
+  const filterAuth = (data) => {
+    if (authority != "الكل") {
+      let filtered = data.filter((e) => e.registeration_class == authority);
+      setfilteredCandidates(filtered);
+    } else {
+      setfilteredCandidates(data);
+    }
+  };
+  const filterStatus = (data) => {
+    if (status != "الكل") {
+      let filtered = data.filter((e) => e.status == status);
+      setfilteredCandidates(filtered);
+    } else {
+      setfilteredCandidates(data);
+    }
+  };
+  const changeStatus = (val) => {
+    setStatus(val);
+    if (val != "الكل") {
+      let filtered = Candidates.filter((e) => e.status == val);
+      filterAuth(filtered);
+    } else {
+      let filtered = Candidates.slice();
+      filterAuth(filtered);
+    }
+  };
+  const changeAuth = (val) => {
+    setAuthority(val);
+    if (val != "الكل") {
+      let filtered = Candidates.filter((e) => e.registeration_class == val);
+      filterStatus(filtered);
+    } else {
+      let filtered = Candidates.slice();
+      filterStatus(filtered);
+    }
+  };
   const renderCandidates = () => {
     if (loading) return <Placeholder loading />;
-    if (Candidates != null && Candidates.length > 0) {
-      let data = Candidates;
+    if (filteredCandidates != null && filteredCandidates.length > 0) {
+      let data = filteredCandidates;
       let options = {
         exportAllData: true,
         exportButton: true,
@@ -353,7 +410,7 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
       };
       return (
         <ActionTable
-          Title={translate("Candidates List")}
+          Title={`قائمة الطلاب (${filteredCandidates.length})`}
           Columns={columns}
           Data={data.map((item) => {
             return {
@@ -362,10 +419,13 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
                 item.registeration_year == new Date().getFullYear()
                   ? "الحالي"
                   : "السابق",
+              auth: item.registeration_class,
               external_value: item.external
                 ? translate("Yes")
                 : translate("No"),
               full_name: `${item.person?.first_name} ${item.father?.first_name} ${item.person?.last_name}`,
+              status: `${item.status!}`,
+              personal_number: `${item.personal_number!}`,
             };
           })}
           Options={options}
@@ -455,8 +515,39 @@ const StudentsList: React.FC<ITeachersListProps> = ({}) => {
             تصدير
           </SuiButton>
         </GridItem>
+        <Grid container style={{ marginTop: "2em" }}>
+          <GridItem md={3}>
+            <InputLabel id="demo-simple-select-label">فلتر الحالة</InputLabel>
+            <FormControl fullWidth variant="filled" size="small">
+              <RSelect
+                defaultValue={status}
+                label="Single select"
+                placeholder={"اختيار الحالة"}
+                isSearchable={true}
+                options={filters}
+                onChange={(e) => changeStatus(e.value)}
+                getOptionLabel={(option) => option.label}
+                getOptionValue={(option) => option.value}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem md={3}>
+            <InputLabel id="demo-simple-select-label">فلتر الحالة</InputLabel>
+            <FormControl fullWidth variant="filled" size="small">
+              <RSelect
+                defaultValue={authority}
+                label="Single select"
+                placeholder={"اختيار جهة الايفاد"}
+                isSearchable={true}
+                options={authorityFilters}
+                onChange={(e) => changeAuth(e.value)}
+                getOptionLabel={(option) => option.label}
+                getOptionValue={(option) => option.value}
+              />
+            </FormControl>
+          </GridItem>
+        </Grid>
       </Grid>
-
       {showExportColumns && (
         <GridItem style={{ marginBottom: "1em" }}>
           <Accordion>

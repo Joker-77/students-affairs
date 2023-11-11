@@ -60,6 +60,8 @@ export const getCandidatesToPrint = (candidates, eduYear, spec, specYear) => {
                   <tr>
                     <td>مسلسل</td>
                     <td>الرقم الذاتي</td>
+                    <td>جهة الإيفاد</td>
+                    <td>الحالة</td>
                     <td>الاسم والشهرة</td>
                     <td colspan="7"></td>
                   </tr>
@@ -69,6 +71,8 @@ export const getCandidatesToPrint = (candidates, eduYear, spec, specYear) => {
                     return `<tr> 
                       <td>${index + 1}</td>
                       <td>${e.personal_number}</td>
+                      <td>${e.registeration_class}</td>
+                      <td>${e.status}</td>
                       <td> 
                       ${e.person?.first_name} ${e.father?.first_name} ${
                       e.person?.last_name
