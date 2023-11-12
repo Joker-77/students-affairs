@@ -194,6 +194,21 @@ export default class ExamService {
       });
   }
 
+  static async observations(st, en): Promise<ApiResponse> {
+    const getUrl = `/exam/observations?start_date=${st}&end_date=${en}`;
+    return await apiConnector
+      .get(getUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data.result;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
   static async delete(_id): promise<ApiResponse> {
     return await apiConnector
       .post("/exam/delete", {

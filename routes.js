@@ -86,6 +86,13 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
+    path: "/admin/reports/obervations-list/obervations-list",
+    name: "Observs",
+    rtlName: "توزيع المراقبين",
+    icon: Edit,
+    layout: "/students_affairs",
+  },
+  {
     path: "/admin/reports/teacher-assign/teacher-assign",
     name: "TeacherAssign",
     rtlName: "تكاليف المدرسين",

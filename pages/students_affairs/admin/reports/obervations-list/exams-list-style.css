@@ -1,0 +1,7 @@
+.MuiPickersSlideTransition-transitionContainer.MuiPickersCalendarHeader-transitionContainer {
+    height: 30px !important;
+}
+
+.MuiPickersTimePickerToolbar-hourMinuteLabel.MuiPickersTimePickerToolbar-hourMinuteLabelReverse {
+    direction: rtl;
+}

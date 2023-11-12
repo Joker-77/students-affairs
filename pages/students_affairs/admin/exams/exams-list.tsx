@@ -64,6 +64,34 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
 
   const [plans, setPlans] = useState([]);
   const [allNums, setAllNums] = useState(0);
+
+  const [selectedPlanData, setSelectedPlanData] = useState([]);
+  const [selectedPlans, setSelectedPlans] = useState<number[]>([]);
+  const [selectedNewStds, setSelectedNewStds] = useState(0);
+  const [selectedOldStds, setSelectedOldStds] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [startTime, setStartTime] = useState(times[36]);
+  const [endTime, setEndTime] = useState(times[48]);
+  const getFullDate = (date) => {
+    let day = date?.getDate();
+    let month = date?.getMonth() + 1;
+    let year = date?.getFullYear();
+    // This arrangement can be altered based on how we want the date's format to appear.
+    return `${("0" + day).slice(-2)}-${("0" + month).slice(-2)}-${year}`;
+  };
+  // Dynamic Halls
+  const [inputFields, setInputFields] = useState([
+    {
+      hall: 0,
+      date: getFullDate(selectedDate),
+      from: startTime,
+      to: endTime,
+      planId: 0,
+      num_studs: 0,
+    },
+  ]);
+  const [halls, setHalls] = useState([]);
+
   useEffect(() => {
     PlanService.GetAll()
       .then((programs) => {
@@ -96,10 +124,6 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       .catch((error) => {});
     setLoadCourses(false);
   };
-
-  // Get Exams
-  useEffect(() => {}, []);
-
   const addInputField = () => {
     if (inputFields.length >= halls.length)
       toast.error("لايمكنك الإضافة! لايوجد سوى قاعتين");
@@ -109,8 +133,8 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
         {
           hall: 0,
           date: getFullDate(selectedDate),
-          from: startTime.value,
-          to: endTime.value,
+          from: startTime,
+          to: endTime,
           planId: 0,
           num_studs: 0,
         },
@@ -129,13 +153,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     console.log(list);
   };
   //
-  const getFullDate = (date) => {
-    let day = date?.getDate();
-    let month = date?.getMonth() + 1;
-    let year = date?.getFullYear();
-    // This arrangement can be altered based on how we want the date's format to appear.
-    return `${("0" + day).slice(-2)}-${("0" + month).slice(-2)}-${year}`;
-  };
+
   // ------------------------
   const clear = () => {
     setSelectedNewStds(0);
@@ -184,25 +202,6 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       .catch((error) => {});
   };
 
-  const [selectedPlanData, setSelectedPlanData] = useState([]);
-  const [selectedPlans, setSelectedPlans] = useState<number[]>([]);
-  const [selectedNewStds, setSelectedNewStds] = useState(0);
-  const [selectedOldStds, setSelectedOldStds] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [startTime, setStartTime] = useState(DateHelper.getTimeOfDay());
-  const [endTime, setEndTime] = useState(DateHelper.getTimeOfDay());
-  // Dynamic Halls
-  const [inputFields, setInputFields] = useState([
-    {
-      hall: 0,
-      date: getFullDate(selectedDate),
-      from: startTime,
-      to: endTime,
-      planId: 0,
-      num_studs: 0,
-    },
-  ]);
-  const [halls, setHalls] = useState([]);
   useEffect(() => {
     ExamService.getHalls()
       .then((resp) => {
@@ -227,12 +226,14 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   };
   const handleStartTime = (e) => {
     setStartTime(e);
+    console.clear();
+    console.log(e);
     let _inptFilds = inputFields.slice().map((dd) => {
       return {
         hall: dd.hall,
         date: getFullDate(selectedDate),
-        from: e.value,
-        to: endTime.value,
+        from: e,
+        to: endTime,
         planId: dd.planId,
         num_studs: dd.num_studs,
       };
@@ -245,8 +246,8 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       return {
         hall: dd.hall,
         date: getFullDate(selectedDate),
-        from: startTime.value,
-        to: e.value,
+        from: startTime,
+        to: e,
         planId: dd.planId,
         num_studs: dd.num_studs,
       };
@@ -347,35 +348,21 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
         };
       }),
     };
-    console.log(payLoad);
-    let allSelected = selectedOldStds + selectedNewStds;
-    let hallsStdsNums = payLoad.halls.reduce(
-      (partialSum, a) => partialSum + a.students_num,
-      0
-    );
     if (
-      parseInt(allSelected) == parseInt(allNums) &&
-      parseInt(allSelected) == parseInt(hallsStdsNums) &&
-      parseInt(hallsStdsNums) == parseInt(allNums)
+      payLoad.halls.some((e) => e.id == 0) ||
+      payLoad.halls.some((e) => e.plan_id == undefined)
     ) {
-      if (
-        payLoad.halls.some((e) => e.id == 0) ||
-        payLoad.halls.some((e) => e.plan_id == undefined)
-      ) {
-        toast.error("يجب اختيار قاعة ");
-      } else {
-        ExamService.Add(payLoad)
-          .then((result) => {
-            if (result.success) {
-              toast.success("تمت إضافة الواقعة الامتحانية بنجاح");
-            }
-          })
-          .catch((error) => {
-            // toast.error(error.message);
-          });
-      }
+      toast.error("يجب اختيار قاعة ");
     } else {
-      toast.error("يجب اختيار كامل الطلّاب");
+      ExamService.Add(payLoad)
+        .then((result) => {
+          if (result.success) {
+            toast.success("تمت إضافة الواقعة الامتحانية بنجاح");
+          }
+        })
+        .catch((error) => {
+          // toast.error(error.message);
+        });
     }
   };
   const renderPlans = (plans) => {
@@ -614,7 +601,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                         variant="outlined"
                         size="small"
                         type="text"
-                        value={data.from}
+                        value={data.from.value}
                         label={translate("من")}
                         fullWidth
                       />
@@ -625,7 +612,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                         variant="outlined"
                         size="small"
                         type="text"
-                        value={data.to}
+                        value={data.to.value}
                         label={translate("إلى")}
                         fullWidth
                       />
