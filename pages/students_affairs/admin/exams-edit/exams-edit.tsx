@@ -36,7 +36,7 @@ import { default as RSelect } from "react-select";
 import { DateHelper } from "./../../../../Helpers/DateHelper";
 
 interface IExamsListProps {}
-const ExamsList: React.FC<IExamsListProps> = ({}) => {
+const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -69,7 +69,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   const [selectedPlans, setSelectedPlans] = useState<number[]>([]);
   const [selectedNewStds, setSelectedNewStds] = useState(0);
   const [selectedOldStds, setSelectedOldStds] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState("");
   const [startTime, setStartTime] = useState(times[0]);
   const [endTime, setEndTime] = useState(times[12]);
   const getFullDate = (date) => {
@@ -151,6 +151,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     const list = [...inputFields];
     list[index][name] = value;
     setInputFields(list);
+    console.log(list);
   };
   //
 
@@ -175,20 +176,28 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     clear();
     let _course = courses.find((e) => e.edu_course_id == course);
     setExamType(val);
-    ExamService.GetAllPlans(
+    ExamService.GetAllExams(
       program,
       eduYear,
       _course.edu_course_id,
       val.toString()
     )
       .then((resp) => {
-        setPlans(resp.result);
+        setSelectedDate(
+          `${resp?.result[0]?.date.split("T")[0].split("-")[2]}/${
+            resp?.result[0]?.date.split("T")[0].split("-")[1]
+          }/${resp?.result[0]?.date.split("T")[0].split("-")[0]}`
+        );
+        let _stime = times.filter((e) => e.value == resp.result[0].from)[0];
+        let _etime = times.filter((e) => e.value == resp.result[0].to)[0];
+        setStartTime(_stime);
+        setEndTime(_etime);
         let all = resp.result.reduce(
           (partialSum, a) =>
-            partialSum + a.old_students_num + a.new_students_num,
+            partialSum + a.plan.old_students_num + a.plan.new_students_num,
           0
         );
-        console.log("all", all);
+        setPlans(resp.result);
         setAllNums(all);
       })
       .catch((error) => {});
@@ -214,7 +223,6 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
         num_studs: dd.num_studs,
       };
     });
-    console.log("_inptFilds", _inptFilds);
     setInputFields(_inptFilds);
   };
   const handleStartTime = (e) => {
@@ -285,11 +293,11 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
       console.log(sel);
       if (sel.length > 0) {
         const sumOld = sel.reduce(
-          (partialSum, a) => partialSum + a.old_students_num,
+          (partialSum, a) => partialSum + a.plan.old_students_num,
           0
         );
         const sumNew = sel.reduce(
-          (partialSum, a) => partialSum + a.new_students_num,
+          (partialSum, a) => partialSum + a.plan.new_students_num,
           0
         );
         setSelectedNewStds(sumNew);
@@ -312,11 +320,11 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
           : [];
       setSelectedPlanData(sel);
       const sumOld = sel.reduce(
-        (partialSum, a) => partialSum + a.old_students_num,
+        (partialSum, a) => partialSum + a.plan.old_students_num,
         0
       );
       const sumNew = sel.reduce(
-        (partialSum, a) => partialSum + a.new_students_num,
+        (partialSum, a) => partialSum + a.plan.new_students_num,
         0
       );
       setSelectedNewStds(sumNew);
@@ -324,30 +332,27 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     }
   };
 
-  const handleAddExam = () => {
-    const payLoad = {
-      plan_ids: [...selectedPlans],
-      type: `${examsTypes.filter((e) => e.id == examType)[0].name}`,
-      date: getFullDate(selectedDate),
-      from: startTime.value,
-      to: endTime.value,
-      halls: inputFields.map((dd) => {
-        return {
-          id: dd.hall,
-          plan_id: dd.planId,
-          students_num: parseInt(`${dd.num_studs}`),
-        };
-      }),
-    };
-    ExamService.Add(payLoad)
-      .then((result) => {
-        if (result.success) {
-          toast.success("تمت إضافة الواقعة الامتحانية بنجاح");
-        }
-      })
-      .catch((error) => {
-        // toast.error(error.message);
-      });
+  const handleEditExam = () => {
+    if (selectedPlans.length !== plans.length) {
+      toast.error("يجب اختيار كل السنوات");
+      return;
+    } else {
+      const payLoad = {
+        exam_ids: [...selectedPlans],
+        date: getFullDate(selectedDate),
+        from: startTime.value,
+        to: endTime.value,
+      };
+      ExamService.Edit(payLoad)
+        .then((result) => {
+          if (result.success) {
+            toast.success("تم تعديل الواقعة الامتحانية بنجاح");
+          }
+        })
+        .catch((error) => {
+          // toast.error(error.message);
+        });
+    }
     // if (
     //   payLoad.halls.some((e) => e.id == 0) ||
     //   payLoad.halls.some((e) => e.plan_id == undefined)
@@ -403,7 +408,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                     variant="outlined"
                     size="small"
                     disabled
-                    value={e.year?.ar_name}
+                    value={e.plan.year?.ar_name}
                   />
                 </GridItem>
                 <GridItem md={2}>
@@ -411,7 +416,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                     variant="outlined"
                     size="small"
                     disabled
-                    value={e.year?.speciality?.ar_name}
+                    value={e.plan.year?.speciality?.ar_name}
                   />
                 </GridItem>
                 <GridItem md={2}>
@@ -419,11 +424,11 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                     variant="outlined"
                     size="small"
                     disabled
-                    value={e.semester}
+                    value={e.plan.semester}
                   />
                 </GridItem>
                 <GridItem md={1}>
-                  {e.new_students_num} | {e.old_students_num}
+                  {e.plan.new_students_num} | {e.plan.old_students_num}
                 </GridItem>
                 <GridItem md={1}>
                   <input
@@ -440,18 +445,11 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
               <GridItem md={3}>
                 <TextField
                   clearable
+                  value={selectedDate}
                   onChange={(e) => handleDateChange(e.target.value)}
                   variant="outlined"
                   size="small"
                 />
-                {/* <KeyboardDatePicker
-                  clearable
-                  value={selectedDate}
-                  onChange={(date) => handleDateChange(date)}
-                  minDate={new Date()}
-                  format="dd/MM/yyyy"
-                  // inputVariant="outlined"
-                /> */}
               </GridItem>
             </Grid>
             <Grid
@@ -505,6 +503,19 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                   }`}</p>
                   <p style={{ margin: "0" }}>{selectedNewStds}</p>
                   <p style={{ margin: "0" }}>{selectedOldStds}</p>
+                </Grid>
+                <Grid item md={12}>
+                  <SuiButton
+                    onClick={handleEditExam}
+                    style={{
+                      margin: "2em 0",
+                      color: "rgb(255, 255, 255)",
+                      background: "rgb(23, 193, 232)",
+                    }}
+                    type="button"
+                  >
+                    {`تعديل واقعة امتحانية`}
+                  </SuiButton>
                 </Grid>
               </Grid>
             </Grid>
@@ -658,7 +669,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                 );
               })}
               <SuiButton
-                onClick={handleAddExam}
+                onClick={handleEditExam}
                 style={{
                   margin: "2em 0",
                   color: "rgb(255, 255, 255)",
@@ -666,7 +677,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                 }}
                 type="button"
               >
-                {`إضافة واقعة امتحانية`}
+                {`تعديل واقعة امتحانية`}
               </SuiButton>
             </Card>
           </Grid>
@@ -703,7 +714,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
           className={classes.typography}
         >
           <Typography variant="h5" component="div">
-            {`إضافة واقعة امتحانية`}
+            {`تعديل واقعة امتحانية`}
           </Typography>
         </GridItem>
       </GridContainer>
@@ -788,6 +799,6 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   );
 };
 
-(ExamsList as any).auth = true;
-(ExamsList as any).layout = Admin;
-export default ExamsList;
+(ExamsEdit as any).auth = true;
+(ExamsEdit as any).layout = Admin;
+export default ExamsEdit;

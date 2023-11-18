@@ -44,6 +44,28 @@ export default class ExamService {
       });
   }
 
+  static async GetAllExams(
+    programId?: string,
+    eduYearId?: string,
+    eduCourseId?: string,
+    methodId?: string
+  ): Promise<ApiResponse> {
+    return await apiConnector
+      .get(
+        `/exam/details?program_id=${programId}&edu_year_id=
+            ${eduYearId}&method_id=${methodId}&edu_course_id=${eduCourseId}`
+      )
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
   static async GetAllHalls(
     date: string,
     edu_year_id: string = "1"
@@ -65,6 +87,21 @@ export default class ExamService {
   static async Add(payload): Promise<ApiResponse> {
     const createUrl = "/exam/add";
     console.log(createUrl);
+    return await apiConnector
+      .post(createUrl, payload)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  static async Edit(payload): Promise<ApiResponse> {
+    const createUrl = "/exam/edit";
     return await apiConnector
       .post(createUrl, payload)
       .then((response) => {

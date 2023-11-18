@@ -1,4 +1,4 @@
-export const getExamToPrint = (data, semester, eduYear, spec) => {
+export const getExamToPrint = (data, semester, eduYear, spec, _special) => {
   return `
     <html lang="ar" dir="rtl">
         <head>
@@ -35,7 +35,7 @@ export const getExamToPrint = (data, semester, eduYear, spec) => {
             </div>
             <div class="row"> 
                 <div class="col-9"></div>
-                <div class="col-3"><h3>  ${spec} </h3></div>
+                <div class="col-3"><h3>  ${spec} ${_special} </h3></div>
             </div>
           </div>
         <div class="row">

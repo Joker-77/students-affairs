@@ -8,7 +8,7 @@ export class DateHelper {
   static getQuarterHourTimes() {
     var quarterHours = ["00", "15", "30", "45"];
     var times = [];
-    for (var i = 0; i < 24; i++) {
+    for (var i = 8; i < 16; i++) {
       for (var j = 0; j < 4; j++) {
         if (i < 10) {
           times.push({

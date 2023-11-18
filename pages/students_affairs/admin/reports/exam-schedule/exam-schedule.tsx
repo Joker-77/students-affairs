@@ -187,12 +187,12 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
             };
           });
           setSpecYears(_data);
-          setSpecYear(_data[0].id);
+          setSpec(_data[0].id);
+          setLoadSpecYear(false);
         } else {
           setSpecYears([]);
-          setSpecYear(null);
+          setSpec(null);
         }
-        setLoadSpecYear(false);
       })
       .catch((err) => {
         setSpecYears([]);
@@ -249,11 +249,10 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
   const changeExamType = (val) => {
     setExamType(val);
   };
-  const changeSemester = (val) => {
-    setSemester(val);
+  const load = () => {
     setLoading(true);
-    if (program && eduYear && examType && spec && val)
-      ExamService.schedule(program, eduYear, examType, spec, val)
+    if (program && eduYear && examType && spec && semester)
+      ExamService.schedule(program, eduYear, examType, spec, semester)
         .then((resp) => {
           let _dd = resp.map((e) => {
             return {
@@ -273,6 +272,12 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
           setLoading(false);
         });
     else toast.error("يجب اختيار كافة المعلومات");
+  };
+  const changeSpecialYear = (id) => {
+    setSpec(id);
+  };
+  const changeSemester = (val) => {
+    setSemester(val);
   };
   const semesters = [
     {
@@ -370,8 +375,9 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
       const printWindow = window.open("", "_blank");
       let _eduYear = eduYears.filter((e) => e.id == eduYear)[0].year;
       let _spec = specYears.filter((e) => e.id == spec)[0].ar_name;
+      let _special = specialities.filter((e) => e.id == speciality)[0].ar_name;
       printWindow.document.write(
-        getExamToPrint(data, semester, _eduYear, _spec)
+        getExamToPrint(data, semester, _eduYear, _spec, _special)
       );
       printWindow.document.close();
       printWindow.focus();
@@ -453,7 +459,7 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
               isSearchable={true}
               options={specYears}
               isDisabled={loadSpecYear}
-              onChange={(e) => setSpec(e.id)}
+              onChange={(e) => changeSpecialYear(e.id)}
               getOptionLabel={(option) => option.ar_name}
               getOptionValue={(option) => option.id}
             />
@@ -486,6 +492,15 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
               getOptionValue={(option) => option.value}
             />
           </FormControl>
+        </GridItem>
+        <GridItem md={3}>
+          <SuiButton
+            style={{ minWidth: 140, marginTop: "1.5em" }}
+            color={"primary"}
+            onClick={load}
+          >
+            عرض البرنامج
+          </SuiButton>
         </GridItem>
         <GridItem md={3}>
           <SuiButton

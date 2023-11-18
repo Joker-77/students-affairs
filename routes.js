@@ -86,6 +86,13 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
+    path: "/admin/exams-edit/exams-edit",
+    name: "Exams",
+    rtlName: "تعديل واقعة امتحانية",
+    icon: Edit,
+    layout: "/students_affairs",
+  },
+  {
     path: "/admin/reports/obervations-list/obervations-list",
     name: "Observs",
     rtlName: "توزيع المراقبين",
