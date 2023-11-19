@@ -42,7 +42,6 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
   const classes = useStyles();
 
   const times = DateHelper.getQuarterHourTimes();
-  console.log(times);
   // Programs
   const [programs, setPrograms] = useState([]);
   const [program, setProgram] = useState(null);
@@ -144,8 +143,6 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
     setInputFields(list);
     console.log(list);
   };
-  //
-
   // ------------------------
   const clear = () => {
     setSelectedNewStds(0);

@@ -69,7 +69,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   const [selectedPlans, setSelectedPlans] = useState<number[]>([]);
   const [selectedNewStds, setSelectedNewStds] = useState(0);
   const [selectedOldStds, setSelectedOldStds] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState("");
   const [startTime, setStartTime] = useState(times[0]);
   const [endTime, setEndTime] = useState(times[12]);
   const getFullDate = (date) => {
@@ -115,6 +115,8 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     setLoadCourses(false);
   };
   const addInputField = () => {
+    console.clear();
+    console.log(getFullDate(selectedDate));
     if (getFullDate(selectedDate) !== "") {
       if (inputFields.length >= halls.length)
         toast.error("لايمكنك الإضافة! لايوجد سوى قاعتين");
