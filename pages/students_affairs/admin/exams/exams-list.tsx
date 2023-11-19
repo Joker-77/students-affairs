@@ -74,18 +74,9 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
   const [endTime, setEndTime] = useState(times[12]);
   const getFullDate = (date) => {
     if (date.split("/").length > 2) {
-      date = new Date(
-        date.split("/")[2],
-        date.split("/")[1],
-        date.split("/")[0]
-      );
-      console.clear();
-      console.log("date", date);
-      let day = date?.getDate();
-      let month = date?.getMonth() + 1;
-      let year = date?.getFullYear();
-      // This arrangement can be altered based on how we want the date's format to appear.
-      return `${("0" + day).slice(-2)}-${("0" + month).slice(-2)}-${year}`;
+      return `${("0" + date.split("/")[0]).slice(-2)}-${(
+        "0" + date.split("/")[1]
+      ).slice(-2)}-${date.split("/")[2]}`;
     } else return "";
   };
   // Dynamic Halls
@@ -124,7 +115,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
     setLoadCourses(false);
   };
   const addInputField = () => {
-    if (getFullDate(selectedDate) !== "")
+    if (getFullDate(selectedDate) !== "") {
       if (inputFields.length >= halls.length)
         toast.error("لايمكنك الإضافة! لايوجد سوى قاعتين");
       else
@@ -139,7 +130,7 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
             num_studs: 0,
           },
         ]);
-    else toast.error("الرجاء ادخال تاريخ صالح");
+    } else toast.error("الرجاء ادخال تاريخ صالح");
   };
   const removeInputFields = (index) => {
     const rows = [...inputFields];
@@ -444,22 +435,14 @@ const ExamsList: React.FC<IExamsListProps> = ({}) => {
                   variant="outlined"
                   size="small"
                 />
-                {/* <KeyboardDatePicker
-                  clearable
-                  value={selectedDate}
-                  onChange={(date) => handleDateChange(date)}
-                  minDate={new Date()}
-                  format="dd/MM/yyyy"
-                  // inputVariant="outlined"
-                /> */}
               </GridItem>
             </Grid>
             <Grid
               container
               md={12}
-              style={{ marginTop: "3em", height: "15em" }}
+              style={{ marginTop: "1em", height: "15em" }}
             >
-              <GridItem style={{ display: "flex", marginTop: "1em" }} md={1}>
+              <GridItem style={{ display: "flex" }} md={1}>
                 <span> الوقت</span>
               </GridItem>
               <GridItem md={2}>

@@ -45,7 +45,7 @@ import { Card } from "@material-ui/core";
 import SuiButton from "../../../../../components/SuiButton";
 import { default as RSelect } from "react-select";
 import { DateHelper } from "./../../../../../Helpers/DateHelper";
-import { getExamToPrint } from "../../../../../Helpers/exam-print.js";
+import { getObservProgToPrint } from "../../../../../Helpers/observations-prog-print";
 
 interface IExamsListProps {}
 const ObservationsSchedule: React.FC<IExamsListProps> = ({}) => {
@@ -69,7 +69,7 @@ const ObservationsSchedule: React.FC<IExamsListProps> = ({}) => {
           let res = resp.map((dt) => {
             return {
               ...dt,
-              date: `${dt.date.split("T")[0]}`,
+              date: DateHelper.getArabicDatefromDate(dt.date),
               time: `${dt.to.split("T")[1].split(".")[0].split(":")[0]}:${
                 dt.to.split("T")[1].split(".")[0].split(":")[1]
               }-${dt.from.split("T")[1].split(".")[0].split(":")[0]}:${
@@ -170,11 +170,15 @@ const ObservationsSchedule: React.FC<IExamsListProps> = ({}) => {
   const print = () => {
     if (data) {
       const printWindow = window.open("", "_blank");
-      let _eduYear = eduYears.filter((e) => e.id == eduYear)[0].year;
-      let _spec = specYears.filter((e) => e.id == spec)[0].ar_name;
-      let _special = specialities.filter((e) => e.id == speciality)[0].ar_name;
+      let dateAsInt = parseInt(startDate.split("/")[2]);
+      let headerDate = `${dateAsInt}-${dateAsInt - 1}`;
       printWindow.document.write(
-        getExamToPrint(data, semester, _eduYear, _spec, _special)
+        getObservProgToPrint(
+          data,
+          headerDate,
+          getFullDateForPrint(startDate),
+          getFullDateForPrint(endDate)
+        )
       );
       printWindow.document.close();
       printWindow.focus();
@@ -186,6 +190,13 @@ const ObservationsSchedule: React.FC<IExamsListProps> = ({}) => {
       return `${("0" + date.split("/")[0]).slice(-2)}-${(
         "0" + date.split("/")[1]
       ).slice(-2)}-${date.split("/")[2]}`;
+    } else return "";
+  };
+  const getFullDateForPrint = (date) => {
+    if (date.split("/").length > 2) {
+      return `${("0" + date.split("/")[0]).slice(-2)}/${(
+        "0" + date.split("/")[1]
+      ).slice(-2)}/${date.split("/")[2]}`;
     } else return "";
   };
   const handleStartDateChange = (e) => {
