@@ -100,6 +100,13 @@ const dashboardRoutes = [
     layout: "/students_affairs",
   },
   {
+    path: "/admin/reports/observations-schedule/observations-schedule",
+    name: "ObservSchdule",
+    rtlName: "برنامج المراقبات",
+    icon: Edit,
+    layout: "/students_affairs",
+  },
+  {
     path: "/admin/reports/teacher-assign/teacher-assign",
     name: "TeacherAssign",
     rtlName: "تكاليف المدرسين",

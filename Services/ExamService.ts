@@ -260,4 +260,19 @@ export default class ExamService {
         throw error;
       });
   }
+
+  static async getObservSchedule(st, en): promise<ApiResponse> {
+    const getUrl = `/exam/observation-detailed-schedule?start_date=${st}&end_date=${en}`;
+    return await apiConnector
+      .get(getUrl)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data.result;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }

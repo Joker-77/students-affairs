@@ -74,18 +74,9 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
   const [endTime, setEndTime] = useState(times[12]);
   const getFullDate = (date) => {
     if (date.split("/").length > 2) {
-      date = new Date(
-        date.split("/")[2],
-        date.split("/")[1],
-        date.split("/")[0]
-      );
-      console.clear();
-      console.log("date", date);
-      let day = date?.getDate();
-      let month = date?.getMonth() + 1;
-      let year = date?.getFullYear();
-      // This arrangement can be altered based on how we want the date's format to appear.
-      return `${("0" + day).slice(-2)}-${("0" + month).slice(-2)}-${year}`;
+      return `${("0" + date.split("/")[0]).slice(-2)}-${(
+        "0" + date.split("/")[1]
+      ).slice(-2)}-${date.split("/")[2]}`;
     } else return "";
   };
   // Dynamic Halls
@@ -164,6 +155,7 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
     setSelectedPlanData([]);
     setInputFields([]);
   };
+
   const changeCourse = (val: number) => {
     clear();
     setCourse(val);
