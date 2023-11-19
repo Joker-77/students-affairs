@@ -13,7 +13,15 @@ import {
   makeStyles,
   Input,
   TextField,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContentText,
+  DialogContent,
+  IconButton,
+  Box,
 } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 import GridItem from "../../../../components/Grid/GridItem";
 import PlanService from "../../../../Services/PlanService";
 import CourseService from "../../../../Services/CourseService";
@@ -36,6 +44,141 @@ import { default as RSelect } from "react-select";
 import { DateHelper } from "./../../../../Helpers/DateHelper";
 
 interface IExamsListProps {}
+const EditHalls = ({
+  title,
+  exam,
+  show,
+  handleClose,
+  handleAdd,
+  handleDelete,
+  handleChange,
+  addInputField,
+  removeInputFields,
+  classes,
+  inputFields,
+  translate,
+  halls,
+}) => {
+  return (
+    <Dialog open={show} maxWidth="sm" fullWidth>
+      <DialogTitle>
+        <Typography style={{ textAlign: "center" }}>{title}</Typography>
+      </DialogTitle>
+      <Box position="absolute" top={0} right={0}>
+        <IconButton onClick={handleClose}>
+          <Close />
+        </IconButton>
+      </Box>
+      <DialogContent>
+        <Grid container md={12} style={{ marginTop: "1em" }}>
+          <Card
+            style={{
+              margin: "5px 0px",
+              width: "100%",
+              paddingRight: "1em",
+              paddingBottom: "1em",
+            }}
+          >
+            <Grid
+              container
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <Button
+                style={{ margin: "10px 5px" }}
+                variant="contained"
+                className={classes.submitBtn}
+                onClick={addInputField}
+              >
+                تخصيص قاعة
+              </Button>
+            </Grid>
+            {inputFields.map((data, index) => {
+              return (
+                <Grid
+                  container
+                  md={12}
+                  style={{ marginTop: "1em", direction: "rtl" }}
+                >
+                  <GridItem md={4}>
+                    <FormControl
+                      fullWidth
+                      variant="filled"
+                      size="small"
+                      size="small"
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        القاعة
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        size="small"
+                        variant="outlined"
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={data.hall}
+                        label="halls"
+                        name="hall"
+                        onChange={(evnt) => handleChange(index, evnt)}
+                      >
+                        {halls.map(
+                          (hall) =>
+                            !hall.selected && (
+                              <MenuItem key={hall.id} value={hall.id}>
+                                {hall.name}
+                              </MenuItem>
+                            )
+                        )}
+                      </Select>
+                    </FormControl>
+                  </GridItem>
+                  <GridItem md={3}>
+                    <TextField
+                      onChange={(evnt) => handleChange(index, evnt)}
+                      variant="outlined"
+                      size="small"
+                      type="number"
+                      name="num_studs"
+                      value={data.num_studs}
+                      label={translate("عدد الطلّاب")}
+                      fullWidth
+                    />
+                  </GridItem>
+                  <GridItem md={1}>
+                    {inputFields.length >= 1 ? (
+                      <Button
+                        type="button"
+                        style={{
+                          width: "10%",
+                          color: "white",
+                          background: "red",
+                        }}
+                        variant="outlined"
+                        className={classes.closeBtn}
+                        onClick={() => removeInputFields(index)}
+                      >
+                        x
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                  </GridItem>
+                </Grid>
+              );
+            })}
+          </Card>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="secondary" variant="contained">
+          {translate("Cancel")}
+        </Button>
+        <Button onClick={() => handleAdd()} color="primary" variant="contained">
+          {translate("Confirm")}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
@@ -71,6 +214,15 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [startTime, setStartTime] = useState(times[0]);
   const [endTime, setEndTime] = useState(times[12]);
+
+  // Halls
+  const [show, setShow] = useState<boolean>(false);
+  const [exam, setExam] = useState(null);
+
+  // Dynamic Halls
+  const [inputFields, setInputFields] = useState([]);
+  const [halls, setHalls] = useState([]);
+  const [title, setTitle] = useState("");
   const getFullDate = (date) => {
     if (date.split("/").length > 2) {
       return `${("0" + date.split("/")[0]).slice(-2)}-${(
@@ -78,9 +230,7 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
       ).slice(-2)}-${date.split("/")[2]}`;
     } else return "";
   };
-  // Dynamic Halls
-  const [inputFields, setInputFields] = useState([]);
-  const [halls, setHalls] = useState([]);
+
   useEffect(() => {
     PlanService.GetAll()
       .then((programs) => {
@@ -117,18 +267,16 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
     if (getFullDate(selectedDate) !== "")
       if (inputFields.length >= halls.length)
         toast.error("لايمكنك الإضافة! لايوجد سوى قاعتين");
-      else
-        setInputFields([
+      else {
+        let newArr = [
           ...inputFields,
           {
             hall: 0,
-            date: getFullDate(selectedDate),
-            from: startTime,
-            to: endTime,
-            planId: 0,
             num_studs: 0,
           },
-        ]);
+        ];
+        setInputFields(newArr);
+      }
     else toast.error("الرجاء ادخال تاريخ صالح");
   };
   const removeInputFields = (index) => {
@@ -359,6 +507,31 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
     //     });
     // }
   };
+
+  // Handle Halls
+  const showExamHalls = (data) => {
+    console.clear();
+    console.log(data);
+    setTitle(
+      `تحديد القاعات ${data.plan.year?.ar_name} ${data.plan.year?.speciality?.ar_name}`
+    );
+    let halls = data.exam_halls.map((e) => {
+      return {
+        hall: e.hall.id,
+        num_studs: e.students_num,
+      };
+    });
+    setInputFields(halls);
+    setExam(data);
+    setShow(true);
+  };
+  const handleClose = () => {
+    setExam(null);
+    setShow(false);
+  };
+  const handleDelete = (exam) => {};
+  const handleAdd = (exam) => {};
+
   const renderPlans = (plans) => {
     if (plans.length > 0) {
       return (
@@ -426,6 +599,18 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
                     value={e.id}
                     onChange={(p) => selectPlan(p.target.value)}
                   />
+                </GridItem>
+                <GridItem md={2}>
+                  <SuiButton
+                    onClick={() => showExamHalls(e)}
+                    style={{
+                      color: "rgb(255, 255, 255)",
+                      background: "rgb(23, 193, 232)",
+                    }}
+                    type="button"
+                  >
+                    تخصيص القاعات
+                  </SuiButton>
                 </GridItem>
               </Grid>
             ))}
@@ -509,167 +694,6 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
               </Grid>
             </Grid>
           </Card>
-          <Grid container md={12} style={{ marginTop: "1em" }}>
-            <Card
-              style={{
-                margin: "5px 0px",
-                width: "100%",
-                paddingRight: "1em",
-                paddingBottom: "1em",
-              }}
-            >
-              <Grid container>
-                <Button
-                  style={{ margin: "10px 5px" }}
-                  variant="contained"
-                  className={classes.submitBtn}
-                  onClick={addInputField}
-                >
-                  تخصيص قاعة
-                </Button>
-              </Grid>
-              {inputFields.map((data, index) => {
-                console.log("data", data);
-                console.log(selectedPlanData);
-                return (
-                  <Grid container md={12} style={{ marginTop: "1em" }}>
-                    <GridItem md={2}>
-                      <FormControl
-                        fullWidth
-                        variant="filled"
-                        size="small"
-                        size="small"
-                      >
-                        <InputLabel id="demo-simple-select-label">
-                          القاعة
-                        </InputLabel>
-                        <Select
-                          fullWidth
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={data.hall}
-                          label="halls"
-                          name="hall"
-                          onChange={(evnt) => handleChange(index, evnt)}
-                        >
-                          {halls.map(
-                            (hall) =>
-                              !hall.selected && (
-                                <MenuItem key={hall.id} value={hall.id}>
-                                  {hall.name}
-                                </MenuItem>
-                              )
-                          )}
-                        </Select>
-                      </FormControl>
-                    </GridItem>
-                    <GridItem md={2}>
-                      <FormControl
-                        fullWidth
-                        variant="filled"
-                        size="small"
-                        size="small"
-                      >
-                        <InputLabel id="demo-simple-select-label">
-                          السنة والاختصاص
-                        </InputLabel>
-                        <Select
-                          fullWidth
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={data.planId}
-                          label="halls"
-                          name="planId"
-                          onChange={(evnt) => handleChange(index, evnt)}
-                        >
-                          {selectedPlanData.map((data) => (
-                            <MenuItem key={data.id} value={data.id}>
-                              {`${data.year?.ar_name} - ${data.year?.speciality?.ar_name}`}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </GridItem>
-                    <GridItem md={2}>
-                      <TextField
-                        disabled={true}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        value={data.date}
-                        label={translate("التاريخ")}
-                        fullWidth
-                      />
-                    </GridItem>
-                    <GridItem md={2}>
-                      <TextField
-                        disabled={true}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        value={data.from.value}
-                        label={translate("من")}
-                        fullWidth
-                      />
-                    </GridItem>
-                    <GridItem md={2}>
-                      <TextField
-                        disabled={true}
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        value={data.to.value}
-                        label={translate("إلى")}
-                        fullWidth
-                      />
-                    </GridItem>
-                    <GridItem md={2}>
-                      <TextField
-                        onChange={(evnt) => handleChange(index, evnt)}
-                        variant="outlined"
-                        size="small"
-                        type="number"
-                        name="num_studs"
-                        value={data.num_studs}
-                        label={translate("عدد الطلّاب")}
-                        fullWidth
-                      />
-                    </GridItem>
-                    <GridItem md={1} style={{ marginTop: "1em" }}>
-                      {inputFields.length >= 1 ? (
-                        <Button
-                          type="button"
-                          style={{
-                            width: "10%",
-                            color: "white",
-                            background: "red",
-                          }}
-                          variant="outlined"
-                          className={classes.closeBtn}
-                          onClick={removeInputFields}
-                        >
-                          x
-                        </Button>
-                      ) : (
-                        ""
-                      )}
-                    </GridItem>
-                  </Grid>
-                );
-              })}
-              <SuiButton
-                onClick={handleEditExam}
-                style={{
-                  margin: "2em 0",
-                  color: "rgb(255, 255, 255)",
-                  background: "rgb(23, 193, 232)",
-                }}
-                type="button"
-              >
-                {`تعديل واقعة امتحانية`}
-              </SuiButton>
-            </Card>
-          </Grid>
         </MuiPickersUtilsProvider>
       );
     } else {
@@ -741,20 +765,6 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
         <GridItem md={2}>
           <InputLabel id="demo-simple-select-label">المقرّر</InputLabel>
           <FormControl fullWidth variant="filled" size="small" size="small">
-            {/* <Select
-              disabled={loadCourses}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={course}
-              label="courses"
-              onChange={(e) => changeCourse(e.target.value)}
-            >
-              {courses.map((course) => (
-                <MenuItem key={course.id} value={course.id}>
-                  {course.ar_name}
-                </MenuItem>
-              ))}
-            </Select> */}
             <RSelect
               isDisabled={loadCourses}
               defaultValue={course}
@@ -784,6 +794,21 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
         </GridItem>
       </Grid>
       {renderPlans(plans)}
+      <EditHalls
+        title={title}
+        inputFields={inputFields}
+        classes={classes}
+        show={show}
+        exam={exam}
+        handleClose={handleClose}
+        handleAdd={handleAdd}
+        handleDelete={handleDelete}
+        handleChange={handleChange}
+        addInputField={addInputField}
+        removeInputFields={removeInputFields}
+        translate={translate}
+        halls={halls}
+      />
     </GridContainer>
   );
 };
