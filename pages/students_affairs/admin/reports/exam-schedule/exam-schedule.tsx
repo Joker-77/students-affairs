@@ -208,7 +208,31 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
   const [semester, setSemester] = React.useState("1");
   const [deleteId, setDeleteId] = React.useState(null);
   const [confirmDelete, setConfirmDelete] = React.useState(false);
-
+  const [betweenDates, setBetweenDates] = React.useState(false);
+  // --------------- Date ------------
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const getFullDate = (date) => {
+    if (date.split("/").length > 2) {
+      return `${("0" + date.split("/")[0]).slice(-2)}-${(
+        "0" + date.split("/")[1]
+      ).slice(-2)}-${date.split("/")[2]}`;
+    } else return "";
+  };
+  const getFullDateForPrint = (date) => {
+    if (date.split("/").length > 2) {
+      return `${("0" + date.split("/")[0]).slice(-2)}/${(
+        "0" + date.split("/")[1]
+      ).slice(-2)}/${date.split("/")[2]}`;
+    } else return "";
+  };
+  const handleStartDateChange = (e) => {
+    setStartDate(e);
+  };
+  const handleEndDateChange = (e) => {
+    setEndDate(e);
+  };
+  //
   const handleConfirmOpen = (data) => {
     setDeleteId(data.id);
     setConfirmDelete(true);
@@ -404,95 +428,172 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
   };
   return (
     <GridContainer md={12}>
-      <Grid container md={12} style={{ margin: "2em 0em" }}>
-        <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
-          <FormControl fullWidth variant="filled" size="small" size="small">
-            <RSelect
-              defaultValue={program}
-              placeholder={"اختيار البرنامج"}
-              isSearchable={true}
-              options={programs}
-              onChange={(e) => {
-                changeProgram(e.id);
-              }}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </FormControl>
+      <Grid container md={12} style={{ margin: "1em 0em" }}>
+        <GridItem md={12} style={{ display: "flex", margin: "1em 0" }}>
+          <span style={{ display: "flex", alignItems: "center" }}>
+            بين تاريخين
+          </span>
+          <input
+            type="checkbox"
+            checked={betweenDates}
+            value="between"
+            onChange={(e) => setBetweenDates(!betweenDates)}
+          />
         </GridItem>
-        <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">السنة</InputLabel>
-          <FormControl fullWidth variant="filled" size="small">
-            <RSelect
-              defaultValue={eduYear}
-              placeholder={"اختيار السنة"}
-              isSearchable={true}
-              options={eduYears}
-              onChange={(e) => changeEduYear(e.id)}
-              getOptionLabel={(option) => option.year}
-              getOptionValue={(option) => option.id}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">الاختصاص</InputLabel>
-          <FormControl fullWidth variant="filled">
-            <RSelect
-              defaultValue={speciality}
-              placeholder={"اختيار الاختصاص"}
-              isSearchable={true}
-              options={specialities}
-              onChange={(e) => changeSpec(e.id)}
-              getOptionLabel={(option) => option.ar_name}
-              getOptionValue={(option) => option.id}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">السنة</InputLabel>
-          <FormControl fullWidth variant="filled" size="small">
-            <RSelect
-              defaultValue={spec}
-              label="Single select"
-              placeholder={"اختيار السنة"}
-              isSearchable={true}
-              options={specYears}
-              isDisabled={loadSpecYear}
-              onChange={(e) => changeSpecialYear(e.id)}
-              getOptionLabel={(option) => option.ar_name}
-              getOptionValue={(option) => option.id}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">نوع الواقعة</InputLabel>
-          <FormControl fullWidth variant="filled" size="small" size="small">
-            <RSelect
-              defaultValue={examType}
-              placeholder={"اختيار الواقعة"}
-              isSearchable={true}
-              options={examsTypes}
-              onChange={(e) => changeExamType(e.value)}
-              getOptionLabel={(option) => option.label}
-              getOptionValue={(option) => option.value}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">الفصل</InputLabel>
-          <FormControl fullWidth variant="filled" size="small" size="small">
-            <RSelect
-              defaultValue={semester}
-              placeholder={"اختيار الفصل"}
-              isSearchable={true}
-              options={semesters}
-              onChange={(e) => changeSemester(e.value)}
-              getOptionLabel={(option) => option.label}
-              getOptionValue={(option) => option.value}
-            />
-          </FormControl>
-        </GridItem>
+        {betweenDates ? (
+          <Grid container md={12} style={{ margin: ".5em 0em" }}>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
+              <FormControl fullWidth variant="filled" size="small" size="small">
+                <RSelect
+                  defaultValue={program}
+                  placeholder={"اختيار البرنامج"}
+                  isSearchable={true}
+                  options={programs}
+                  onChange={(e) => {
+                    changeProgram(e.id);
+                  }}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">السنة</InputLabel>
+              <FormControl fullWidth variant="filled" size="small">
+                <RSelect
+                  defaultValue={eduYear}
+                  placeholder={"اختيار السنة"}
+                  isSearchable={true}
+                  options={eduYears}
+                  onChange={(e) => changeEduYear(e.id)}
+                  getOptionLabel={(option) => option.year}
+                  getOptionValue={(option) => option.id}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">
+                من (تاريخ البدء)
+              </InputLabel>
+              <FormControl fullWidth variant="filled" size="small" size="small">
+                <TextField
+                  clearable
+                  value={startDate}
+                  onChange={(e) => handleStartDateChange(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">
+                إلى (تاريخ الانتهاء)
+              </InputLabel>
+              <FormControl fullWidth variant="filled" size="small">
+                <TextField
+                  clearable
+                  value={endDate}
+                  onChange={(e) => handleEndDateChange(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                />
+              </FormControl>
+            </GridItem>
+          </Grid>
+        ) : (
+          <>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
+              <FormControl fullWidth variant="filled" size="small" size="small">
+                <RSelect
+                  defaultValue={program}
+                  placeholder={"اختيار البرنامج"}
+                  isSearchable={true}
+                  options={programs}
+                  onChange={(e) => {
+                    changeProgram(e.id);
+                  }}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">السنة</InputLabel>
+              <FormControl fullWidth variant="filled" size="small">
+                <RSelect
+                  defaultValue={eduYear}
+                  placeholder={"اختيار السنة"}
+                  isSearchable={true}
+                  options={eduYears}
+                  onChange={(e) => changeEduYear(e.id)}
+                  getOptionLabel={(option) => option.year}
+                  getOptionValue={(option) => option.id}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">الاختصاص</InputLabel>
+              <FormControl fullWidth variant="filled">
+                <RSelect
+                  defaultValue={speciality}
+                  placeholder={"اختيار الاختصاص"}
+                  isSearchable={true}
+                  options={specialities}
+                  onChange={(e) => changeSpec(e.id)}
+                  getOptionLabel={(option) => option.ar_name}
+                  getOptionValue={(option) => option.id}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">السنة</InputLabel>
+              <FormControl fullWidth variant="filled" size="small">
+                <RSelect
+                  defaultValue={spec}
+                  label="Single select"
+                  placeholder={"اختيار السنة"}
+                  isSearchable={true}
+                  options={specYears}
+                  isDisabled={loadSpecYear}
+                  onChange={(e) => changeSpecialYear(e.id)}
+                  getOptionLabel={(option) => option.ar_name}
+                  getOptionValue={(option) => option.id}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">نوع الواقعة</InputLabel>
+              <FormControl fullWidth variant="filled" size="small" size="small">
+                <RSelect
+                  defaultValue={examType}
+                  placeholder={"اختيار الواقعة"}
+                  isSearchable={true}
+                  options={examsTypes}
+                  onChange={(e) => changeExamType(e.value)}
+                  getOptionLabel={(option) => option.label}
+                  getOptionValue={(option) => option.value}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem md={2}>
+              <InputLabel id="demo-simple-select-label">الفصل</InputLabel>
+              <FormControl fullWidth variant="filled" size="small" size="small">
+                <RSelect
+                  defaultValue={semester}
+                  placeholder={"اختيار الفصل"}
+                  isSearchable={true}
+                  options={semesters}
+                  onChange={(e) => changeSemester(e.value)}
+                  getOptionLabel={(option) => option.label}
+                  getOptionValue={(option) => option.value}
+                />
+              </FormControl>
+            </GridItem>
+          </>
+        )}
+
         <GridItem md={3}>
           <SuiButton
             style={{ minWidth: 140, marginTop: "1.5em" }}
