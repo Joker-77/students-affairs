@@ -223,6 +223,35 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
   const [inputFields, setInputFields] = useState([]);
   const [halls, setHalls] = useState([]);
   const [title, setTitle] = useState("");
+  const [selectedAll, setSelectedAll] = useState(false);
+
+  const selectAll = () => {
+    if (selectedAll) {
+      setSelectedNewStds(0);
+      setSelectedOldStds(0);
+      setSelectedPlans([]);
+      setSelectedAll(false);
+    } else {
+      let _arr = [];
+      let _planData = [];
+      let sumOld = 0;
+      let sumNew = 0;
+      console.clear();
+      console.log(plans);
+      plans.map((e) => {
+        console.log(e);
+        _arr.push(e.id);
+        _planData.push(e);
+        sumOld += e.plan.old_students_num;
+        sumNew += e.plan.new_students_num;
+      });
+      setSelectedPlans(_arr);
+      setSelectedPlanData(plans);
+      setSelectedNewStds(sumNew);
+      setSelectedOldStds(sumOld);
+      setSelectedAll(true);
+    }
+  };
   const getFullDate = (date) => {
     if (date.split("/").length > 2) {
       return `${("0" + date.split("/")[0]).slice(-2)}-${(
@@ -427,7 +456,6 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
             )
           : [];
       setSelectedPlanData(sel);
-      console.log(sel);
       if (sel.length > 0) {
         const sumOld = sel.reduce(
           (partialSum, a) => partialSum + a.plan.old_students_num,
@@ -562,8 +590,19 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
                   مستجد | معيد{" "}
                 </h5>
               </GridItem>
+              <GridItem md={2} style={{ display: "flex" }}>
+                <span style={{ display: "flex", alignItems: "center" }}>
+                  مشترك
+                </span>
+                <input
+                  type="checkbox"
+                  checked={selectedAll}
+                  value={"all"}
+                  onChange={(e) => selectAll()}
+                />
+              </GridItem>
             </Grid>
-            {plans.map((e) => (
+            {plans.map((e, index) => (
               <Grid container md={12} style={{ margin: "2em 0em" }}>
                 <GridItem md={2}>
                   <TextField
@@ -600,18 +639,22 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
                     onChange={(p) => selectPlan(p.target.value)}
                   />
                 </GridItem>
-                <GridItem md={2}>
-                  <SuiButton
-                    onClick={() => showExamHalls(e)}
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      background: "rgb(23, 193, 232)",
-                    }}
-                    type="button"
-                  >
-                    تخصيص القاعات
-                  </SuiButton>
-                </GridItem>
+                {index > 0 && selectedAll ? (
+                  <> </>
+                ) : (
+                  <GridItem md={2}>
+                    <SuiButton
+                      onClick={() => showExamHalls(e)}
+                      style={{
+                        color: "rgb(255, 255, 255)",
+                        background: "rgb(23, 193, 232)",
+                      }}
+                      type="button"
+                    >
+                      تخصيص القاعات
+                    </SuiButton>
+                  </GridItem>
+                )}
               </Grid>
             ))}
             <Grid container md={12}>
