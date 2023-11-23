@@ -172,7 +172,11 @@ const EditHalls = ({
         <Button onClick={handleClose} color="secondary" variant="contained">
           {translate("Cancel")}
         </Button>
-        <Button onClick={() => handleAdd()} color="primary" variant="contained">
+        <Button
+          onClick={() => handleAdd(exam)}
+          color="primary"
+          variant="contained"
+        >
           {translate("Confirm")}
         </Button>
       </DialogActions>
@@ -555,7 +559,28 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
     setShow(false);
   };
   const handleDelete = (exam) => {};
-  const handleAdd = (exam) => {};
+  const handleAdd = (exam) => {
+    let payload = {
+      exam_id: exam.id,
+      halls: inputFields.map((e) => {
+        return {
+          id: `${e.hall}`,
+          students_num: parseInt(e.num_studs),
+        };
+      }),
+    };
+    console.log(payload);
+    if (payload) {
+      ExamService.addExamHalls(payload)
+        .then((response) => {
+          console.log("response", response);
+          toast.success("تم إضافة القاعات إلى الواقعة بنجاح");
+          setExam(null);
+          setShow(false);
+        })
+        .catch((e) => console.log(e));
+    }
+  };
 
   const renderPlans = (plans) => {
     if (plans.length > 0) {

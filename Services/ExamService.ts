@@ -202,6 +202,21 @@ export default class ExamService {
         throw error;
       });
   }
+
+  static async addExamHalls(payload): Promise<ApiResponse> {
+    const createUrl = "/exam/add_exam_halls";
+    return await apiConnector
+      .post(createUrl, payload)
+      .then((response) => {
+        if (response.data.success) {
+          let result = response.data;
+          return result;
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
   static async teacherAssignReport(
     eduYearId,
     start_date,
