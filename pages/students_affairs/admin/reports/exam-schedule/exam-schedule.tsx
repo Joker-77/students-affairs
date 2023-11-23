@@ -46,7 +46,7 @@ import SuiButton from "../../../../../components/SuiButton";
 import { default as RSelect } from "react-select";
 import { DateHelper } from "./../../../../../Helpers/DateHelper";
 import { getExamToPrint } from "../../../../../Helpers/exam-print.js";
-
+import { getExamBetweenToPrint } from "../../../../../Helpers/exam-between-print.js";
 interface IExamsListProps {}
 const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
   const { translate } = useTranslation();
@@ -292,7 +292,7 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
                   return {
                     ...exam,
                     date: DateHelper.getArabicDatefromDate(exam.date),
-                    type: examType,
+                    type: exam.evaluation_method.name,
                     time: `${exam.to}-${exam.from}`,
                   };
                 }),
@@ -376,76 +376,141 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
   ];
   const renderExam = () => {
     if (loading) return <Placeholder loading={loading} />;
-    if (data != null && data.length > 0) {
-      let options = {
-        // exportAllData: true,
-        // exportButton: true,
-        actionsColumnIndex: -1,
-        headerStyle: {
-          backgroundColor: "#01579b",
-          color: "#FFF",
-          fontWeight: "bold",
-        },
-        filtering: false,
-        paging: true,
-        pageSize: 10,
-        maxBodyHeight: "500px",
-        search: false,
-        tableLayout: "auto",
-      };
-      let actions = [
-        {
-          icon: () => (
-            <SuiButton
-              style={{
-                minWidth: 80,
-                color: "#dc3545",
-                backgroundColor: "transparent",
-                border: "1px solid #dc3545",
-              }}
-              color={"danger"}
-            >
-              {translate("Delete")}
-            </SuiButton>
-          ),
-          onClick: (evt, dt) => handleConfirmOpen(dt),
-        },
-      ];
-      console.clear();
-      console.log(data);
-      return data.map((dt) => {
-        if (dt.exams.length > 0)
-          return (
-            <div ref={tableRef}>
-              <ActionTable
-                Title={`برنامج الامتحان ${dt.year_name} ${dt.speciality_name}`}
-                Columns={columns}
-                Data={dt.exams.map((item) => {
-                  return {
-                    ...item,
-                  };
-                })}
-                Options={options}
-                Actions={actions}
-              />
-            </div>
-          );
-        else return <Placeholder loading={false} />;
-      });
-    } else return <Placeholder loading={false} />;
+    if (betweenDates) {
+      if (data != null && data.length > 0) {
+        let options = {
+          // exportAllData: true,
+          // exportButton: true,
+          actionsColumnIndex: -1,
+          headerStyle: {
+            backgroundColor: "#01579b",
+            color: "#FFF",
+            fontWeight: "bold",
+          },
+          filtering: false,
+          paging: true,
+          pageSize: 10,
+          maxBodyHeight: "500px",
+          search: false,
+          tableLayout: "auto",
+        };
+        let actions = [
+          {
+            icon: () => (
+              <SuiButton
+                style={{
+                  minWidth: 80,
+                  color: "#dc3545",
+                  backgroundColor: "transparent",
+                  border: "1px solid #dc3545",
+                }}
+                color={"danger"}
+              >
+                {translate("Delete")}
+              </SuiButton>
+            ),
+            onClick: (evt, dt) => handleConfirmOpen(dt),
+          },
+        ];
+        return data.map((dt) => {
+          if (dt.exams.length > 0)
+            return (
+              <div ref={tableRef}>
+                <ActionTable
+                  Title={`برنامج الامتحان ${dt.year_name} ${dt.speciality_name}`}
+                  Columns={columns}
+                  Data={dt.exams.map((item) => {
+                    return {
+                      ...item,
+                    };
+                  })}
+                  Options={options}
+                  Actions={actions}
+                />
+              </div>
+            );
+          else return <Placeholder loading={false} />;
+        });
+      } else return <Placeholder loading={false} />;
+    } else {
+      if (data != null && data.length > 0) {
+        let options = {
+          // exportAllData: true,
+          // exportButton: true,
+          actionsColumnIndex: -1,
+          headerStyle: {
+            backgroundColor: "#01579b",
+            color: "#FFF",
+            fontWeight: "bold",
+          },
+          filtering: false,
+          paging: true,
+          pageSize: 10,
+          maxBodyHeight: "500px",
+          search: false,
+          tableLayout: "auto",
+        };
+        let actions = [
+          {
+            icon: () => (
+              <SuiButton
+                style={{
+                  minWidth: 80,
+                  color: "#dc3545",
+                  backgroundColor: "transparent",
+                  border: "1px solid #dc3545",
+                }}
+                color={"danger"}
+              >
+                {translate("Delete")}
+              </SuiButton>
+            ),
+            onClick: (evt, data) => handleConfirmOpen(data),
+          },
+        ];
+        return (
+          <div ref={tableRef}>
+            <ActionTable
+              Title={`برنامج الامتحان`}
+              Columns={columns}
+              Data={data.map((item) => {
+                return {
+                  ...item,
+                };
+              })}
+              Options={options}
+              Actions={actions}
+            />
+          </div>
+        );
+      } else return <Placeholder loading={false} />;
+    }
   };
   const print = () => {
-    if (data) {
-      const printWindow = window.open("", "_blank");
-      let _eduYear = eduYears.filter((e) => e.id == eduYear)[0].year;
-      let _spec = specYears.filter((e) => e.id == spec)[0].ar_name;
-      let _special = specialities.filter((e) => e.id == speciality)[0].ar_name;
-      printWindow.document.write(
-        getExamToPrint(data, semester, _eduYear, _spec, _special)
-      );
-      printWindow.document.close();
-      printWindow.focus();
-      // setTimeout(() => printWindow.print(), 2500);
+    if (betweenDates) {
+      if (data) {
+        const printWindow = window.open("", "_blank");
+        printWindow.document.write(
+          getExamBetweenToPrint(data, startDate, endDate)
+        );
+        printWindow.document.close();
+        printWindow.focus();
+        // setTimeout(() => printWindow.print(), 2500);
+      }
+    } else {
+      if (data) {
+        const printWindow = window.open("", "_blank");
+        let _eduYear = eduYears.filter((e) => e.id == eduYear)[0].year;
+        let _spec = specYears.filter((e) => e.id == spec)[0].ar_name;
+        let _special = specialities.filter((e) => e.id == speciality)[0]
+          .ar_name;
+        printWindow.document.write(
+          getExamToPrint(data, semester, _eduYear, _spec, _special)
+        );
+        printWindow.document.close();
+        printWindow.focus();
+        // setTimeout(() => printWindow.print(), 2500);
+      }
     }
   };
   const handleDeleteExam = (id) => {
@@ -466,6 +531,10 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
         setLoading(false);
       });
   };
+  const changeBetween = () => {
+    setData([]);
+    setBetweenDates(!betweenDates);
+  };
   return (
     <GridContainer md={12}>
       <Grid container md={12} style={{ margin: "1em 0em" }}>
@@ -477,7 +546,7 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
             type="checkbox"
             checked={betweenDates}
             value="between"
-            onChange={(e) => setBetweenDates(!betweenDates)}
+            onChange={(e) => changeBetween()}
           />
         </GridItem>
         {betweenDates ? (
