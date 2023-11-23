@@ -54,7 +54,6 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
   const classes = useStyles();
 
   const times = DateHelper.getQuarterHourTimes();
-  console.log(times);
   // Programs
   const [programs, setPrograms] = useState([]);
   const [program, setProgram] = useState(null);
@@ -275,27 +274,62 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
   };
   const load = () => {
     setLoading(true);
-    if (program && eduYear && examType && spec && semester)
-      ExamService.schedule(program, eduYear, examType, spec, semester)
-        .then((resp) => {
-          let _dd = resp.map((e) => {
-            return {
-              ...e,
-              date: DateHelper.getArabicDatefromDate(e.date),
-              type: examType,
-              time: `${e.to}-${e.from}`,
-            };
+    if (betweenDates) {
+      if (program && eduYear && startDate && endDate) {
+        let _vs = `${startDate.split("/")[1]}/${startDate.split("/")[0]}/${
+          startDate.split("/")[2]
+        }`;
+        let _ve = `${endDate.split("/")[1]}/${endDate.split("/")[0]}/${
+          endDate.split("/")[2]
+        }`;
+        ExamService.scheduleBetweenDates(program, eduYear, _vs, _ve)
+          .then((resp) => {
+            let exams = resp.map((e) => e.exams);
+            let _dd = resp.map((e) => {
+              return {
+                ...e,
+                exams: e.exams.map((exam) => {
+                  return {
+                    ...exam,
+                    date: DateHelper.getArabicDatefromDate(exam.date),
+                    type: examType,
+                    time: `${exam.to}-${exam.from}`,
+                  };
+                }),
+              };
+            });
+            setData(_dd);
+            setDisable(false);
+            setLoading(false);
+          })
+          .then((e) => {
+            console.log(e);
+            setLoading(false);
           });
-          setData(_dd);
-          console.log(_dd);
-          setDisable(false);
-          setLoading(false);
-        })
-        .then((e) => {
-          console.log(e);
-          setLoading(false);
-        });
-    else toast.error("يجب اختيار كافة المعلومات");
+      } else toast.error("يجب اختيار كافة المعلومات");
+    } else {
+      if (program && eduYear && examType && spec && semester)
+        ExamService.schedule(program, eduYear, examType, spec, semester)
+          .then((resp) => {
+            let _dd = resp.map((e) => {
+              return {
+                ...e,
+                date: DateHelper.getArabicDatefromDate(e.date),
+                type: examType,
+                time: `${e.to}-${e.from}`,
+              };
+            });
+            setData(_dd);
+            console.log(_dd);
+            setDisable(false);
+            setLoading(false);
+          })
+          .then((e) => {
+            console.log(e);
+            setLoading(false);
+          });
+      else toast.error("يجب اختيار كافة المعلومات");
+    }
   };
   const changeSpecialYear = (id) => {
     setSpec(id);
@@ -374,24 +408,30 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
               {translate("Delete")}
             </SuiButton>
           ),
-          onClick: (evt, data) => handleConfirmOpen(data),
+          onClick: (evt, dt) => handleConfirmOpen(dt),
         },
       ];
-      return (
-        <div ref={tableRef}>
-          <ActionTable
-            Title={"برنامج الامتحان"}
-            Columns={columns}
-            Data={data.map((item) => {
-              return {
-                ...item,
-              };
-            })}
-            Options={options}
-            Actions={actions}
-          />
-        </div>
-      );
+      console.clear();
+      console.log(data);
+      return data.map((dt) => {
+        if (dt.exams.length > 0)
+          return (
+            <div ref={tableRef}>
+              <ActionTable
+                Title={`برنامج الامتحان ${dt.year_name} ${dt.speciality_name}`}
+                Columns={columns}
+                Data={dt.exams.map((item) => {
+                  return {
+                    ...item,
+                  };
+                })}
+                Options={options}
+                Actions={actions}
+              />
+            </div>
+          );
+        else return <Placeholder loading={false} />;
+      });
     } else return <Placeholder loading={false} />;
   };
   const print = () => {

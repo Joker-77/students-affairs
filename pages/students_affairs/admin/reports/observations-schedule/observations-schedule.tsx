@@ -63,8 +63,14 @@ const ObservationsSchedule: React.FC<IExamsListProps> = ({}) => {
 
   const load = () => {
     setLoading(true);
-    if (startDate && endDate)
-      ExamService.getObservSchedule(startDate, endDate)
+    if (startDate && endDate) {
+      let _vs = `${startDate.split("/")[1]}/${startDate.split("/")[0]}/${
+        startDate.split("/")[2]
+      }`;
+      let _ve = `${endDate.split("/")[1]}/${endDate.split("/")[0]}/${
+        endDate.split("/")[2]
+      }`;
+      ExamService.getObservSchedule(_vs, _ve)
         .then((resp) => {
           let res = resp.map((dt) => {
             return {
@@ -89,8 +95,6 @@ const ObservationsSchedule: React.FC<IExamsListProps> = ({}) => {
           let final = Object.groupBy(res, ({ date }) => date);
           setFinal(final);
           setData(res);
-          console.clear();
-          console.log(final);
           setDisable(false);
           setLoading(false);
         })
@@ -98,7 +102,7 @@ const ObservationsSchedule: React.FC<IExamsListProps> = ({}) => {
           console.log(e);
           setLoading(false);
         });
-    else toast.error("يجب اختيار كافة المعلومات");
+    } else toast.error("يجب اختيار كافة المعلومات");
   };
 
   let columns = [

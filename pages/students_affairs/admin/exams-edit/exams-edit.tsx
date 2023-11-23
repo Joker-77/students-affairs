@@ -236,8 +236,6 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
       let _planData = [];
       let sumOld = 0;
       let sumNew = 0;
-      console.clear();
-      console.log(plans);
       plans.map((e) => {
         console.log(e);
         _arr.push(e.id);
@@ -322,6 +320,7 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
   };
   // ------------------------
   const clear = () => {
+    setSelectedAll(false);
     setSelectedNewStds(0);
     setSelectedOldStds(0);
     setSelectedPlans([]);
@@ -538,8 +537,6 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
 
   // Handle Halls
   const showExamHalls = (data) => {
-    console.clear();
-    console.log(data);
     setTitle(
       `تحديد القاعات ${data.plan.year?.ar_name} ${data.plan.year?.speciality?.ar_name}`
     );
