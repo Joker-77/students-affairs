@@ -575,6 +575,7 @@ const ExamsEdit: React.FC<IExamsListProps> = ({}) => {
         .then((response) => {
           console.log("response", response);
           toast.success("تم إضافة القاعات إلى الواقعة بنجاح");
+          changeExamType(examType);
           setExam(null);
           setShow(false);
         })

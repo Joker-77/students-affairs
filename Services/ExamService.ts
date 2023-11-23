@@ -204,7 +204,7 @@ export default class ExamService {
   }
 
   static async addExamHalls(payload): Promise<ApiResponse> {
-    const createUrl = "/exam/add_exam_halls";
+    const createUrl = "/exam/add_exam_hall";
     return await apiConnector
       .post(createUrl, payload)
       .then((response) => {
