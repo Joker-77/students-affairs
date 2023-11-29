@@ -26,11 +26,11 @@ import {
   DialogContentText,
 } from "@material-ui/core";
 import { ISpecialityModel } from "../../../../Models/Specialities/SpecialityModel";
-import { IStudentYear } from '../../../../.history/Models/StudentsYear/IStudentYear_20230527030144';
-import { Card } from '@material-ui/core';
-import { AddMark } from "./add-mark";
-import { EditMark } from './edit-mark';
-interface IMarksProps { }
+import { IStudentYear } from "../../../../.history/Models/StudentsYear/IStudentYear_20230527030144";
+import { Card } from "@material-ui/core";
+import AddMark from "./add-mark";
+import EditMark from "./edit-mark";
+interface IMarksProps {}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,7 +72,7 @@ function tabProps(index: number) {
   };
 }
 
-const Marks: React.FC<IMarksProps> = ({ }) => {
+const Marks: React.FC<IMarksProps> = ({}) => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -87,7 +87,7 @@ const Marks: React.FC<IMarksProps> = ({ }) => {
   const handleCloseConfirmLock = () => {
     setConfirm(false);
   };
-  const handleLock = () => { };
+  const handleLock = () => {};
   // Lock Dialog
   const ConfirmDialog = () => (
     <div>
@@ -116,16 +116,16 @@ const Marks: React.FC<IMarksProps> = ({ }) => {
   );
 
   const [value, setValue] = React.useState(0);
-  const [title, setTitle] = React.useState('إدخال العلامات');
+  const [title, setTitle] = React.useState("إدخال العلامات");
   React.useEffect(() => {
-    value == 0 ? setTitle('إدخال العلامات') : setTitle('تعديل علامة');
-  }, [value])
+    value == 0 ? setTitle("إدخال العلامات") : setTitle("تعديل علامة");
+  }, [value]);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   return (
     <GridContainer>
-      <Card style={{ padding: "1em 4em", width: '100%', margin: "5px 0px" }}>
+      <Card style={{ padding: "1em 4em", width: "100%", margin: "5px 0px" }}>
         <Grid container>
           <Typography variant="h5" component="div">
             {title}

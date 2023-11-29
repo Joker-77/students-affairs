@@ -16,7 +16,7 @@ interface Marks {
   id: string;
   mark: number;
 }
-export const ListStudents = ({ students, exam, type }: IStudentsProps) => {
+export default ListStudents = ({ students, exam, type }: IStudentsProps) => {
   console.log(exam);
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);

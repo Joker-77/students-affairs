@@ -20,7 +20,7 @@ import { ListStudents } from './list-students';
 import StudentsImportService from '../../../../Services/StudentsImportService';
 
 interface IAddMarkProps { }
-export const AddMark: React.FC<IAddMarkProps> = () => {
+export default AddMark: React.FC<IAddMarkProps> = () => {
     const { translate } = useTranslation();
     const useStyles = makeStyles(styles);
     const classes = useStyles();
