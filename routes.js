@@ -155,13 +155,13 @@ const dashboardRoutes = [
     icon: EditAttributesSharp,
     layout: "/students_affairs",
   },
-  // {
-  //   path: "/admin/marks",
-  //   name: "Observers",
-  //   rtlName: "علامات الطالب",
-  //   icon: EditAttributesSharp,
-  //   layout: "/students_affairs",
-  // },
+  {
+    path: "/admin/marks",
+    name: "Observers",
+    rtlName: "علامات الطالب",
+    icon: EditAttributesSharp,
+    layout: "/students_affairs",
+  },
   {
     path: "/admin/course_result",
     name: "CourseResult",

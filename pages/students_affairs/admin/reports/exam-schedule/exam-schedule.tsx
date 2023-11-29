@@ -285,6 +285,7 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
         ExamService.scheduleBetweenDates(program, eduYear, _vs, _ve)
           .then((resp) => {
             let exams = resp.map((e) => e.exams);
+            console.clear();
             let _dd = resp.map((e) => {
               return {
                 ...e,
@@ -298,7 +299,19 @@ const ExamSchedule: React.FC<IExamsListProps> = ({}) => {
                 }),
               };
             });
-            setData(_dd);
+            console.log(_dd);
+            let groupedExams = [];
+            let object = Object.groupBy(_dd, ({ year_name }) => year_name);
+            let keys = Object.keys(object).map((e) => {
+              return object[e];
+            });
+            keys.forEach((e) => {
+              e.map((item) => {
+                groupedExams.push(item);
+              });
+            });
+            console.log("groupedExams", groupedExams);
+            setData(groupedExams);
             setDisable(false);
             setLoading(false);
           })
