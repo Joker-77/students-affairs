@@ -28,7 +28,7 @@ import { useTranslation } from "../../../../Utility/Translations/useTranslation"
 import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
 import SpecialityService from "../../../../Services/SpecialityService";
 import SpecYearsService from "../../../../Services/SpecYearsService";
-import { ListStudents } from "./list-students";
+import ListStudents from "./list-students";
 import StudentsImportService from "../../../../Services/StudentsImportService";
 
 interface IAddMarkProps {}
