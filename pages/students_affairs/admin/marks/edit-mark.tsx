@@ -26,7 +26,7 @@ import ListStudents from "./list-students";
 
 interface EditMarkProps {}
 
-export default EditMark = ({}) => {
+const EditMark = ({}) => {
   const { translate } = useTranslation();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -235,3 +235,5 @@ export default EditMark = ({}) => {
     </GridContainer>
   );
 };
+
+export default EditMark;
