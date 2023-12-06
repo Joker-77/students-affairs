@@ -8,6 +8,7 @@ import {
   SupervisorAccount,
   Edit,
   EditAttributesSharp,
+  AssignmentOutlined,
 } from "@material-ui/icons";
 
 const dashboardRoutes = [
@@ -104,6 +105,13 @@ const dashboardRoutes = [
     name: "ObservSchdule",
     rtlName: "برنامج المراقبات",
     icon: Edit,
+    layout: "/students_affairs",
+  },
+  {
+    path: "/admin/reports/observation-assignments",
+    name: "ObservAssign",
+    rtlName: "تكاليف المراقبين",
+    icon: AssignmentOutlined,
     layout: "/students_affairs",
   },
   {
