@@ -33,12 +33,19 @@
       "static/chunks/styles.js",
       "static/chunks/pages/students_affairs/admin/observers/observations.js"
     ],
-    "/students_affairs/admin/reports/students-delay/students-delay": [
+    "/students_affairs/admin/observers/observers-list": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/css/styles.chunk.css",
       "static/chunks/styles.js",
-      "static/chunks/pages/students_affairs/admin/reports/students-delay/students-delay.js"
+      "static/chunks/pages/students_affairs/admin/observers/observers-list.js"
+    ],
+    "/students_affairs/admin/reports/observation-assignments": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/css/styles.chunk.css",
+      "static/chunks/styles.js",
+      "static/chunks/pages/students_affairs/admin/reports/observation-assignments.js"
     ]
   },
   "ampFirstPages": []
