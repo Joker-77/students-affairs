@@ -55,7 +55,7 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
     //from: hall.from,
     //to: hall.to,
     employee: null,
-    hallChef: 1,
+    hallChef: 0,
   };
 
   const { locale } = useRouter();
@@ -108,6 +108,7 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
   const [inactiveEmployees, setInactiveEmployees] = React.useState([]);
   const [hallChefDisabled, setHallChefDisabled] = React.useState(false);
   const [showAlert, setShowAlert] = React.useState(false);
+  const [keyGen, setKeyGen] = React.useState(0);
 
   const loadData = () => {
     //console.log(`${examDate}===${hall.hall.id}`);
@@ -184,9 +185,7 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
     },
   ];
 
-  const handleAddObserver = (values, { setSubmitting }) => {
-    console.log(employees);
-    console.log(values.employee);
+  const handleAddObserver = async(values, {resetForm}) => {
     let emp = employees.find((emp) => emp.id == values.employee);
     setObservers([
       ...observers,
@@ -194,7 +193,13 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
     ]);
     setInactiveEmployees([...inactiveEmployees, { ...emp }]);
     setEmployees(employees.filter((emp) => emp.id != values.employee));
-    if (values.hallChef == 1) setHallChefDisabled(true);
+    setKeyGen(keyGen + 1);
+    //setFieldValue('employee', null);
+    if (values.hallChef == 1){
+      //setFieldValue('hallChef', 0);
+      setHallChefDisabled(true);
+    }
+    resetForm();
   };
 
   const handleDeleteObserver = (data) => {
@@ -421,6 +426,7 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
                   isValid,
                   dirty,
                   setFieldValue,
+                  resetForm,
                 } = formik;
                 return (
                   <Form>
@@ -451,27 +457,35 @@ const AssignObserversToHall: React.FC<IAssignObserversToHallProps> = ({
                               }}
                               getOptionLabel={(option) => option.printing_name}
                               getOptionValue={(option) => option.id}
+                              value={employees.find((e) => {e.id == field.value})}
+                              key={`obs_emp_${keyGen}`}
                             />
                           )}
                         </Field>
                       </Grid>
                       <Grid item xs={3}>
-                        <FormControlLabel
-                          label={translate("Hall chef")}
-                          onChange={handleChange}
-                          control={
+                      <InputLabel id="demo-simple-select-label">
+                        {translate("Hall chef")}
+                      </InputLabel>
+                        <Field id="hallChef" name="hallChef">
+                          {({
+                            field, // { name, value, onChange, onBlur }
+                            form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+                            meta,
+                          }) => (
+
                             <Checkbox
                               disabled={hallChefDisabled}
                               onChange={handleChange}
                               id="hallChef"
                               name="hallChef"
-                              //checked={values.hallChef == 1}
+                              checked={field.value}
                               onBlur={handleBlur}
                               placeholder={translate("Hall chef")}
-                              defaultChecked
+                              //defaultChecked
                             />
-                          }
-                        />
+                            )}
+                            </Field>  
                       </Grid>
                       <Grid item xs={3}>
                         <SuiButton

@@ -94,8 +94,8 @@ const ObserverDetail: FC<IObserverDetailProps> = ({
           .number(translate("Office number"))
           .required(translate("Field is required")),
         mobile_number: yup
-          .number(translate("Mobile"))
-          .required(translate("Field is required")),
+          .number(translate("Mobile")),
+          //.required(translate("Field is required")),
         excluded: yup
           .boolean(translate("Excluded"))
           .required(translate("Field is required")),
