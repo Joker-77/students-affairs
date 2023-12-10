@@ -30,48 +30,48 @@ import { getStudentToPrint } from "../../../../../Helpers/delay-print.js";
 
 const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
   // Programs
-  const [programs, setPrograms] = useState([]);
-  const [program, setProgram] = useState(null);
+  //const [programs, setPrograms] = useState([]);
+  //const [program, setProgram] = useState(null);
 
   // Edu Year
   const [eduYears, setEduYears] = useState([]);
   const [eduYear, setEduYear] = useState(null);
 
-  const [years, setYears] = useState<IStudentYear[]>();
+  //const [years, setYears] = useState<IStudentYear[]>();
 
-  const [year, setYear] = useState<number | undefined>(null);
-  const [speciality, setSpeciality] = useState(1);
+  //const [year, setYear] = useState<number | undefined>(null);
+  //const [speciality, setSpeciality] = useState(1);
 
-  const [specialities, SetSpecialities] = useState<any>([]);
+  //const [specialities, SetSpecialities] = useState<any>([]);
 
   // Years ( Speciality Year)
-  const [specYears, setSpecYears] = useState([]);
-  const [specYear, setSpecYear] = useState(null);
+  //const [specYears, setSpecYears] = useState([]);
+  //const [specYear, setSpecYear] = useState(null);
 
-  const [loadSpecYear, setLoadSpecYear] = useState(false);
-  const [spec, setSpec] = useState(null);
-  const [loading, setLoading] = React.useState(false);
+  //const [loadSpecYear, setLoadSpecYear] = useState(false);
+  //const [spec, setSpec] = useState(null);
+  //const [loading, setLoading] = React.useState(false);
   const { translate } = useTranslation();
-  const [Candidates, setCandidates] = React.useState<ICandidateModel[]>(null);
+  //const [Candidates, setCandidates] = React.useState<ICandidateModel[]>(null);
 
   useEffect(() => {
-    PlanService.GetAll()
-      .then((programs) => {
+    //PlanService.GetAll()
+      //.then((programs) => {
         EduYearService.GetYears("")
           .then((eduYears) => {
-            setPrograms(programs.result);
+            //setPrograms(programs.result);
             setEduYears(eduYears.result);
           })
           .catch((err) => {
             console.error("Error", err);
           });
-      })
-      .catch((err) => {
-        console.error("Error", err);
-      });
+      //})
+      //.catch((err) => {
+        //console.error("Error", err);
+      //});
   }, []);
 
-  useEffect(() => {
+  /*useEffect(() => {
     EduYearService.GetYears(`${new Date().getFullYear()}`)
       .then((resp) => {
         let result = resp.result;
@@ -135,11 +135,11 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
 
   const changeProgram = (val: number) => {
     setProgram(val);
-  };
+  };*/
   const changeEduYear = (val: number) => {
     setEduYear(val);
   };
-  const changeSpec = (e) => {
+  /*const changeSpec = (e) => {
     setSpeciality(e);
     setLoadSpecYear(true);
     YearsService.GetWhereSpeciality(e)
@@ -195,10 +195,10 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
         setLoading(false);
         setLoadNum(false);
       });
-  };
+  };*/
 
   // columns
-  let columns = [
+  /*let columns = [
     {
       title: translate("Id"),
       field: "id",
@@ -261,9 +261,9 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
   // Dynamic Export
   const [showExportColumns, setShowExportColumns] = React.useState(false);
   const [selectedColumns, setSelectedColumns] = React.useState([]);
-  const [checked, setChecked] = React.useState([]);
+  const [checked, setChecked] = React.useState([]);*/
   const [num, setPersonalNum] = React.useState("");
-  const [nums, setNums] = React.useState([]);
+  /*const [nums, setNums] = React.useState([]);
   const [loadNum, setLoadNum] = React.useState(false);
   const [disable, setDisable] = React.useState(true);
   const [student, setStudent] = React.useState(null);
@@ -297,11 +297,11 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
         return object;
       })
     );
-  };
+  };*/
 
   const changeNum = (e) => {
     setPersonalNum(e);
-    setDisable(true);
+    /*setDisable(true);
     StudentsImportService.getDelay(e, eduYear)
       .then((resp) => {
         setStudent(resp.result);
@@ -310,24 +310,43 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
       .catch((e) => {
         console.log(e);
         setDisable(false);
-      });
+      });*/
   };
 
-  const printDelay = () => {
-    if (student) {
+  const getStudent = async () => {
+    return await StudentsImportService.getDelay(num, eduYear)
+      .then((resp) => {
+        return resp.result;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  const printDelay = async () => {
+    getStudent().then((student) => {
       const printWindow = window.open("", "_blank");
-      printWindow.document.write(getStudentToPrint(student, 1));
+      console.log('YYYYYYYYY: ');
+      let eduYearName = eduYears.find((y) => y.id === eduYear).year;
+      printWindow.document.write(getStudentToPrint(student, eduYearName, 1));
       setTimeout(() => printWindow.print(), 2500);
-    }
+    })
+    .catch((e) => {
+      console.log(e);
+    });
   };
-  const printAttend = () => {
-    if (student) {
+  const printAttend = async () => {
+    getStudent().then((student) => {
       const printWindow = window.open("", "_blank");
-      printWindow.document.write(getStudentToPrint(student, 2));
+      let eduYearName = eduYears.find((y) => y.id === eduYear).year;
+      printWindow.document.write(getStudentToPrint(student, eduYearName, 2));
       setTimeout(() => printWindow.print(), 2500);
-    }
+    })
+    .catch((e) => {
+      console.log(e);
+    });
   };
-  const renderCandidates = () => {
+  /*const renderCandidates = () => {
     if (loading) return <Placeholder loading />;
     if (Candidates != null && Candidates.length > 0) {
       let data = Candidates;
@@ -367,32 +386,17 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
         />
       );
     } else return <Placeholder />;
-  };
+  };*/
+
   return (
     <GridContainer>
       <Grid container md={12} style={{ margin: "2em 0em" }}>
         <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">البرنامج</InputLabel>
-          <FormControl fullWidth variant="filled" size="small" size="small">
-            <RSelect
-              defaultValue={program}
-              placeholder={"اختيار البرنامج"}
-              isSearchable={true}
-              options={programs}
-              onChange={(e) => {
-                changeProgram(e.id);
-              }}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">السنة</InputLabel>
+          <InputLabel id="demo-simple-select-label">العام الدراسي</InputLabel>
           <FormControl fullWidth variant="filled" size="small">
             <RSelect
               defaultValue={eduYear}
-              placeholder={"اختيار السنة"}
+              placeholder={"اختيار العام الدراسي"}
               isSearchable={true}
               options={eduYears}
               onChange={(e) => changeEduYear(e.id)}
@@ -402,48 +406,14 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
           </FormControl>
         </GridItem>
         <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">الاختصاص</InputLabel>
-          <FormControl fullWidth variant="filled">
-            <RSelect
-              defaultValue={speciality}
-              placeholder={"اختيار الاختصاص"}
-              isSearchable={true}
-              options={specialities}
-              onChange={(e) => changeSpec(e.id)}
-              getOptionLabel={(option) => option.ar_name}
-              getOptionValue={(option) => option.id}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem md={2}>
-          <InputLabel id="demo-simple-select-label">السنة</InputLabel>
-          <FormControl fullWidth variant="filled" size="small">
-            <RSelect
-              defaultValue={spec}
-              label="Single select"
-              placeholder={"اختيار السنة"}
-              isSearchable={true}
-              isDisabled={loadSpecYear}
-              options={specYears}
-              onChange={(e) => showStudents(e.id)}
-              getOptionLabel={(option) => option.ar_name}
-              getOptionValue={(option) => option.id}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem md={2}>
           <InputLabel id="demo-simple-select-label">الرقم الذاتي</InputLabel>
           <FormControl fullWidth variant="filled" size="small">
-            <RSelect
-              defaultValue={num}
-              label="Single select"
-              placeholder={"اختيار الرقم الذاتي"}
-              isSearchable={true}
-              isDisabled={loadNum}
-              options={nums}
-              onChange={(e) => changeNum(e.value)}
-              getOptionLabel={(option) => option.label}
-              getOptionValue={(option) => option.value}
+            <TextField
+              value={num}
+              onChange={(e) => changeNum(e.target.value)}
+              type="text"
+              size="small"
+              variant="outlined"
             />
           </FormControl>
         </GridItem>
@@ -452,7 +422,6 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
             style={{ minWidth: 140, marginTop: "1.5em" }}
             color={"primary"}
             onClick={printDelay}
-            disabled={disable}
           >
             طباعة وثيقة تأجيل
           </SuiButton>
@@ -462,22 +431,15 @@ const StudentDelay: React.FC<ITeachersListProps> = ({}) => {
             style={{ minWidth: 140, marginTop: "1.5em" }}
             color={"primary"}
             onClick={printAttend}
-            disabled={disable}
           >
             طباعة وثيقة دوام
           </SuiButton>
         </GridItem>
       </Grid>
-      <Grid
-        container
-        style={{ display: "flex", justifyContent: "center" }}
-        md={12}
-      >
-        {renderCandidates()}
-      </Grid>
     </GridContainer>
   );
 };
+
 (StudentDelay as any).auth = true;
 (StudentDelay as any).layout = Admin;
 export default StudentDelay;
