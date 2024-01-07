@@ -2,7 +2,6 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
-  "/students_affairs/admin/reports/observation-assignments": "pages/students_affairs/admin/reports/observation-assignments.js",
-  "/students_affairs/admin/observers/observations": "pages/students_affairs/admin/observers/observations.js",
-  "/students_affairs/admin/observers/observers-list": "pages/students_affairs/admin/observers/observers-list.js"
+  "/students_affairs/dashboard": "pages/students_affairs/dashboard.js",
+  "/students_affairs/admin/year_averages": "pages/students_affairs/admin/year_averages.js"
 }
