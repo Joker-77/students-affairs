@@ -26,26 +26,19 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/students_affairs/admin/observers/observations": [
+    "/students_affairs/admin/year_averages": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/css/styles.chunk.css",
       "static/chunks/styles.js",
-      "static/chunks/pages/students_affairs/admin/observers/observations.js"
+      "static/chunks/pages/students_affairs/admin/year_averages.js"
     ],
-    "/students_affairs/admin/observers/observers-list": [
+    "/students_affairs/dashboard": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/css/styles.chunk.css",
       "static/chunks/styles.js",
-      "static/chunks/pages/students_affairs/admin/observers/observers-list.js"
-    ],
-    "/students_affairs/admin/reports/observation-assignments": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/css/styles.chunk.css",
-      "static/chunks/styles.js",
-      "static/chunks/pages/students_affairs/admin/reports/observation-assignments.js"
+      "static/chunks/pages/students_affairs/dashboard.js"
     ]
   },
   "ampFirstPages": []

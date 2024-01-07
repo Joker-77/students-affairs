@@ -177,6 +177,13 @@ const dashboardRoutes = [
     icon: EditAttributesSharp,
     layout: "/students_affairs",
   },
+  {
+    path: "/admin/year_averages",
+    name: "YearAverages",
+    rtlName: "حساب معدّل سنة",
+    icon: EditAttributesSharp,
+    layout: "/students_affairs",
+  },
   // {
   //   path: "/table-list",
   //   name: "Table List",
