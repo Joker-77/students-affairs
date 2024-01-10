@@ -7,11 +7,7 @@ const path = require("path");
 const nextEnv = require("next-env");
 const dotenvLoad = require("dotenv-load");
 const withNextEnv = nextEnv();
-module.exports = withPlugins([
-  [withSass],
-  [withImages],
-  [withCSS]
-], {
+module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
   i18n: {
     locales: ["ar", "en"],
     defaultLocale: "ar",
@@ -32,7 +28,8 @@ module.exports = withPlugins([
     SITE_URL: "http://teststudent.hiast.edu.sy:3000",
     // SITE_URL: "http://localhost:3000",
     SECRET: "LlKq6ZtYbr+hTC021nAnOj2/h2HwMfsFo4hrfCx6gts=",
-    BASE_URL: "http://teststudent.hiast.edu.sy/backend/public",
+    // BASE_URL: "http://teststudent.hiast.edu.sy/backend/public",
+    BASE_URL: "http://student.hiast.edu.sy/backend/public",
     LIST_ROLES_URL: "/roles",
     ADD_ROLE_URL: "/roles/add",
     DELETE_ROLE_URL: "/roles/delete",
@@ -115,7 +112,7 @@ module.exports = withPlugins([
     LIST_EXAM_COURSE_URL: "/exam/course",
 
     // Mark
-    MARK_URL: '/mark',
+    MARK_URL: "/mark",
 
     // Login
     LOGIN_URL: "/login",
@@ -127,6 +124,6 @@ module.exports = withPlugins([
     LIST_AVAILABLE_OBSERVERS_URL: "/observation/employees",
     ADD_OBSERVATION_URL: "/observation/add",
     DELETE_OBSERVATION_URL: "/observation/delete",
-    LIST_User_URL: "/users"
+    LIST_User_URL: "/users",
   },
 });
